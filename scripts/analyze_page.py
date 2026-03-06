@@ -177,15 +177,48 @@ class MarketingPageParser(HTMLParser):
             if self.links:
                 self.links[-1]["text"] = text
             # Detect CTAs
-            cta_words = ["sign up", "get started", "try free", "start free", "buy now",
-                         "subscribe", "join", "register", "download", "book", "schedule",
-                         "request demo", "contact us", "learn more", "see pricing",
-                         "start trial", "create account", "claim", "unlock"]
-            text_lower = text.lower()
-            for cta in cta_words:
+            # 英語の汎用CTAキーワード
+            cta_words_en = ["sign up", "get started", "try free", "start free", "buy now",
+                            "subscribe", "join", "register", "download", "book", "schedule",
+                            "request demo", "contact us", "learn more", "see pricing",
+                            "start trial", "create account", "claim", "unlock"]
+            # 日本語の汎用CTAキーワード
+            cta_words_ja = [
+                # 問い合わせ・相談系
+                "お問い合わせ", "ご相談", "お気軽にご連絡", "資料請求", "お問合せ",
+                "ご連絡ください", "今すぐ相談", "無料相談", "お気軽にどうぞ",
+                # 予約・来場系（建設業界重要）
+                "来場予約", "来場のご予約", "見学予約", "現地見学", "ショールーム予約",
+                "モデルハウス", "見学会", "内覧会", "現場見学",
+                # 見積もり・費用系（建設業界重要）
+                "無料見積もり", "無料見積", "お見積り", "お見積もり", "見積依頼",
+                "見積もり依頼", "費用を確認", "料金を見る",
+                # 施工・実績系（建設業界特有）
+                "施工事例を見る", "施工実績", "工事の流れ", "施工の流れ",
+                "対応エリア", "対応エリアを確認", "工事エリア",
+                # 資料・パンフレット
+                "資料をダウンロード", "カタログ請求", "パンフレット", "資料を見る",
+                # 汎用CTA
+                "詳しくはこちら", "詳細はこちら", "もっと見る", "続きを読む",
+                "今すぐ確認", "今すぐ申し込む", "無料で試す", "無料登録",
+                "申し込む", "申込む", "購入する", "注文する",
+                "始める", "スタート", "はじめる", "試してみる",
+            ]
+            cta_words = cta_words_en + cta_words_ja
+            text_lower = text.lower()  # 英語の比較用（小文字化）
+            matched = False
+            # 英語キーワードは小文字比較
+            for cta in cta_words_en:
                 if cta in text_lower:
                     self.ctas.append({"text": text, "href": self.links[-1]["href"], "type": "link"})
+                    matched = True
                     break
+            # 日本語キーワードはそのまま比較（大文字小文字区別なし）
+            if not matched:
+                for cta in cta_words_ja:
+                    if cta in text:
+                        self.ctas.append({"text": text, "href": self.links[-1]["href"], "type": "link"})
+                        break
 
         elif tag == "button" and self._in_button:
             self._in_button = False
@@ -387,12 +420,52 @@ def analyze(url):
     page_results["robots"] = fetch_robots_txt(url)
     page_results["sitemap"] = fetch_sitemap(url)
 
-    # Generate marketing scores
+    # -------------------------------------------------------
+    # マーケティングスコア算出（6カテゴリ加重平均）
+    # READMEのウェイト仕様に準拠：
+    #   コンテンツ・メッセージング  25%
+    #   コンバージョン最適化        20%
+    #   SEO・発見可能性             20%
+    #   ブランド・信頼性            15%
+    #   成長・戦略（計測基盤）      10%
+    #   技術基盤                    10%
+    # -------------------------------------------------------
+    WEIGHTS = {
+        "content":   0.25,
+        "cta":       0.20,
+        "seo":       0.20,
+        "trust":     0.15,
+        "tracking":  0.10,
+        "technical": 0.10,
+    }
     scores = {}
-
-    # SEO Score
-    seo_score = 10
     seo = page_results["seo"]
+    conv = page_results["conversion"]
+
+    # --- コンテンツ・メッセージングスコア (0-10) ---
+    content_score = 1  # 最低点
+    content = page_results["content"]
+    if content["word_count"] >= 500:
+        content_score += 3
+    elif content["word_count"] >= 300:
+        content_score += 2
+    elif content["word_count"] >= 100:
+        content_score += 1
+    if seo["headings"].get("h1"):
+        content_score += 2
+    h2_count = len(seo["headings"].get("h2", []))
+    if h2_count >= 5:
+        content_score += 2
+    elif h2_count >= 3:
+        content_score += 1
+    if seo["og_tags"]:  # OGP設定（SNS拡散対応）
+        content_score += 1
+    if seo["images_total"] >= 5:  # 画像コンテンツの充実
+        content_score += 1
+    scores["content"] = min(10, content_score)
+
+    # --- SEO・発見可能性スコア (0-10) ---
+    seo_score = 10
     if not seo["title"]:
         seo_score -= 3
     elif not seo["title_ok"]:
@@ -409,45 +482,78 @@ def analyze(url):
         seo_score -= 1
     if not seo["has_viewport"]:
         seo_score -= 1
+    if page_results["robots"].get("exists"):
+        seo_score = min(10, seo_score + 1)
+    if page_results["sitemap"].get("exists"):
+        seo_score = min(10, seo_score + 1)
     scores["seo"] = max(0, seo_score)
 
-    # CTA Score
-    cta_score = 5
-    conv = page_results["conversion"]
+    # --- コンバージョン最適化スコア (0-10) ---
+    cta_score = 2
     if conv["cta_count"] == 0:
         cta_score = 1
     elif conv["cta_count"] >= 2:
-        cta_score = 7
+        cta_score = 6
     if conv["cta_count"] >= 4:
+        cta_score = 7
+    if conv["cta_count"] >= 6:
         cta_score = 8
-    # Check for value-driven CTAs
+    # 文字数10文字超のCTA（説明的な訴求文）はポイント加算
     value_ctas = [c for c in conv["ctas"] if len(c.get("text", "")) > 10]
     if value_ctas:
         cta_score = min(10, cta_score + 1)
+    # フォームがあればさらに加算
+    if conv["form_count"] >= 1:
+        cta_score = min(10, cta_score + 1)
     scores["cta"] = cta_score
 
-    # Trust Score
-    trust_score = 5
-    if page_results["trust"]["social_link_count"] >= 3:
+    # --- ブランド・信頼性スコア (0-10) ---
+    trust_score = 4
+    social_count = page_results["trust"]["social_link_count"]
+    if social_count >= 3:
         trust_score += 2
-    elif page_results["trust"]["social_link_count"] >= 1:
+    elif social_count >= 1:
         trust_score += 1
-    if page_results["tracking"]["schema_count"] > 0:
+    schema_count = page_results["tracking"]["schema_count"]
+    if schema_count >= 2:
+        trust_score += 2
+    elif schema_count >= 1:
+        trust_score += 1
+    if seo["canonical"]:  # canonical設定は信頼性・技術品質の指標
         trust_score += 1
     scores["trust"] = min(10, trust_score)
 
-    # Tracking Score
-    track_score = 3
-    if page_results["tracking"]["tools_count"] >= 3:
+    # --- 成長・戦略（計測基盤）スコア (0-10) ---
+    track_score = 2
+    tools = page_results["tracking"]["tools_count"]
+    if tools >= 3:
         track_score = 9
-    elif page_results["tracking"]["tools_count"] >= 2:
+    elif tools >= 2:
         track_score = 7
-    elif page_results["tracking"]["tools_count"] >= 1:
+    elif tools >= 1:
         track_score = 5
     scores["tracking"] = track_score
 
+    # --- 技術基盤スコア (0-10) ---
+    tech_score = 5
+    if seo["has_viewport"]:
+        tech_score += 1
+    tech = page_results["technical"]
+    if tech["internal_links"] >= 5:
+        tech_score += 1
+    if seo["images_with_lazy_loading"] > 0:
+        tech_score += 1
+    if page_results["robots"].get("exists"):
+        tech_score += 1
+    if page_results["sitemap"].get("exists"):
+        tech_score += 1
+    scores["technical"] = min(10, tech_score)
+
+    # --- 加重平均で総合スコア算出（0-100点） ---
+    overall = sum(scores[cat] * WEIGHTS[cat] for cat in WEIGHTS) * 10
     page_results["scores"] = scores
-    page_results["overall_score"] = round(sum(scores.values()) / len(scores), 1)
+    page_results["weights"] = WEIGHTS
+    page_results["overall_score"] = round(overall, 1)
 
     results["analysis"] = page_results
     return results
