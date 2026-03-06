@@ -2,7 +2,7 @@
   <img src="banner.svg" alt="AI Marketing Suite for Claude Code" width="100%">
 </p>
 
-# AI マーケティングスイート for Claude Code（日本語版）
+# AI マーケティング for Claude Code（日本語版）
 
 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 向けの包括的なマーケティング分析・自動化スキルシステムです。ウェブサイトのマーケティング監査、コピー生成、メールシーケンス作成、コンテンツカレンダー作成、競合分析、クライアント向けPDFレポート作成まで、すべてターミナルから実行できます。
 
