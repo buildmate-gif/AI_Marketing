@@ -138,6 +138,14 @@ def generate_pdf(data, output_filename):
         topMargin=2*cm, bottomMargin=2*cm
     )
     styles = create_styles()
+    body_style = styles['TrustBody']
+    header_style = ParagraphStyle(
+        name='TableHeader',
+        fontName=FONT_NAME,
+        fontSize=10,
+        textColor=colors.white,
+        leading=16,
+    )
     story = []
 
     # --- ページ1：表紙 & サマリー ---
@@ -161,9 +169,13 @@ def generate_pdf(data, output_filename):
         story.append(Spacer(1, 1*cm))
         
         # テーブルデータの作成
-        table_data = [["カテゴリ", "スコア", "重み"]]
+        table_data = [[Paragraph("カテゴリ", header_style), Paragraph("スコア", header_style), Paragraph("重み", header_style)]]
         for name, info in cats.items():
-            table_data.append([name, f"{info['score']}/100", info['weight']])
+            table_data.append([
+                Paragraph(name, body_style),
+                Paragraph(f"{info['score']}/100", body_style),
+                Paragraph(str(info['weight']), body_style)
+            ])
             
         t = Table(table_data, colWidths=[8*cm, 4*cm, 4*cm])
         t.setStyle(TableStyle([
@@ -182,9 +194,12 @@ def generate_pdf(data, output_filename):
     story.append(Paragraph("主要課題", styles['TrustTitle']))
     findings = data.get('findings', [])
     if findings:
-        table_data = [["重要度", "課題内容"]]
+        table_data = [[Paragraph("重要度", header_style), Paragraph("課題内容", header_style)]]
         for f in findings:
-            table_data.append([f.get('severity', ''), f.get('finding', '')])
+            table_data.append([
+                Paragraph(f.get('severity', ''), body_style),
+                Paragraph(f.get('finding', ''), body_style)
+            ])
             
         t = Table(table_data, colWidths=[3*cm, 13*cm])
         t.setStyle(TableStyle([
