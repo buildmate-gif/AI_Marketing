@@ -8,7 +8,7 @@
 
 **長年の慣習・アナログ文化が根強い建設業界に対応した、日本市場向けカスタマイズ版です。**
 
-> 本リポジトリは [zubair-trabzada/ai-marketing-claude](https://github.com/zubair-trabzada/ai-marketing-claude) を日本語化・建設業界向けにカスタマイズしたものです。
+> 本リポジトリは 建設業界向けにカスタマイズしたものです。
 
 ---
 
