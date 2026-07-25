@@ -4,329 +4,378 @@ description: "ランディングページのCRO分析。セクション単位で
 ---
 # ランディングページCRO分析
 
-## Skill Purpose
-Perform a comprehensive Conversion Rate Optimization (CRO) analysis on any landing page. This skill produces a section-by-section teardown with prioritized, actionable fixes that directly impact conversion rates.
+## このスキルの目的
 
-## When to Use
-- User provides a landing page URL and asks for conversion optimization
-- User asks for landing page feedback, review, or audit
-- User wants to improve signup, lead capture, or purchase rates
-- Triggered by `/market landing <url>` or `/market cro <url>`
+ランディングページのCRO（コンバージョン率最適化）分析を網羅的に行います。セクション単位で分解し、コンバージョン率に直接効く改善案を優先順位つきで提示します。
 
-## How to Execute
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
-### Step 1: Identify the Page Type
-Determine which type of landing page you are analyzing. This affects benchmark expectations and scoring weights.
+## 使う場面
 
-| Page Type | Primary Goal | Good CR | Great CR |
+- ランディングページのURLを渡され、コンバージョン改善を求められたとき
+- LPの講評・レビュー・診断を求められたとき
+- 問い合わせ数、資料請求数、購入数を増やしたいとき
+- `/market landing <url>` または `/market cro <url>` が実行されたとき
+
+## 実行手順
+
+### ステップ1：ページ種別の判定
+
+どの種類のLPかを判定します。これによって期待値と配点が変わります。
+
+| ページ種別 | 主目的 | 良好なCVR | 優秀なCVR |
 |---|---|---|---|
-| Lead Capture | Email/form submission | 5-10% | 15%+ |
-| SaaS Signup | Free trial or freemium signup | 3-7% | 10%+ |
-| E-commerce Product | Add to cart / Purchase | 2-4% | 5%+ |
-| Webinar Registration | Register for event | 20-30% | 40%+ |
-| App Download | Install app | 10-15% | 20%+ |
-| Waitlist | Join waitlist | 15-25% | 35%+ |
-| Consultation Booking | Schedule a call | 5-10% | 15%+ |
-| Nonprofit Donation | Make a donation | 2-5% | 8%+ |
+| 問い合わせ・見積依頼（建設業） | 問い合わせ送信 | 1.0〜2.0% | 3.0%以上 |
+| 無料現地調査の申込（建設業） | 調査の申込 | 1.5〜3.0% | 4.0%以上 |
+| 資料請求・リード獲得 | フォーム送信 | 5〜10% | 15%以上 |
+| SaaS登録 | 無料トライアル登録 | 3〜7% | 10%以上 |
+| EC商品ページ | カート投入・購入 | 2〜4% | 5%以上 |
+| セミナー申込 | イベント登録 | 20〜30% | 40%以上 |
+| アプリDL | インストール | 10〜15% | 20%以上 |
+| 事前登録 | 登録 | 15〜25% | 35%以上 |
+| 相談予約 | 日程確定 | 5〜10% | 15%以上 |
 
-### Step 2: Run the 7-Point CRO Framework
-Analyze each section in order. Score each section 1-10 and provide specific findings.
+**注意：** 建設業の問い合わせLPを「資料請求のLPは5〜10%が普通」という基準で評価しないでください。数十万〜数千万円の意思決定を伴うため、1〜3%が正常な水準です。
 
-#### Section 1: Hero Section (Weight: 25%)
-The first screen a visitor sees. This is where 80% of conversion decisions begin.
+### ステップ2：7項目のCRO評価
 
-**Checklist:**
-- [ ] Headline is visible within 2 seconds of page load
-- [ ] Headline communicates the primary benefit (not a feature)
-- [ ] Headline is under 10 words
-- [ ] Subheadline expands on the headline with specificity
-- [ ] Primary CTA is above the fold
-- [ ] CTA button color contrasts with the background
-- [ ] CTA text is action-oriented (not "Submit" or "Click Here")
-- [ ] Hero image or video supports the message (not generic stock)
-- [ ] Trust badges or social proof visible above the fold
-- [ ] Page loads in under 3 seconds
-- [ ] No navigation menu competing with the CTA (for dedicated landing pages)
+各セクションを順に分析し、1〜10で採点して具体的な所見を書きます。
 
-**Scoring Criteria:**
-- 9-10: Headline is benefit-driven, specific, and compelling. CTA is clear and contrasting. Visual supports the message. Trust indicators present.
-- 7-8: Strong headline and CTA but missing one element (trust badges, supporting visual, or specificity).
-- 5-6: Generic headline or weak CTA. Missing multiple above-the-fold elements.
-- 3-4: Headline is feature-focused or vague. CTA is below the fold or unclear.
-- 1-2: No clear headline or CTA. Visitor cannot understand the offer within 5 seconds.
+#### 項目1：ファーストビュー（配点25%）
 
-#### Section 2: Value Proposition (Weight: 20%)
-How clearly the page communicates WHY someone should convert.
+訪問者が最初に見る画面。コンバージョンの判断の8割はここで始まります。
 
-**Checklist:**
-- [ ] Clear statement of what the product/service does
-- [ ] Specific outcomes or results promised
-- [ ] Differentiation from alternatives (why THIS solution)
-- [ ] Target audience is clear (visitor knows if this is for them)
-- [ ] Benefits are quantified where possible (save X hours, increase Y%)
-- [ ] Value proposition is scannable (not buried in paragraphs)
+**確認項目：**
 
-**Evaluate Using the 4U Framework:**
-1. **Useful** - Does it solve a real problem the visitor has?
-2. **Urgent** - Is there a reason to act now?
-3. **Unique** - Is it different from competitors?
-4. **Ultra-specific** - Are claims concrete, not vague?
+- [ ] 見出しが読み込み後2秒以内に表示される
+- [ ] 見出しが「機能」ではなく「得られる価値」を伝えている
+- [ ] 見出しが全角30文字以内に収まっている
+- [ ] サブ見出しが見出しを具体的に補足している
+- [ ] 主要CTAがファーストビュー内にある
+- [ ] CTAボタンの色が背景と明確に対比している
+- [ ] CTAの文言が行動を促している（「送信」「こちら」ではない）
+- [ ] メイン画像・動画がメッセージを補強している（汎用的な素材写真でない）
+- [ ] 信頼バッジ・社会的証明がファーストビュー内にある
+- [ ] ページが3秒以内に表示される
+- [ ] CTAと競合するナビゲーションメニューがない（専用LPの場合）
+- [ ] （建設業）電話番号がヘッダーに固定表示され、タップで発信できる
+- [ ] （建設業）対応エリアが明記されている
 
-#### Section 3: Social Proof (Weight: 15%)
-Evidence that others trust and benefit from this product/service.
+**採点基準：**
 
-**Types of Social Proof (ranked by persuasion power):**
-1. Revenue/results metrics ("$2.4B processed", "500K users")
-2. Named customer testimonials with photos, titles, and companies
-3. Recognizable client logos
-4. Case studies with specific results
-5. Star ratings and review counts
-6. Media mentions ("As seen in...")
-7. Certifications and awards
-8. User-generated content
-9. Social media follower counts
+- 9〜10：見出しが価値中心で具体的かつ訴求力がある。CTAが明確で対比が効いている。ビジュアルが内容を支え、信頼要素も揃っている
+- 7〜8：見出しとCTAは良いが、1要素が欠けている（信頼バッジ、補強ビジュアル、具体性のいずれか）
+- 5〜6：見出しが汎用的、またはCTAが弱い。ファーストビュー内の要素が複数欠けている
+- 3〜4：見出しが機能説明中心か曖昧。CTAがファーストビュー外か不明瞭
+- 1〜2：明確な見出しもCTAもない。5秒では何のページか分からない
 
-**Checklist:**
-- [ ] At least 2 types of social proof present
-- [ ] Testimonials include real names and photos
-- [ ] Testimonials mention specific results or outcomes
-- [ ] Social proof is placed near decision points (close to CTAs)
-- [ ] Numbers are specific (not rounded - "11,847" beats "10,000+")
-- [ ] Logos are recognizable to the target audience
-- [ ] Social proof is recent and relevant
+#### 項目2：価値提案（配点20%）
 
-#### Section 4: Features and Benefits (Weight: 15%)
-How the page presents what the product/service includes.
+「なぜ行動すべきか」がどれだけ明確に伝わっているか。
 
-**Checklist:**
-- [ ] Features are translated into benefits (what the feature DOES for the user)
-- [ ] Content is scannable (icons, bullet points, short paragraphs)
-- [ ] Visual hierarchy guides the eye through features
-- [ ] Most important features/benefits are listed first
-- [ ] Each feature section has a clear mini-headline
-- [ ] Screenshots, demos, or visuals accompany feature descriptions
-- [ ] Feature list is comprehensive but not overwhelming (3-7 key features)
+**確認項目：**
 
-**Feature-to-Benefit Translation Check:**
-Bad: "AI-powered analytics dashboard"
-Good: "See exactly which campaigns drive revenue -- AI analyzes your data so you don't have to"
+- [ ] 商品・サービスが何をするものか明確に書かれている
+- [ ] 得られる具体的な成果が約束されている
+- [ ] 他の選択肢との違いが示されている
+- [ ] 誰向けかが明確（自分向けかどうかが分かる）
+- [ ] 可能な範囲で数値化されている（〇時間の削減、〇%の向上）
+- [ ] 価値提案が拾い読みできる（長文に埋もれていない）
 
-#### Section 5: Objection Handling (Weight: 10%)
-How the page addresses reasons a visitor might NOT convert.
+**4Uで評価する：**
 
-**Common Objections by Page Type:**
+1. **有益（Useful）** — 訪問者の実際の課題を解決するか
+2. **緊急（Urgent）** — 今行動する理由があるか
+3. **独自（Unique）** — 競合と違うか
+4. **具体（Ultra-specific）** — 主張が具体的か、曖昧でないか
 
-| Objection | How to Address |
-|---|---|
-| "Too expensive" | ROI calculator, price comparison, money-back guarantee |
-| "Not sure it works" | Case studies, free trial, demo video |
-| "Too complicated" | Setup wizard, onboarding support, "get started in 5 minutes" |
-| "Not sure I need it" | Problem agitation, cost of inaction |
-| "What if I don't like it?" | Free trial, money-back guarantee, cancel anytime |
-| "Is my data safe?" | Security badges, compliance logos, privacy policy link |
-| "I need to ask my team" | Shareable comparison page, team trial, ROI one-pager |
+#### 項目3：社会的証明（配点15%）
 
-**Checklist:**
-- [ ] FAQ section addresses top 3-5 objections
-- [ ] Risk reversals present (guarantee, free trial, cancel anytime)
-- [ ] Pricing transparency (no hidden fees or surprise costs)
-- [ ] Security and privacy indicators where relevant
-- [ ] Comparison with alternatives (if applicable)
+他の人が信頼し、成果を得ていることの証拠。
 
-#### Section 6: Call-to-Action (Weight: 10%)
-The conversion mechanism itself.
+**説得力の強い順：**
 
-**CTA Button Checklist:**
-- [ ] CTA text describes the VALUE, not the action ("Get My Free Report" vs "Submit")
-- [ ] CTA button is visually dominant (size, color, whitespace)
-- [ ] CTA appears multiple times on long pages
-- [ ] Secondary CTA exists for visitors not ready to commit
-- [ ] CTA has supporting microcopy (e.g., "No credit card required")
-- [ ] Button text uses first person ("Start MY trial" vs "Start YOUR trial")
-- [ ] CTA is specific to the offer (not generic)
+1. 実績の数値（「施工実績1,200件」「累計〇億円の工事を施工」）
+2. 顔写真・氏名・属性つきのお客様の声
+3. 認知度のある取引先ロゴ
+4. 具体的な成果を含む事例
+5. 星評価とレビュー件数（Googleクチコミ）
+6. メディア掲載
+7. 資格・認定・受賞
+8. 利用者が投稿したコンテンツ
+9. SNSのフォロワー数
 
-**CTA Copy Scoring:**
-- Weak: "Submit", "Click Here", "Learn More"
-- Medium: "Sign Up", "Get Started", "Download Now"
-- Strong: "Start My Free Trial", "Get My Custom Report", "Claim Your Discount"
+**確認項目：**
 
-#### Section 7: Footer and Secondary Elements (Weight: 5%)
-The bottom of the page and supporting elements.
+- [ ] 社会的証明が2種類以上ある
+- [ ] お客様の声に実名と写真がある
+- [ ] お客様の声が具体的な成果に触れている
+- [ ] 判断の直前（CTA付近）に社会的証明が配置されている
+- [ ] 数値が具体的（「1,187件」は「1,000件以上」より強い）
+- [ ] ロゴが対象顧客にとって認知度がある
+- [ ] 情報が新しく、関連性がある
 
-**Checklist:**
-- [ ] Final CTA present at bottom of page
-- [ ] Contact information or support options visible
-- [ ] Privacy policy and terms of service linked
-- [ ] Trust badges repeated near final CTA
-- [ ] No competing links that lead away from conversion
-- [ ] Copyright and legal information present
-- [ ] Social media links (only if they support conversion, not distract)
+**建設業で最も強い社会的証明：** 施工前後の写真、実際にかかった費用と工期、「〇〇市 A様邸」という地域を含む表記、Googleクチコミの点数と件数。抽象的な推薦文より、写真と数字が効きます。
 
-### Step 3: Copy Scoring
-Score the overall page copy on 5 dimensions (1-10 each):
+#### 項目4：特徴とベネフィット（配点15%）
 
-1. **Clarity** - Can a visitor understand the offer in 5 seconds?
-2. **Urgency** - Is there a reason to act NOW vs later?
-3. **Specificity** - Are claims concrete with numbers, timeframes, outcomes?
-4. **Proof** - Are claims backed by evidence, data, or testimonials?
-5. **Action Orientation** - Does the copy drive toward a specific next step?
+商品・サービスの内容の見せ方。
 
-Calculate the Copy Score: average of all 5 dimensions, multiplied by 10 for a score out of 100.
+**確認項目：**
 
-### Step 4: Form Optimization Audit
-If the page has a form, evaluate:
+- [ ] 機能がベネフィット（利用者にとっての意味）に翻訳されている
+- [ ] 拾い読みできる（アイコン、箇条書き、短い段落）
+- [ ] 視覚的な流れが特徴を追いやすく導いている
+- [ ] 重要な特徴が先に並んでいる
+- [ ] 各項目に小見出しがある
+- [ ] 説明に画像・実演・図解が添えられている
+- [ ] 特徴の数が適切（3〜7項目。多すぎない）
 
-| Element | Best Practice |
-|---|---|
-| Field count | Every additional field reduces conversion ~7%. Lead capture: 3-5 fields max. |
-| Labels | Use inline labels or floating labels. Avoid placeholder-only labels. |
-| Button text | Match the value proposition. "Get My Free Guide" > "Submit". |
-| Error handling | Inline validation. Specific error messages. Don't clear the entire form on error. |
-| Multi-step | Break long forms into steps with progress indicator. |
-| Required vs optional | Mark optional fields, not required ones. |
-| Auto-fill | Enable browser auto-fill for standard fields. |
-| Field types | Use appropriate input types (email, tel, url) for mobile keyboards. |
+**機能→ベネフィットの翻訳例：**
 
-### Step 5: Mobile Responsiveness Audit
-Mobile accounts for 60%+ of web traffic. Check:
-
-- [ ] CTA is thumb-reachable (bottom half of screen)
-- [ ] Text is readable without zooming (16px minimum body text)
-- [ ] Forms are usable on mobile (large tap targets, appropriate keyboards)
-- [ ] Images resize properly and don't break layout
-- [ ] No horizontal scrolling required
-- [ ] Page loads under 3 seconds on 4G
-- [ ] Click-to-call for phone numbers
-- [ ] Sticky CTA bar on scroll (if applicable)
-
-### Step 6: Page Speed Impact Assessment
-Reference these conversion impact benchmarks:
-
-| Load Time | Conversion Impact |
-|---|---|
-| 0-2 seconds | Baseline (optimal) |
-| 2-3 seconds | -7% conversion rate |
-| 3-5 seconds | -20% conversion rate |
-| 5-8 seconds | -35% conversion rate |
-| 8+ seconds | -50%+ conversion rate |
-
-Check for common speed issues:
-- Unoptimized images (use WebP, lazy loading)
-- Render-blocking JavaScript
-- Missing browser caching
-- No CDN
-- Excessive third-party scripts
-- Unminified CSS/JS
-
-### Step 7: Generate A/B Test Recommendations
-Format each test as a hypothesis:
-
-**Template:**
-"If we [CHANGE], then [METRIC] will [IMPROVE/INCREASE] because [REASON]."
-
-**Example tests to consider:**
-1. Headline variations (benefit-focused vs outcome-focused)
-2. CTA button color and text
-3. Social proof placement (above vs below fold)
-4. Form field count (reduce by 1-2 fields)
-5. Hero image vs hero video
-6. Long-form vs short-form page
-7. Adding urgency elements (countdown, limited spots)
-8. Price anchoring and presentation
-9. Testimonial format (text vs video)
-10. Adding a chatbot or live chat widget
-
-### Step 8: Heat Map Interpretation Guidance
-Even without actual heat map data, provide guidance on:
-
-- **Expected attention zones** based on page layout
-- **F-pattern vs Z-pattern** reading based on content density
-- **Scroll depth predictions** based on page length and content breaks
-- **Click probability zones** based on visual hierarchy
-- **Rage click indicators** (elements that look clickable but aren't)
-- **Dead zones** where content may be ignored
-
-## Output Format
-
-Generate a file called `LANDING-CRO.md` in the project root or output directory with:
-
-```markdown
-# Landing Page CRO Analysis
-## [Page URL]
-### Analysis Date: [date]
-
----
-
-## Overall CRO Score: [X/100]
-
-## Page Type: [identified type]
-## Current Estimated Conversion Rate: [estimate based on findings]
-## Target Conversion Rate: [realistic improvement target]
-
----
-
-## Section-by-Section Analysis
-
-### 1. Hero Section [Score: X/10]
-**Findings:**
-- [specific observations]
-
-**Fixes (Priority: HIGH/MEDIUM/LOW):**
-- [specific, actionable recommendations]
-
-[Repeat for all 7 sections]
-
----
-
-## Copy Score: [X/100]
-| Dimension | Score | Notes |
-|---|---|---|
-| Clarity | X/10 | [notes] |
-| Urgency | X/10 | [notes] |
-| Specificity | X/10 | [notes] |
-| Proof | X/10 | [notes] |
-| Action Orientation | X/10 | [notes] |
-
----
-
-## Form Audit
-[findings and recommendations]
-
----
-
-## Mobile Audit
-[findings and recommendations]
-
----
-
-## A/B Test Recommendations
-1. [Hypothesis format test]
-2. [Hypothesis format test]
-3. [Hypothesis format test]
-
----
-
-## Prioritized Fix List
-
-### Quick Wins (implement this week)
-1. [fix with expected impact]
-
-### Medium-Term (implement this month)
-1. [fix with expected impact]
-
-### Strategic (implement this quarter)
-1. [fix with expected impact]
-
----
-
-## Before/After Wireframe Suggestions
-[Text-based wireframe descriptions of current vs recommended layout]
+```
+悪い例：「シリコン系塗料を使用しています」
+良い例：「シリコン系塗料で12〜15年もつため、
+　　　　 30年間で塗り替え回数が1回減り、
+　　　　 トータルで約80万円の節約になります」
 ```
 
-## Key Principles
-- Always tie recommendations to REVENUE IMPACT. Don't just say "change the button color" -- say "changing the CTA button to a contrasting color typically increases clicks 15-30%, which at your current traffic could mean X more conversions per month."
-- Prioritize fixes by effort-to-impact ratio. Quick wins first.
-- Be specific. "Improve your headline" is useless. "Change your headline from 'Welcome to Our Platform' to 'Cut Your Reporting Time by 75% -- Automated Analytics for Growth Teams' because it adds specificity, a quantified benefit, and targets a specific audience" is actionable.
-- Reference industry benchmarks so the client understands where they stand.
-- If you have access to the page via browser tools, take screenshots and reference specific elements.
-- If the user has run `/market audit` previously, incorporate those findings into the CRO analysis for a more complete picture.
+#### 項目5：不安の解消（配点10%）
+
+行動しない理由への対処。
+
+**よくある不安と対処：**
+
+| 不安 | 対処法 |
+|---|---|
+| 「高すぎる」 | 費用対効果の提示、価格の内訳公開、他社比較、保証 |
+| 「本当に効果があるのか」 | 事例、無料体験、実演動画 |
+| 「面倒そう」 | 手順の可視化、「相談は30秒で完了」 |
+| 「今すぐ必要か分からない」 | 放置した場合のリスク提示（煽らず事実で） |
+| 「気に入らなかったら」 | 無料体験、返金保証、いつでも解約 |
+| 「個人情報は大丈夫か」 | プライバシーポリシー、SSL表示 |
+| 「家族と相談したい」 | 共有できる資料、検討期間の明示 |
+| （建設業）「しつこく営業されそう」 | 「営業電話はいたしません」の明記 |
+| （建設業）「工事中の生活が心配」 | 工程の説明、近隣挨拶の実施、養生の写真 |
+| （建設業）「手抜き工事が心配」 | 工程写真の提供、第三者検査、自社職人であることの明示 |
+| （建設業）「相見積もりを取りたい」 | 「相見積もり歓迎」の明記（隠さない方が信頼される） |
+
+**確認項目：**
+
+- [ ] FAQで上位3〜5個の不安に答えている
+- [ ] リスクを下げる要素がある（保証、無料体験、いつでも解約）
+- [ ] 費用が透明（隠れた追加費用がない）
+- [ ] 必要に応じてセキュリティ・プライバシーの表示がある
+- [ ] 他の選択肢との比較がある（該当する場合）
+
+#### 項目6：CTA（配点10%）
+
+コンバージョンの仕組みそのもの。
+
+**確認項目：**
+
+- [ ] CTAの文言が「行動」ではなく「価値」を伝えている（「送信」ではなく「無料で見積もりを受け取る」）
+- [ ] CTAボタンが視覚的に目立つ（大きさ、色、余白）
+- [ ] 長いページではCTAが複数回出てくる
+- [ ] 決断できない人向けの副次的なCTAがある（「まず事例を見る」）
+- [ ] CTA周辺に補足文言がある（「入力は30秒／営業電話なし」）
+- [ ] 文言が訪問者側の視点になっている
+- [ ] CTAがオファーに固有（汎用的でない）
+- [ ] （建設業）電話とフォームの両方の導線が同じ強さで並んでいる
+
+**CTA文言の強さ：**
+
+- 弱い：「送信」「こちら」「詳細を見る」
+- 普通：「申し込む」「はじめる」「ダウンロード」
+- 強い：「無料で現地調査を依頼する」「費用相場ガイドを受け取る」「30秒で概算を確認する」
+
+#### 項目7：フッターと補助要素（配点5%）
+
+**確認項目：**
+
+- [ ] ページ最下部に最終CTAがある
+- [ ] 連絡先・問い合わせ手段が見える
+- [ ] プライバシーポリシー・利用規約へのリンクがある
+- [ ] 最終CTA付近に信頼バッジが再掲されている
+- [ ] コンバージョンから離脱させるリンクがない
+- [ ] 著作権表記・法的情報がある
+- [ ] SNSリンクは、コンバージョンを助ける場合のみ設置
+- [ ] （建設業）建設業許可番号、所在地、固定電話番号が記載されている
+
+### ステップ3：コピーの採点
+
+ページ全体のコピーを5観点（各1〜10）で採点します。
+
+1. **明確さ** — 5秒でオファーを理解できるか
+2. **緊急性** — 後回しではなく今行動する理由があるか
+3. **具体性** — 数値・期間・成果で具体化されているか
+4. **証拠** — 主張が根拠・データ・お客様の声で裏づけられているか
+5. **行動誘導** — 次の一歩へ導いているか
+
+コピースコア＝5観点の平均×10（100点満点）
+
+### ステップ4：フォームの点検
+
+フォームがある場合、以下を評価します。
+
+| 項目 | 基準 |
+|---|---|
+| 項目数 | 1項目増えるごとに約7%コンバージョンが下がる。問い合わせなら3〜5項目まで |
+| ラベル | 入力欄の外または浮動ラベルを使う。プレースホルダーだけのラベルは避ける |
+| ボタン文言 | 価値提案と一致させる。「無料見積もりを依頼する」＞「送信」 |
+| エラー処理 | 入力中に検証する。具体的なエラー文言にする。エラーで全項目を消さない |
+| 複数ステップ | 長いフォームは分割し、進捗を表示する |
+| 必須・任意 | 任意項目の方に印をつける（必須ではなく） |
+| 自動入力 | ブラウザの自動入力を有効にする |
+| 入力種別 | 適切な入力種別を指定する（email、tel）。スマホのキーボードが変わる |
+
+**建設業のフォームで削るべき項目：** 「築年数」「ご希望の工期」「予算」などは、現地調査の際に聞けば済みます。最初のフォームは「お名前・連絡先・相談内容」の3項目に絞ってください。
+
+### ステップ5：スマホ対応の点検
+
+スマホからの流入は全体の6割以上を占めます。建設業では7割を超えることも珍しくありません。
+
+- [ ] CTAが親指の届く位置にある（画面下半分）
+- [ ] 拡大せずに文字が読める（本文16px以上）
+- [ ] フォームがスマホで入力しやすい（タップ領域が大きい、適切なキーボード）
+- [ ] 画像が適切に縮小され、レイアウトが崩れない
+- [ ] 横スクロールが発生しない
+- [ ] 4G回線で3秒以内に表示される
+- [ ] 電話番号がタップで発信できる
+- [ ] スクロール時に追従するCTAバーがある（該当する場合）
+
+### ステップ6：表示速度の影響評価
+
+| 表示時間 | コンバージョンへの影響 |
+|---|---|
+| 0〜2秒 | 基準（最適） |
+| 2〜3秒 | 約7%低下 |
+| 3〜5秒 | 約20%低下 |
+| 5〜8秒 | 約35%低下 |
+| 8秒以上 | 50%以上低下 |
+
+**よくある速度低下の原因：**
+
+- 未最適化の画像（WebP形式と遅延読込を推奨）
+- 描画をブロックするJavaScript
+- ブラウザキャッシュの未設定
+- CDN未使用
+- 過剰な外部スクリプト
+- CSS・JavaScriptの未圧縮
+
+**建設業で特に多い問題：** 施工写真を撮影したままの解像度で大量に掲載し、ページが数十MBになっているケース。スマホの回線では表示に10秒以上かかり、その時点でほとんどの訪問者が離脱します。
+
+### ステップ7：A/Bテストの提案
+
+各テストを仮説の形式で書きます。
+
+**書式：**
+
+「[変更]を行えば、[理由]により、[指標]が[改善]する」
+
+**検討するテスト例：**
+
+1. 見出しの方向性（価値中心 vs 成果中心）
+2. CTAボタンの色と文言
+3. 社会的証明の配置（ファーストビュー内 vs 下部）
+4. フォーム項目数（1〜2項目削減）
+5. メイン画像 vs メイン動画
+6. 長いページ vs 短いページ
+7. 緊急性の追加（残り枠数、期限）
+8. 費用の見せ方
+9. お客様の声の形式（文章 vs 動画）
+10. チャット窓口の設置
+11. （建設業）ファーストビューに施工事例写真を出す vs 会社の外観写真を出す
+12. （建設業）電話番号の表示位置と大きさ
+
+### ステップ8：視線の流れの想定
+
+実測データがなくても、以下の観点で指摘します。
+
+- **注目される領域** — レイアウトから推定
+- **F型 vs Z型の視線移動** — 情報密度による違い
+- **スクロール到達率の予測** — ページの長さと区切りから
+- **クリックされやすい領域** — 視覚的な優先順位から
+- **押しても反応しない要素** — クリックできそうに見えるが機能しない箇所
+- **見落とされる領域** — 読まれない可能性が高い箇所
+
+## 出力形式
+
+`LANDING-CRO.md` というファイルを生成します。
+
+```markdown
+# ランディングページCRO分析
+## [ページURL]
+### 分析日： [日付]
+
+---
+
+## 総合CROスコア： [X/100]
+
+## ページ種別： [判定した種別]
+## 推定される現在のCVR： [所見に基づく推定]
+## 目標CVR： [現実的な改善目標]
+
+---
+
+## セクション別の分析
+
+### 1. ファーストビュー [スコア： X/10]
+**所見：**
+- [具体的な観察]
+
+**改善案（優先度：高/中/低）：**
+- [具体的で実行可能な提案]
+
+[以下、7項目すべてについて繰り返す]
+
+---
+
+## コピースコア： [X/100]
+
+| 観点 | スコア | 所見 |
+|---|---|---|
+| 明確さ | X/10 | [所見] |
+| 緊急性 | X/10 | [所見] |
+| 具体性 | X/10 | [所見] |
+| 証拠 | X/10 | [所見] |
+| 行動誘導 | X/10 | [所見] |
+
+---
+
+## フォームの点検
+## スマホ対応の点検
+## A/Bテストの提案
+
+1. [仮説形式のテスト]
+2. [仮説形式のテスト]
+3. [仮説形式のテスト]
+
+---
+
+## 優先順位別の改善リスト
+
+### クイックウィン（今週実施）
+1. [改善案と想定効果]
+
+### 中期（今月実施）
+1. [改善案と想定効果]
+
+### 戦略（今四半期実施）
+1. [改善案と想定効果]
+
+---
+
+## 改善前後の構成案
+[現状と推奨レイアウトを文章で対比]
+```
+
+## 基本原則
+
+- 提案は必ず収益インパクトに結びつけてください。「ボタンの色を変えましょう」ではなく、「CTAボタンを背景と対比する色に変えると一般にクリックが15〜30%増えます。現在の月間3,000訪問なら、問い合わせが月2〜4件増える計算です」と書いてください
+- 工数と効果の比で優先順位をつけ、すぐできるものから並べてください
+- 具体的に書いてください。「見出しを改善する」では役に立ちません。「見出しを『快適な住まいづくり』から『〇〇市で施工実績1,200件｜外壁塗装の専門店』に変更する。地域・実績・専門性が加わり、5秒で何の会社か判断できるようになるため」まで書いて初めて実行できます
+- 業界のベンチマークを併記し、現在地が分かるようにしてください
+- ブラウザツールが使える場合はスクリーンショットを撮り、具体的な箇所を指摘してください
+- `/market audit` を実行済みの場合は、その所見を取り込んで総合的に判断してください
+- 建設業では、CVRの絶対値が低いのが正常です。他業種の基準で「低すぎる」と指摘しないでください

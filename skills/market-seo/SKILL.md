@@ -4,483 +4,558 @@ description: "SEO監査。オンページSEO・E-E-A-T・キーワード・テ�
 ---
 # SEOコンテンツ監査
 
-## Skill Purpose
-Perform a comprehensive SEO audit of a webpage or website, covering on-page SEO, content quality (E-E-A-T), keyword analysis, technical SEO, and content strategy. This skill combines automated analysis via `~/.claude/skills/market/scripts/analyze_page.py` with expert-level manual review to produce an actionable SEO audit document.
+## このスキルの目的
 
-## When to Use
-- User provides a URL and asks for SEO analysis, audit, or recommendations
-- User wants to improve organic search rankings and traffic
-- User asks about on-page SEO, meta tags, content quality, or technical SEO
-- User wants a content gap analysis or content strategy recommendations
-- Triggered by `/market seo <url>` or `/market seo`
+Webページ・サイトの網羅的なSEO監査を行います。オンページSEO、コンテンツ品質（E-E-A-T）、キーワード分析、テクニカルSEO、コンテンツ戦略を対象とし、`~/.claude/skills/market/scripts/analyze_page.py` による自動分析と、専門的な手動レビューを組み合わせて、実行可能なSEO監査書を作成します。
 
-## How to Execute
+**出力言語はすべて日本語です。文字数は全角換算で判定してください。**
 
-### Step 1: Run Automated Analysis
-Use the Python analysis script to gather baseline data:
+## 使う場面
+
+- URLを渡されてSEO分析・監査・改善提案を求められたとき
+- 検索からの流入を増やしたいとき
+- オンページSEO、メタタグ、コンテンツ品質、テクニカルSEOについて聞かれたとき
+- コンテンツの不足領域や記事戦略の提案を求められたとき
+- `/market seo <url>` または `/market seo` が実行されたとき
+
+## 実行手順
+
+### ステップ1：自動分析の実行
+
+まずPythonスクリプトで基礎データを収集します。
 
 ```bash
 python3 ~/.claude/skills/market/scripts/analyze_page.py <url>
 ```
 
-This script extracts:
-- Title tag and meta description
-- Open Graph tags
-- Heading hierarchy (H1-H6)
-- Links (internal and external)
-- Images and alt text status
-- Forms and CTAs
-- Schema/structured data
-- Social links
-- Tracking scripts
-- Viewport meta tag (mobile-friendliness indicator)
-- Canonical tag
-- Robots meta directives
+このスクリプトが抽出するもの：
 
-Capture the JSON output and use it as the foundation for the manual analysis.
+- タイトルタグとメタディスクリプション
+- OGPタグ
+- 見出し階層（H1〜H6）
+- リンク（内部・外部）
+- 画像とalt属性の状況
+- フォームとCTA
+- 構造化データ
+- SNSリンク
+- 計測タグ
+- viewportメタタグ（スマホ対応の指標）
+- canonicalタグ
+- robotsメタタグ
 
-### Step 2: On-Page SEO Checklist
-Evaluate each element and score it as Pass, Needs Work, or Fail.
+出力されたJSONを、以降の手動分析の土台にします。
 
-#### Title Tag
-| Criteria | Best Practice | Check |
+### ステップ2：オンページSEOのチェック
+
+各項目を「合格 / 要改善 / 不合格」で評価します。
+
+#### タイトルタグ
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Exists | Every page must have a unique title tag | Pass/Fail |
-| Length | 50-60 characters (displays fully in SERPs) | Pass/Needs Work/Fail |
-| Primary keyword | Contains the primary target keyword | Pass/Needs Work/Fail |
-| Keyword position | Primary keyword appears near the beginning | Pass/Needs Work/Fail |
-| Brand name | Includes brand name (typically at the end, separated by pipe or dash) | Pass/Needs Work/Fail |
-| Uniqueness | Different from other pages on the site | Pass/Fail |
-| Compelling | Would a searcher want to click this? | Pass/Needs Work/Fail |
+| 設置されている | すべてのページに固有のタイトルがある | 合格/不合格 |
+| 文字数 | **全角28〜32文字**（検索結果で省略されない範囲） | 合格/要改善/不合格 |
+| 主要キーワード | 狙うキーワードが含まれている | 合格/要改善/不合格 |
+| キーワードの位置 | 主要キーワードが前半にある | 合格/要改善/不合格 |
+| 社名 | 社名が含まれている（通常は末尾に｜や－で区切る） | 合格/要改善/不合格 |
+| 固有性 | 他ページと異なる | 合格/不合格 |
+| 訴求力 | 検索した人がクリックしたくなるか | 合格/要改善/不合格 |
 
-**Common title tag mistakes:**
-- Too long (truncated in search results)
-- Missing primary keyword
-- Keyword stuffing ("Best SEO Tool | Top SEO Tool | SEO Software | SEO Platform")
-- Using the same title across multiple pages
-- Generic titles ("Home", "Welcome", "Page 1")
-- Missing brand name
+**日本語のタイトルは全角30文字前後で切れます。** 英語基準の60文字をそのまま適用すると、後半が省略されて表示されません。
 
-#### Meta Description
-| Criteria | Best Practice | Check |
+**建設業の良いタイトル例：**
+
+```
+「外壁塗装なら〇〇市の△△塗装｜施工実績1200件・10年保証」（29文字）
+「〇〇市の屋根修理・雨漏り対応｜最短即日で無料点検｜△△工務店」（30文字）
+```
+
+**よくある失敗：**
+
+- 長すぎて検索結果で切れている
+- 主要キーワードが入っていない
+- キーワードの詰め込み（「外壁塗装｜塗装｜塗替え｜ペンキ｜塗装業者」）
+- 全ページで同じタイトルを使っている
+- 「ホーム」「トップページ」のような汎用的な文言
+- **地域名が入っていない**（建設業では致命的）
+
+#### メタディスクリプション
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Exists | Every page should have a meta description | Pass/Fail |
-| Length | 150-160 characters | Pass/Needs Work/Fail |
-| Primary keyword | Naturally includes the target keyword | Pass/Needs Work/Fail |
-| Call to action | Includes a reason to click | Pass/Needs Work/Fail |
-| Unique | Different from other pages | Pass/Fail |
-| Compelling | Acts as ad copy for the search result | Pass/Needs Work/Fail |
+| 設置されている | すべてのページに記述がある | 合格/不合格 |
+| 文字数 | **全角80〜120文字**（スマホでは全角50文字程度まで表示） | 合格/要改善/不合格 |
+| 主要キーワード | 狙うキーワードが自然に含まれている | 合格/要改善/不合格 |
+| 行動喚起 | クリックする理由が書かれている | 合格/要改善/不合格 |
+| 固有性 | 他ページと異なる | 合格/不合格 |
+| 訴求力 | 検索結果上の広告文として機能しているか | 合格/要改善/不合格 |
 
-#### Heading Hierarchy (H1-H6)
-| Criteria | Best Practice | Check |
+**重要：** スマホの検索結果では冒頭の全角50文字程度しか表示されません。**最も伝えたい内容を前半に置いてください。**
+
+#### 見出し階層（H1〜H6）
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| H1 exists | Exactly one H1 per page | Pass/Fail |
-| H1 contains keyword | Primary keyword in the H1 | Pass/Needs Work/Fail |
-| H1 differs from title | H1 and title tag are different (but related) | Pass/Needs Work/Fail |
-| Logical hierarchy | H2 under H1, H3 under H2 (no skipping levels) | Pass/Needs Work/Fail |
-| Descriptive subheadings | H2s and H3s describe content sections clearly | Pass/Needs Work/Fail |
-| Keywords in subheadings | Secondary keywords appear naturally in H2s/H3s | Pass/Needs Work/Fail |
-| Not overused | Headers used for structure, not styling | Pass/Needs Work/Fail |
+| H1がある | 1ページにH1が1つだけ | 合格/不合格 |
+| H1にキーワード | 主要キーワードがH1に含まれる | 合格/要改善/不合格 |
+| H1とタイトルの違い | H1とタイトルタグが異なる（ただし関連する） | 合格/要改善/不合格 |
+| 階層が正しい | H1の下にH2、H2の下にH3（階層を飛ばさない） | 合格/要改善/不合格 |
+| 説明的な見出し | H2・H3が内容を的確に表している | 合格/要改善/不合格 |
+| 副次キーワード | H2・H3に関連キーワードが自然に入っている | 合格/要改善/不合格 |
+| 装飾目的でない | 見出しタグを文字を大きくする目的で使っていない | 合格/要改善/不合格 |
 
-#### Image Optimization
-| Criteria | Best Practice | Check |
+#### 画像の最適化
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Alt text | Every image has descriptive alt text | Pass/Needs Work/Fail |
-| Alt text quality | Alt text describes the image and includes keywords naturally | Pass/Needs Work/Fail |
-| File names | Descriptive filenames (not IMG_001.jpg) | Pass/Needs Work/Fail |
-| File size | Images optimized for web (WebP preferred, compressed) | Pass/Needs Work/Fail |
-| Lazy loading | Below-fold images use lazy loading | Pass/Needs Work/Fail |
-| Responsive images | Uses srcset or picture element for different sizes | Pass/Needs Work/Fail |
-| Decorative images | Decorative images have empty alt="" (not missing alt) | Pass/Needs Work/Fail |
+| alt属性 | すべての画像に説明的なalt属性がある | 合格/要改善/不合格 |
+| alt属性の質 | 画像の内容を説明し、キーワードが自然に入っている | 合格/要改善/不合格 |
+| ファイル名 | 内容が分かる名前（IMG_001.jpg ではない） | 合格/要改善/不合格 |
+| ファイルサイズ | Web用に最適化されている（WebP推奨、圧縮済み） | 合格/要改善/不合格 |
+| 遅延読込 | ファーストビュー外の画像が遅延読込になっている | 合格/要改善/不合格 |
+| レスポンシブ画像 | srcset や picture 要素で複数サイズを用意している | 合格/要改善/不合格 |
+| 装飾画像 | 装飾用の画像は alt="" にしている（属性の欠落ではなく） | 合格/要改善/不合格 |
 
-#### Internal Linking
-| Criteria | Best Practice | Check |
+**建設業では画像SEOの重要度が特に高くなります。** 施工事例の写真には「〇〇市 A様邸 外壁塗装 施工後」のような具体的なalt属性を設定してください。画像検索からの流入が期待できます。
+
+#### 内部リンク
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Internal links present | Page links to other relevant pages on the site | Pass/Needs Work/Fail |
-| Anchor text | Internal link anchor text is descriptive (not "click here") | Pass/Needs Work/Fail |
-| Deep linking | Links go to specific pages, not just homepage | Pass/Needs Work/Fail |
-| Relevant context | Links are contextually relevant to surrounding content | Pass/Needs Work/Fail |
-| Reasonable count | 3-10 internal links per 1,000 words of content | Pass/Needs Work/Fail |
-| Broken links | No broken internal links (404s) | Pass/Fail |
+| 内部リンクがある | 関連する他ページへのリンクがある | 合格/要改善/不合格 |
+| アンカーテキスト | リンク文言が説明的（「こちら」ではない） | 合格/要改善/不合格 |
+| 深いリンク | トップページだけでなく個別ページへリンクしている | 合格/要改善/不合格 |
+| 文脈の適合 | 前後の内容と関連したリンクになっている | 合格/要改善/不合格 |
+| 適切な数 | 本文1,000文字あたり3〜10本 | 合格/要改善/不合格 |
+| リンク切れ | 内部リンクに404がない | 合格/不合格 |
 
-#### URL Structure
-| Criteria | Best Practice | Check |
+#### URL構造
+
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Readable | URL is human-readable and descriptive | Pass/Needs Work/Fail |
-| Keywords | URL contains relevant keywords | Pass/Needs Work/Fail |
-| Length | Under 75 characters (ideally under 60) | Pass/Needs Work/Fail |
-| Hyphens | Words separated by hyphens (not underscores) | Pass/Fail |
-| Lowercase | All lowercase characters | Pass/Fail |
-| No parameters | Clean URLs without unnecessary query parameters | Pass/Needs Work/Fail |
-| Trailing slashes | Consistent use (either always or never) | Pass/Needs Work/Fail |
+| 可読性 | 人が読んで意味が分かる | 合格/要改善/不合格 |
+| キーワード | 関連するキーワードが含まれる（英数字で） | 合格/要改善/不合格 |
+| 長さ | 75文字以内（できれば60文字以内） | 合格/要改善/不合格 |
+| ハイフン区切り | 単語をハイフンで区切る（アンダースコアではない） | 合格/不合格 |
+| 小文字 | すべて小文字 | 合格/不合格 |
+| パラメータ | 不要なクエリパラメータがない | 合格/要改善/不合格 |
+| 末尾スラッシュ | 統一されている | 合格/要改善/不合格 |
 
-### Step 3: Content Quality Assessment (E-E-A-T)
+**日本語URLについて：** 日本語のURLは検索結果で読みやすく表示される利点がありますが、共有時にパーセントエンコードされて非常に長くなります。原則としてローマ字または英語のURLを推奨してください。
 
-Evaluate the content against Google's E-E-A-T framework:
+### ステップ3：コンテンツ品質の評価（E-E-A-T）
 
-#### Experience
-Does the content demonstrate first-hand experience with the topic?
+GoogleのE-E-A-T指標で評価します。
 
-**Check for:**
-- Personal anecdotes, case studies, or real-world examples
-- Screenshots, photos, or evidence of hands-on experience
-- Specific details that only someone with experience would know
-- "I did X and here's what happened" type content
+#### 経験（Experience）
 
-**Score:** Strong / Present / Weak / Missing
+そのテーマについて、実際に経験した人が書いているか。
 
-#### Expertise
-Does the author have demonstrated knowledge in this subject?
+**確認する点：**
 
-**Check for:**
-- Author bio with relevant credentials
-- Depth of content (not superficial)
-- Accurate information and data
-- Proper use of industry terminology
-- Links to authoritative sources
+- 自身の体験、事例、実際の出来事
+- 現場写真、スクリーンショット、実施の証拠
+- 経験者しか知り得ない具体的な記述
+- 「実際にやってみた結果」型の内容
 
-**Score:** Strong / Present / Weak / Missing
+**建設業では：** 自社で撮影した施工写真、実際の工期・費用、現場で起きたトラブルと対処など。素材サイトの写真ばかりのサイトは評価されません。
 
-#### Authoritativeness
-Is the website and author recognized as an authority on this topic?
+**評価：** 強い / あり / 弱い / なし
 
-**Check for:**
-- Author bylines with real names and bios
-- About page with company background
-- Industry awards or certifications
-- Backlinks from authoritative sites
-- Media mentions or press coverage
-- Guest posts on industry publications
+#### 専門性（Expertise）
 
-**Score:** Strong / Present / Weak / Missing
+書き手がその分野の知識を持っていることが示されているか。
 
-#### Trustworthiness
-Can users trust this content and this website?
+**確認する点：**
 
-**Check for:**
-- HTTPS (SSL certificate)
-- Privacy policy and terms of service
-- Physical address and contact information
-- Customer reviews and testimonials
-- Security badges and certifications
-- Transparent business practices
-- Accurate, up-to-date information
-- Properly sourced claims and statistics
+- 執筆者のプロフィールと保有資格
+- 内容の深さ（表面的でないか）
+- 情報とデータの正確さ
+- 専門用語の適切な使用
+- 権威ある情報源への言及
 
-**Score:** Strong / Present / Weak / Missing
+**建設業では：** 一級建築士、一級塗装技能士、雨漏り診断士などの保有資格の明示。監修者の記載。
 
-### Step 4: Keyword Analysis
+**評価：** 強い / あり / 弱い / なし
 
-#### Primary Keyword Assessment
-| Element | Evaluation |
+#### 権威性（Authoritativeness）
+
+サイトと書き手が、その分野で認知されているか。
+
+**確認する点：**
+
+- 実名と経歴つきの執筆者表記
+- 会社概要ページの充実
+- 受賞歴、認定、加盟団体
+- 権威あるサイトからの被リンク
+- メディア掲載、プレスリリース
+- 業界メディアへの寄稿
+
+**建設業では：** 建設業許可番号、加盟組合、メーカー認定施工店、リフォーム関連ポータルでの掲載実績。
+
+**評価：** 強い / あり / 弱い / なし
+
+#### 信頼性（Trustworthiness）
+
+利用者がこのサイトと情報を信頼できるか。
+
+**確認する点：**
+
+- HTTPS（SSL証明書）
+- プライバシーポリシー、利用規約
+- 所在地と連絡先の記載
+- お客様の声、口コミ
+- 各種認証の表示
+- 情報の正確さと更新日
+- 出典が明示された主張・統計
+
+**建設業では最重要項目です。** 以下を必ず確認してください。
+
+- 建設業許可番号（〇〇県知事許可（般-XX）第XXXXX号）
+- 所在地と固定電話番号
+- 代表者名と顔写真
+- 保証内容とアフターサービス体制
+- 損害賠償責任保険の加入
+
+**評価：** 強い / あり / 弱い / なし
+
+### ステップ4：キーワード分析
+
+#### 主要キーワードの評価
+
+| 項目 | 評価内容 |
 |---|---|
-| Primary keyword identified | What keyword is this page targeting? |
-| Search intent alignment | Does the content match what searchers expect? (informational, commercial, transactional, navigational) |
-| Keyword in title | Present, position, natural usage |
-| Keyword in H1 | Present, natural usage |
-| Keyword in first 100 words | Appears early in the content |
-| Keyword in subheadings | Appears in at least one H2 or H3 |
-| Keyword in meta description | Present and natural |
-| Keyword in URL | Present |
-| Keyword density | 1-2% is ideal. Over 3% is keyword stuffing. |
+| 主要キーワードの特定 | このページはどのキーワードを狙っているか |
+| 検索意図との一致 | 内容が検索者の期待に合っているか（情報収集・比較検討・取引・指名） |
+| タイトルへの含有 | 有無、位置、自然さ |
+| H1への含有 | 有無、自然さ |
+| 冒頭100文字への含有 | 本文の早い段階に登場するか |
+| 見出しへの含有 | H2・H3のいずれかに登場するか |
+| メタディスクリプションへの含有 | 有無、自然さ |
+| URLへの含有 | 有無 |
+| 出現頻度 | 全体の1〜2%が目安。3%を超えると詰め込みと判断される |
 
-#### Secondary Keywords
-Identify 5-10 related keywords that should be naturally included in the content:
-- Synonyms and variations of the primary keyword
-- Long-tail variations
-- Related questions (People Also Ask)
-- LSI (Latent Semantic Indexing) keywords
+#### 建設業のキーワード設計
 
-#### Search Intent Analysis
-Determine the search intent behind the target keyword and evaluate if the content matches:
+**基本構造は「地域名 ＋ 工種」です。** これが最も成約に近く、競合も限られます。
 
-| Intent Type | User Goal | Content Should Be |
+| 階層 | キーワード例 | 狙い |
 |---|---|---|
-| Informational | Learn something | Blog post, guide, tutorial, FAQ |
-| Commercial | Compare options | Comparison page, review, list |
-| Transactional | Buy something | Product page, pricing page, checkout |
-| Navigational | Find a specific page | Homepage, login page, specific tool |
+| 最優先 | 「〇〇市 外壁塗装」「〇〇市 屋根修理」 | 商圏内の今すぐ客。専用ページを作る |
+| 準優先 | 「〇〇市 外壁塗装 費用」「〇〇市 塗装 評判」 | 比較検討層 |
+| 情報収集 | 「外壁塗装 時期」「屋根 塗り替え 目安」 | ブログ記事で獲得し、内部リンクで誘導 |
+| 緊急性 | 「雨漏り 修理 〇〇市」「〇〇市 台風 屋根」 | 緊急需要。電話導線を最優先に |
+| 指名 | 「△△塗装 評判」「△△工務店 口コミ」 | 既に認知済み。信頼補強のページを用意 |
 
-**Misalignment is a ranking killer.** If the user searches "how to do X" (informational) and lands on a sales page (transactional), they bounce -- and Google notices.
+**重要：** 対応エリアに含まれる市区町村ごとに個別ページを作ることが有効です。ただし、地名だけを差し替えた実質同一の量産ページは低品質と判定されます。各ページに、その地域の施工事例・地域特有の気候条件・実際の対応実績を入れてください。
 
-### Step 5: Technical SEO Quick Check
+#### 副次キーワード
 
-#### Robots.txt
-```
-Check: Does /robots.txt exist and is it properly configured?
-```
-- [ ] robots.txt is accessible
-- [ ] Not blocking important pages or resources
-- [ ] Points to sitemap.xml
-- [ ] Not blocking CSS/JS (needed for rendering)
+本文に自然に含めるべき関連語を5〜10個特定します。
 
-#### XML Sitemap
-```
-Check: Does /sitemap.xml exist?
-```
-- [ ] Sitemap exists and is accessible
-- [ ] Contains all important pages
-- [ ] No broken URLs in sitemap
-- [ ] Submitted to Google Search Console
-- [ ] Last modified dates are accurate
+- 主要キーワードの言い換え・表記ゆれ（「塗り替え」「塗替え」「ぬりかえ」）
+- より詳細な複合語
+- 「他の人はこちらも検索」に出る質問
+- 関連性の高い共起語
 
-#### Canonical Tags
-- [ ] Canonical tag present on the page
-- [ ] Points to the correct URL (self-referencing or to the canonical version)
-- [ ] Consistent with robots.txt and sitemap
+#### 検索意図の分析
 
-#### Page Speed
-Reference benchmarks:
+狙うキーワードの検索意図を判定し、内容が合っているか評価します。
 
-| Metric | Good | Needs Work | Poor |
+| 意図の種類 | 検索者の目的 | 適したコンテンツ |
+|---|---|---|
+| 情報収集 | 知りたい | ブログ記事、解説、手順、FAQ |
+| 比較検討 | 選びたい | 比較ページ、事例、一覧 |
+| 取引 | 依頼・購入したい | サービスページ、費用ページ、問い合わせ |
+| 指名 | 特定のページに行きたい | トップページ、会社概要 |
+
+**意図のずれは順位低下の主因です。** 「外壁塗装 時期」（情報収集）で検索した人が、いきなり見積依頼ページに着地すれば離脱します。Googleはその離脱を検知します。
+
+### ステップ5：テクニカルSEOの確認
+
+#### robots.txt
+
+- [ ] robots.txt にアクセスできる
+- [ ] 重要なページやリソースをブロックしていない
+- [ ] sitemap.xml の場所を記載している
+- [ ] CSS・JSをブロックしていない（描画に必要）
+
+#### XMLサイトマップ
+
+- [ ] sitemap.xml が存在しアクセスできる
+- [ ] 重要なページが全て含まれている
+- [ ] 無効なURLが含まれていない
+- [ ] Google Search Console に登録済み
+- [ ] 更新日が正確
+
+#### canonicalタグ
+
+- [ ] canonicalタグが設置されている
+- [ ] 正しいURLを指している
+- [ ] robots.txt・サイトマップと矛盾がない
+
+#### 表示速度
+
+| 指標 | 良好 | 要改善 | 不良 |
 |---|---|---|---|
-| Largest Contentful Paint (LCP) | Under 2.5s | 2.5-4.0s | Over 4.0s |
-| First Input Delay (FID) | Under 100ms | 100-300ms | Over 300ms |
-| Cumulative Layout Shift (CLS) | Under 0.1 | 0.1-0.25 | Over 0.25 |
-| Time to First Byte (TTFB) | Under 200ms | 200-500ms | Over 500ms |
-| First Contentful Paint (FCP) | Under 1.8s | 1.8-3.0s | Over 3.0s |
+| LCP（最大コンテンツの描画） | 2.5秒未満 | 2.5〜4.0秒 | 4.0秒超 |
+| INP（操作への応答） | 200ms未満 | 200〜500ms | 500ms超 |
+| CLS（レイアウトのずれ） | 0.1未満 | 0.1〜0.25 | 0.25超 |
+| TTFB（初回バイト） | 200ms未満 | 200〜500ms | 500ms超 |
+| FCP（初回描画） | 1.8秒未満 | 1.8〜3.0秒 | 3.0秒超 |
 
-**Common speed issues to flag:**
-- Unoptimized images (recommend WebP format, compression)
-- Render-blocking JavaScript or CSS
-- No browser caching headers
-- No CDN detected
-- Excessive third-party scripts (tracking, widgets, fonts)
-- Unminified CSS and JavaScript
-- Missing compression (gzip or brotli)
+**よくある速度低下の原因：**
 
-#### Mobile-Friendliness
-- [ ] Viewport meta tag present (`<meta name="viewport" content="width=device-width, initial-scale=1">`)
-- [ ] Text readable without zooming (minimum 16px body text)
-- [ ] Tap targets adequately sized and spaced (minimum 48x48px)
-- [ ] No horizontal scrolling required
-- [ ] Responsive images
-- [ ] Forms usable on mobile
+- 未最適化の画像（WebP形式と圧縮を推奨）
+- 描画をブロックするJavaScript・CSS
+- ブラウザキャッシュの未設定
+- CDN未使用
+- 過剰な外部スクリプト（計測、ウィジェット、フォント）
+- CSS・JavaScriptの未圧縮
+- gzip・brotli圧縮の未設定
 
-### Step 6: Content Gap Analysis
+**建設業のサイトで特に多い問題：** 施工写真を撮影したままの高解像度で掲載し、1ページあたり数十MBになっているケース。写真は横幅1600px以下、WebP形式、1枚200KB以下を目安に圧縮してください。
 
-Methodology for identifying content gaps:
+#### スマホ対応
 
-1. **Identify the topic cluster:** What is the main topic this page/site covers?
-2. **Map existing content:** What subtopics are already covered?
-3. **Identify missing subtopics:** What related topics are competitors covering that this site is not?
-4. **Analyze People Also Ask:** What questions do searchers have about this topic?
-5. **Check related searches:** What does Google suggest at the bottom of the SERP?
+- [ ] viewportメタタグがある（`<meta name="viewport" content="width=device-width, initial-scale=1">`）
+- [ ] 拡大せずに文字が読める（本文16px以上）
+- [ ] タップ領域が十分な大きさと間隔（48×48px以上）
+- [ ] 横スクロールが発生しない
+- [ ] 画像がレスポンシブ対応
+- [ ] フォームがスマホで入力しやすい
+- [ ] 電話番号がタップで発信できる（建設業では必須）
 
-**Content Gap Template:**
-| Missing Topic | Search Volume Potential | Competition | Content Type Needed | Priority |
-|---|---|---|---|---|
-| [Topic] | High/Med/Low | High/Med/Low | Blog/Guide/Tool/Page | 1-5 |
+### ステップ6：地域SEO・MEOの評価
 
-### Step 7: Featured Snippet Optimization
+**建設業・地域密着ビジネスでは、通常のSEOと同等かそれ以上に重要です。**
 
-Identify opportunities to capture featured snippets:
+#### Googleビジネスプロフィール
 
-**Types of featured snippets:**
-1. **Paragraph snippet** -- Answer in 40-60 words. Use a clear question as H2/H3 followed by a concise answer.
-2. **List snippet** -- Use ordered or unordered lists with H2 containing the target query.
-3. **Table snippet** -- Use HTML tables with clear headers.
-4. **Video snippet** -- Include video with descriptive title and timestamps.
-
-**Optimization checklist:**
-- [ ] Target question-based queries ("how to", "what is", "why does")
-- [ ] Place answer immediately after the question heading
-- [ ] Keep paragraph answers between 40-60 words
-- [ ] Use structured lists and tables where appropriate
-- [ ] Include the target query in an H2 or H3
-
-### Step 8: Schema Markup Audit
-
-Check for structured data implementation:
-
-| Schema Type | Applicable To | Status |
+| 評価項目 | 基準 | 判定 |
 |---|---|---|
-| Organization | Homepage, About page | Present/Missing |
-| LocalBusiness | Local businesses | Present/Missing/N/A |
-| Product | Product pages | Present/Missing/N/A |
-| Article | Blog posts, news | Present/Missing/N/A |
-| FAQ | FAQ sections | Present/Missing |
-| HowTo | Tutorial content | Present/Missing/N/A |
-| Review/AggregateRating | Reviews, testimonials | Present/Missing/N/A |
-| BreadcrumbList | All pages with breadcrumbs | Present/Missing |
-| WebSite/SearchAction | Homepage (sitelinks search box) | Present/Missing |
-| Event | Event pages | Present/Missing/N/A |
+| 登録・オーナー確認 | 登録済みでオーナー確認が完了している | 合格/不合格 |
+| 業種カテゴリ | 主要カテゴリが適切（「塗装業者」「リフォーム業者」など） | 合格/要改善/不合格 |
+| NAP情報の一貫性 | 名称・住所・電話番号がサイトと完全に一致 | 合格/不合格 |
+| 営業時間 | 正確に設定され、祝日対応も反映 | 合格/要改善 |
+| 写真 | 施工事例・外観・スタッフの写真が20枚以上 | 合格/要改善/不合格 |
+| 投稿 | 週1回以上の最新情報投稿 | 合格/要改善/不合格 |
+| クチコミ数 | 同業の地域競合と比較して十分か | 合格/要改善/不合格 |
+| クチコミ評価 | 4.0以上 | 合格/要改善/不合格 |
+| クチコミ返信 | 全件に返信している（低評価にも誠実に） | 合格/要改善/不合格 |
+| サービス・商品 | 対応工事の一覧を登録している | 合格/要改善 |
 
-**Implementation guidance:**
-- Use JSON-LD format (Google's preferred format)
-- Validate with Google's Rich Results Test
-- Don't mark up content that isn't visible on the page
-- Keep schema data consistent with on-page content
+**NAP情報の不一致は地域SEOで最も多い失点要因です。** サイト、Googleビジネスプロフィール、各種ポータルサイトで、住所表記（丁目・番地の書き方）と電話番号が一字一句一致しているか確認してください。
 
-### Step 9: Internal Linking Opportunities
+#### 引用情報（サイテーション）
 
-Identify specific internal linking improvements:
+- [ ] 主要なポータルサイトに登録されている
+- [ ] 登録情報がサイトのNAPと一致している
+- [ ] 古い情報や重複登録が残っていない
 
-1. **Orphan pages** -- Pages with no internal links pointing to them
-2. **Hub pages** -- High-authority pages that should link to related content
-3. **Topical clusters** -- Group related content and create linking structures
-4. **CTA links** -- Blog content should link to relevant product/service pages
-5. **Footer/sidebar links** -- Sitewide links to important pages
+### ステップ7：コンテンツの不足領域の分析
 
-**Linking Architecture Assessment:**
-```
-Homepage
-  |-- Category/Service Pages (Pillar Content)
-       |-- Individual Blog Posts/Articles (Cluster Content)
-            |-- Back-links to Pillar Content
-  |-- Key Conversion Pages (Pricing, Signup, Contact)
-       |-- Linked from relevant content
-```
+不足領域を特定する手順：
 
-### Step 10: Core Web Vitals Impact Assessment
+1. **主題を特定する：** このサイトが扱う中心テーマは何か
+2. **既存内容を整理する：** どの副題が既に扱われているか
+3. **不足を洗い出す：** 競合が扱っていて自社が扱っていない話題は何か
+4. **「他の人はこちらも検索」を確認する：** 検索者が抱く疑問は何か
+5. **関連検索を確認する：** 検索結果下部の提案を確認する
 
-Evaluate the revenue impact of Core Web Vitals performance:
+**不足領域の一覧表：**
 
-**Research-backed impacts:**
-- Sites passing all Core Web Vitals see 24% fewer page abandonments
-- A 100ms decrease in LCP correlates with a 1.1% increase in conversion rates
-- Reducing CLS by 0.1 corresponds to a 15% decrease in bounce rate
-- Pages loading within 2 seconds have an average bounce rate of 9%, while pages loading in 5 seconds have a 38% bounce rate
-
-**Recommendations by metric:**
-| Metric | If Failing | Typical Fixes |
-|---|---|---|
-| LCP | Over 2.5s | Optimize hero image, preload critical resources, use CDN, reduce server response time |
-| FID/INP | Over 100ms | Reduce JavaScript execution, defer non-critical scripts, use web workers |
-| CLS | Over 0.1 | Set image dimensions, reserve space for ads/embeds, avoid inserting content above existing content |
-
-### Step 11: Blog and Content Strategy Recommendations
-
-Based on the audit findings, recommend:
-
-1. **Publishing cadence** -- How often to publish based on competition and resources
-2. **Content types** -- Blog posts, guides, tools, videos, infographics
-3. **Keyword targeting strategy** -- Balance between high-volume and long-tail
-4. **Content length** -- Benchmark against top-ranking content for target keywords
-5. **Content update strategy** -- How often to refresh existing content
-6. **Distribution plan** -- How to promote content beyond organic search
-
-**Content Prioritization Matrix:**
-| Content Idea | Search Volume | Competition | Business Value | Priority Score |
+| 不足している話題 | 検索需要 | 競合性 | 必要な形式 | 優先度 |
 |---|---|---|---|---|
-| [Topic] | High/Med/Low | High/Med/Low | High/Med/Low | 1-10 |
+| [話題] | 高/中/低 | 高/中/低 | 記事/解説/事例/ページ | 1〜5 |
 
-Scoring: High volume + Low competition + High business value = Highest priority
+**建設業で不足しがちな内容：**
 
-## Output Format
+- 工種ごとの費用相場ページ（最も検索される）
+- 助成金・補助金の解説
+- 業者の選び方・見積書の見方
+- 施工事例（費用・工期つき）
+- よくある質問（近隣対応、工事中の生活、天候不良時）
+- 地域ごとの対応ページ
 
-Generate a file called `SEO-AUDIT.md` with:
+### ステップ8：強調スニペットの獲得
+
+**強調スニペットの種類：**
+
+1. **段落型** — 全角100文字前後で回答。質問をH2・H3に置き、直後に簡潔な答えを書く
+2. **リスト型** — 番号つき・箇条書きのリスト。H2に対象クエリを含める
+3. **表型** — 見出しが明確なHTML表
+4. **動画型** — 説明的なタイトルとチャプターつきの動画
+
+**確認項目：**
+
+- [ ] 質問形式のクエリを狙っている（「〜とは」「〜の方法」「なぜ〜」）
+- [ ] 質問の見出し直後に答えを置いている
+- [ ] 段落型の答えを全角100文字前後に収めている
+- [ ] 適切な箇所でリストと表を使っている
+- [ ] 対象クエリをH2・H3に含めている
+
+### ステップ9：構造化データの監査
+
+| 種類 | 対象 | 状況 |
+|---|---|---|
+| Organization | トップ、会社概要 | 設置済み/未設置 |
+| LocalBusiness | 地域密着ビジネス | 設置済み/未設置/対象外 |
+| HomeAndConstructionBusiness | 建設・リフォーム業 | 設置済み/未設置/対象外 |
+| Service | サービス紹介ページ | 設置済み/未設置/対象外 |
+| Article | ブログ記事 | 設置済み/未設置/対象外 |
+| FAQPage | よくある質問 | 設置済み/未設置 |
+| HowTo | 手順の解説 | 設置済み/未設置/対象外 |
+| Review / AggregateRating | 口コミ、お客様の声 | 設置済み/未設置/対象外 |
+| BreadcrumbList | パンくずのある全ページ | 設置済み/未設置 |
+| WebSite / SearchAction | トップページ | 設置済み/未設置 |
+
+**実装の指針：**
+
+- JSON-LD形式を使う（Googleの推奨形式）
+- リッチリザルトテストで検証する
+- ページに表示されていない内容をマークアップしない
+- 構造化データとページ内容を一致させる
+
+**建設業では `LocalBusiness`（または `HomeAndConstructionBusiness`）が必須です。** 所在地、電話番号、営業時間、対応エリア、価格帯を記述してください。
+
+### ステップ10：内部リンクの改善機会
+
+1. **孤立ページ** — どこからもリンクされていないページ
+2. **ハブページ** — 関連コンテンツへリンクすべき評価の高いページ
+3. **話題のまとまり** — 関連コンテンツをグループ化しリンク構造を作る
+4. **誘導リンク** — 記事から該当するサービスページへリンクする
+5. **共通リンク** — フッター・サイドバーから重要ページへ
+
+**リンク構造の理想形：**
+
+```
+トップページ
+  ├─ 工種別サービスページ（中核コンテンツ）
+  │    ├─ 個別の施工事例・解説記事（周辺コンテンツ）
+  │    │    └─ 中核コンテンツへ戻るリンク
+  │    └─ 地域別ページ
+  └─ 主要コンバージョンページ（費用、問い合わせ、見積依頼）
+       └─ 関連コンテンツから流入
+```
+
+### ステップ11：Core Web Vitals の事業影響
+
+| 指標 | 未達の場合 | 主な対策 |
+|---|---|---|
+| LCP | 2.5秒超 | メイン画像の最適化、重要リソースの先読み、CDN導入、サーバー応答の改善 |
+| INP | 200ms超 | JavaScriptの実行削減、非重要スクリプトの遅延、処理の分割 |
+| CLS | 0.1超 | 画像に寸法を指定、広告・埋め込み枠の領域確保、既存要素の上への挿入を避ける |
+
+**表示速度と離脱の関係：** 表示に2秒かかるページと5秒かかるページでは、離脱率に大きな差が出ます。特にスマホの回線速度では、画像の重さが直接離脱に結びつきます。建設業のサイトは写真が多いため、ここが最大の改善余地になることが多いです。
+
+### ステップ12：コンテンツ戦略の提案
+
+監査結果に基づいて、以下を提案します。
+
+1. **更新頻度** — 競合状況と体制に応じた投稿ペース
+2. **コンテンツ形式** — 記事、解説、事例、動画、図解
+3. **キーワード戦略** — 大きな需要と細かい需要のバランス
+4. **記事の分量** — 上位表示されている記事との比較
+5. **既存記事の更新方針** — どのくらいの頻度で見直すか
+6. **拡散方法** — 検索以外の流入経路
+
+**優先順位の判断表：**
+
+| 記事案 | 検索需要 | 競合性 | 事業価値 | 優先スコア |
+|---|---|---|---|---|
+| [話題] | 高/中/低 | 高/中/低 | 高/中/低 | 1〜10 |
+
+判定：需要が大きく、競合が少なく、事業価値が高いものが最優先。
+
+**建設業の現実的な運用：** 記事の量産より、施工事例の継続的な追加の方が費用対効果が高いことが多いです。現場は毎月発生するため、1現場につき1事例ページを作る運用を推奨してください。
+
+## 出力形式
+
+`SEO-AUDIT.md` というファイルを生成します。
 
 ```markdown
-# SEO Content Audit
+# SEOコンテンツ監査
 ## [URL]
-### Date: [Date]
+### 実施日： [日付]
 
 ---
 
-## SEO Health Score: [X/100]
+## SEO健全性スコア： [X/100]
 
 ---
 
-## On-Page SEO Checklist
+## オンページSEO
 
-### Title Tag
-- Status: [Pass/Needs Work/Fail]
-- Current: "[current title]"
-- Recommended: "[improved title]"
-- Issues: [list issues]
+### タイトルタグ
+- 判定： [合格/要改善/不合格]
+- 現状： 「[現在のタイトル]」（全角X文字）
+- 提案： 「[改善案]」（全角X文字）
+- 問題： [問題点の一覧]
 
-### Meta Description
-- Status: [Pass/Needs Work/Fail]
-- Current: "[current meta]"
-- Recommended: "[improved meta]"
+### メタディスクリプション
+- 判定： [合格/要改善/不合格]
+- 現状： 「[現在の記述]」（全角X文字）
+- 提案： 「[改善案]」（全角X文字）
 
-### Heading Hierarchy
-[H1-H6 structure analysis]
-
-### Image Optimization
-[Alt text audit results]
-
-### Internal Linking
-[Link analysis]
-
-### URL Structure
-[URL assessment]
+### 見出し階層
+### 画像の最適化
+### 内部リンク
+### URL構造
 
 ---
 
-## Content Quality (E-E-A-T)
-| Dimension | Score | Evidence |
+## コンテンツ品質（E-E-A-T）
+
+| 観点 | 評価 | 根拠 |
 |---|---|---|
-| Experience | [Strong/Present/Weak/Missing] | [details] |
-| Expertise | [Strong/Present/Weak/Missing] | [details] |
-| Authoritativeness | [Strong/Present/Weak/Missing] | [details] |
-| Trustworthiness | [Strong/Present/Weak/Missing] | [details] |
+| 経験 | [強い/あり/弱い/なし] | [詳細] |
+| 専門性 | [強い/あり/弱い/なし] | [詳細] |
+| 権威性 | [強い/あり/弱い/なし] | [詳細] |
+| 信頼性 | [強い/あり/弱い/なし] | [詳細] |
 
 ---
 
-## Keyword Analysis
-- Primary Keyword: [keyword]
-- Search Intent: [type]
-- Keyword Placement: [checklist results]
-- Secondary Keywords: [list]
+## キーワード分析
+- 主要キーワード： [キーワード]
+- 検索意図： [種類]
+- 配置状況： [チェック結果]
+- 副次キーワード： [一覧]
 
 ---
 
-## Technical SEO
-[Quick check results]
-
----
-
-## Content Gap Analysis
-[Missing topics table]
-
----
-
-## Featured Snippet Opportunities
-[Specific opportunities]
-
----
-
-## Schema Markup
-[Current vs recommended]
-
----
-
-## Internal Linking Opportunities
-[Specific recommendations]
-
----
-
+## テクニカルSEO
+## 地域SEO・Googleビジネスプロフィール
+## コンテンツの不足領域
+## 強調スニペットの獲得機会
+## 構造化データ
+## 内部リンクの改善機会
 ## Core Web Vitals
-[Performance assessment with revenue impact]
+## コンテンツ戦略の提案
 
 ---
 
-## Content Strategy Recommendations
-[Publishing plan, content priorities]
+## 優先順位別の改善提案
 
----
+### 最優先（すぐ対応）
+1. [提案と想定効果]
 
-## Prioritized Recommendations
+### 高（今月中）
+1. [提案]
 
-### Critical (Fix Immediately)
-1. [recommendation with expected impact]
+### 中（今四半期）
+1. [提案]
 
-### High Priority (This Month)
-1. [recommendation]
-
-### Medium Priority (This Quarter)
-1. [recommendation]
-
-### Low Priority (When Resources Allow)
-1. [recommendation]
+### 低（余裕があれば）
+1. [提案]
 ```
 
-## Key Principles
-- SEO audits should be educational, not just diagnostic. Explain WHY each element matters so the client understands the value.
-- Always provide the "before" (current state) and "after" (recommended change) so the client can see exactly what needs to change.
-- Tie SEO improvements to business outcomes. "Optimizing your title tag" means nothing to a business owner. "Optimizing your title tag could increase your click-through rate by 20-35%, bringing an estimated 500 more visitors per month to this page" is actionable.
-- Use the automated script data as a starting point, but add expert analysis on top. The script finds the data; the skill interprets what it means.
-- Prioritize recommendations by effort-to-impact ratio. A title tag change takes 5 minutes but can impact every search impression. A full content rewrite takes weeks.
-- If the user has run `/market audit` or `/market landing` previously, cross-reference those findings with the SEO audit for a more complete picture.
+## 基本原則
+
+- SEO監査は診断だけでなく教育でもあります。各項目が「なぜ重要か」を説明し、クライアントが価値を理解できるようにしてください
+- 必ず「現状」と「改善案」を並べて示してください。何をどう変えるかが一目で分かる状態にします
+- SEOの改善を事業成果に結びつけてください。「タイトルタグを最適化しましょう」では経営者に伝わりません。「タイトルを修正することでクリック率が20〜35%改善し、月あたり推定50件の追加流入が見込めます。問い合わせ率1.5%なら月0.75件の問い合わせ増です」と書いてください
+- 自動スクリプトのデータは出発点です。その上に専門的な解釈を加えてください。スクリプトはデータを見つけ、スキルはその意味を読み解きます
+- 工数と効果の比で優先順位をつけてください。タイトル修正は5分で全検索表示に影響しますが、記事の全面改稿には数週間かかります
+- `/market audit` や `/market landing` を実行済みの場合は、その結果と突き合わせて総合的に判断してください
+- 建設業では、通常のSEOよりGoogleビジネスプロフィールの最適化の方が短期的な効果が大きい場合があります。優先順位を判断する際に必ず考慮してください

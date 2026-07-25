@@ -4,538 +4,587 @@ description: "競合他社を特定し、ポジショニング・訴求・価格
 ---
 # 競合インテリジェンス分析
 
-You are the competitive intelligence engine for `/market competitors <url>`. You identify competitors, analyze their marketing strategies, and produce a comprehensive comparison report that reveals positioning gaps, steal-worthy tactics, and differentiation opportunities. Output is structured for both strategic decision-making and client presentations.
+あなたは `/market competitors <url>` の競合分析エンジンです。競合を特定し、そのマーケティング戦略を分析し、ポジショニングの空白・取り入れるべき施策・差別化の機会を明らかにする比較レポートを作成します。出力は、戦略判断とクライアント提出の両方に使える構成にしてください。
 
-## When This Skill Is Invoked
+## このスキルが呼ばれる場面
 
-The user runs `/market competitors <url>`. Fetch the target site, identify competitors, analyze each one, and produce a COMPETITOR-REPORT.md with actionable intelligence.
+ユーザーが `/market competitors <url>` を実行したとき。対象サイトを取得し、競合を特定して各社を分析し、`COMPETITOR-REPORT.md` を作成します。
 
----
-
-## Phase 1: Competitor Identification
-
-### 1.1 Competitor Categories
-
-Identify competitors across three tiers:
-
-| Category | Definition | How to Find | Count |
-|----------|-----------|-------------|-------|
-| **Direct Competitors** | Same product, same audience, same market | Search for product category keywords, check who ranks | 3-5 |
-| **Indirect Competitors** | Different product, same problem solved | Search for the problem being solved, check alternative approaches | 2-3 |
-| **Aspirational Competitors** | Market leaders the brand aspires to become | Industry leaders, category creators, well-known brands | 1-2 |
-
-### 1.2 Competitor Discovery Methods
-
-Use multiple methods to identify competitors:
-
-**Method 1: Keyword-Based Discovery**
-- Search for the target site's primary keywords
-- Note which companies rank on page 1
-- Search for "[product category] software/service/tool"
-- Search for "[target brand] alternatives"
-- Search for "[target brand] vs"
-
-**Method 2: Site-Based Discovery**
-- Look for comparison pages on the target site
-- Check footer links for industry associations
-- Look for "integrations" pages that mention similar tools
-- Check the target site's blog for competitor mentions
-
-**Method 3: Review Platform Discovery**
-- Search G2, Capterra, Trustpilot for the product category
-- Note top-rated competitors in the same category
-- Check "Compare" features on review sites
-
-**Method 4: Social and Community Discovery**
-- Search Reddit for "[product category] recommendations"
-- Check Twitter/X for conversations about the product category
-- Look at LinkedIn for companies followed by the target's audience
-
-### 1.3 Automated Data Collection
-
-Use the Python script at `~/.claude/skills/market/scripts/competitor_scanner.py` for automated data collection when available:
-
-```
-python3 ~/.claude/skills/market/scripts/competitor_scanner.py --url [competitor-url] --output json
-```
-
-The script can collect:
-- Homepage content and metadata
-- Pricing page data (if public)
-- Blog post count and recent topics
-- Social media profile links and follower counts
-- Technology stack detection
-- Page speed metrics
-
-If the script is not available, use `WebFetch` to manually collect this data for each competitor.
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
 ---
 
-## Phase 2: Competitor Analysis Framework
+## フェーズ1：競合の特定
 
-### 2.1 Website and Messaging Analysis
+### 1.1 競合の分類
 
-For each competitor, analyze:
+3つの層で競合を特定します。
 
-**Messaging:**
-| Element | What to Capture | Why It Matters |
-|---------|----------------|----------------|
-| **Headline** | Exact H1 text | Reveals positioning and value prop |
-| **Subheadline** | Supporting text | Shows secondary messaging angle |
-| **Value proposition** | Core promise | Identifies positioning territory |
-| **Target audience** | Who they speak to | Reveals market segment focus |
-| **Key differentiator** | What sets them apart | Shows competitive moat claims |
-| **Tone of voice** | Casual/formal/technical | Reveals brand personality choices |
-| **Social proof** | Type and quantity | Shows credibility strategy |
+| 分類 | 定義 | 探し方 | 社数 |
+|---|---|---|---|
+| **直接競合** | 同じ商品、同じ顧客層、同じ市場 | カテゴリのキーワードで検索し上位を確認 | 3〜5社 |
+| **間接競合** | 別の商品だが同じ課題を解決 | 課題そのもので検索し代替手段を確認 | 2〜3社 |
+| **目標とする企業** | 目指したい市場のリーダー | 業界の代表的企業 | 1〜2社 |
 
-**Positioning Map:**
-Plot each competitor on two axes:
-- X-axis: Perceived simplicity ←→ Perceived power
-- Y-axis: Perceived affordability ←→ Perceived premium
+**建設業の場合の分類：**
+
+| 分類 | 具体例 |
+|---|---|
+| 直接競合 | 同一商圏（市区町村）で同じ工種を扱う会社。**最重要** |
+| 間接競合 | 大手ハウスメーカーのリフォーム部門、ホームセンターのリフォーム、家電量販店 |
+| 集客の競合 | リフォーム系ポータルサイト（一括見積もりサイト）。顧客を横取りする存在 |
+| 目標とする企業 | 隣接商圏で成功している同業、全国展開のフランチャイズ |
+
+**注意：** 建設業では「一括見積もりサイト」が事実上の最大の競合です。施主がそこに登録すると、複数社の相見積もりに巻き込まれ、価格競争になります。この存在を分析から外さないでください。
+
+### 1.2 競合の見つけ方
+
+複数の方法を組み合わせます。
+
+**方法1：キーワードからの発見**
+
+- 対象サイトの主要キーワードで検索する
+- 検索結果1ページ目に出てくる会社を記録する
+- 「[地域名] [工種]」で検索する（建設業では最重要）
+- 「[対象社名] 評判」「[対象社名] 比較」で検索する
+
+**方法2：サイトからの発見**
+
+- 対象サイトに比較ページがないか確認する
+- フッターの加盟団体・組合のリンクを確認する
+- 取扱メーカーのページから、同じ認定を受けている施工店を探す
+- 対象サイトのブログで競合に言及していないか確認する
+
+**方法3：口コミ・評価サイトからの発見**
+
+- Googleマップで「[地域名] [業種]」を検索し、上位の事業者を確認する
+- リフォーム系ポータルサイトで同一エリアの掲載業者を確認する
+- 各社のクチコミ件数と評点を記録する
+
+**方法4：SNS・コミュニティからの発見**
+
+- Instagram で地域タグ（`#〇〇市外壁塗装` など）を検索する
+- 地域の掲示板やSNSで業者名が挙がっていないか確認する
+
+**建設業では「Googleマップの検索結果上位3社」が実質的な最大の競合です。** 地図検索の上位表示枠を誰が取っているかを必ず確認してください。
+
+### 1.3 データの自動収集
+
+自動収集には以下のスクリプトを使います。
+
+```bash
+python3 ~/.claude/skills/market/scripts/competitor_scanner.py --url [競合のURL] --output json
+```
+
+収集できるもの：
+
+- トップページの内容とメタ情報
+- 料金ページのデータ（公開されている場合）
+- ブログ記事数と最近の話題
+- SNSアカウントのリンクとフォロワー数
+- 使用している技術
+- 表示速度の指標
+
+スクリプトが使えない場合は、`WebFetch` で各競合のデータを手動収集してください。
+
+---
+
+## フェーズ2：競合分析の枠組み
+
+### 2.1 サイトと訴求の分析
+
+各競合について、以下を分析します。
+
+| 項目 | 記録する内容 | なぜ重要か |
+|---|---|---|
+| **見出し** | H1の文言そのまま | ポジショニングと価値提案が表れる |
+| **サブ見出し** | 補足文 | 二番目の訴求軸が分かる |
+| **価値提案** | 中核の約束 | どの領域を取ろうとしているか |
+| **対象顧客** | 誰に向けて語っているか | 狙っている市場区分 |
+| **主な差別化** | 何を強みとしているか | 競争優位の主張 |
+| **文体** | 柔らかい/硬い/専門的 | ブランドの人格 |
+| **社会的証明** | 種類と量 | 信頼獲得の方法 |
+| **施工実績数**（建設業） | 掲載件数、写真の質 | 最大の信頼要素 |
+| **対応エリア**（建設業） | 記載の粒度 | 商圏の重なり具合 |
+
+**ポジショニング図：**
+
+2軸で各競合を配置します。
 
 ```
-POSITIONING MAP
-===============
-                    PREMIUM
+ポジショニング図
+================
+                    高価格・高品質訴求
                        |
                        |
-        [Competitor C] |  [Aspirational]
+        [競合C]        |  [目標企業]
                        |
-  SIMPLE ──────────────┼────────────── POWERFUL
+  総合対応 ────────────┼──────────── 専門特化
                        |
-        [Target]       |  [Competitor A]
+        [対象社]       |  [競合A]
                        |
                        |
-                    BUDGET
+                    低価格訴求
 ```
 
-Adjust axes based on what matters most in the specific industry.
+**建設業で有効な2軸の組み合わせ：**
 
-### 2.2 Pricing Comparison
+- 縦軸：価格訴求 ←→ 品質・技術訴求
+- 横軸：総合リフォーム ←→ 単一工種の専門店
+- 別案：地域密着 ←→ 広域対応
+- 別案：職人直営 ←→ 営業主体
 
-Build a detailed pricing matrix:
+業界の実情に応じて軸を調整してください。
+
+### 2.2 価格の比較
+
+**建設業の価格比較表：**
 
 ```markdown
-| Feature/Plan | [Target] | Competitor A | Competitor B | Competitor C |
-|-------------|----------|-------------|-------------|-------------|
-| Free Plan | Yes/No | Yes/No | Yes/No | Yes/No |
-| Starter Price | $X/mo | $X/mo | $X/mo | $X/mo |
-| Pro Price | $X/mo | $X/mo | $X/mo | $X/mo |
-| Enterprise | Custom | Custom | $X/mo | Custom |
-| Free Trial | X days | X days | X days | X days |
-| Annual Discount | X% | X% | X% | X% |
-| Per-User Pricing | Yes/No | Yes/No | Yes/No | Yes/No |
-| Usage Limits | [detail] | [detail] | [detail] | [detail] |
+| 項目 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|
+| 外壁塗装（30坪） | XX〜XX万円 | XX〜XX万円 | 記載なし | XX万円〜 |
+| 屋根塗装 | XX〜XX万円 | XX万円〜 | 記載なし | XX〜XX万円 |
+| 費用の掲載 | あり（幅で表示） | あり（最低価格のみ） | なし | あり |
+| 施工事例の費用記載 | あり | なし | なし | あり |
+| 無料見積もり | あり | あり | あり | あり |
+| 保証年数 | 10年 | 5年 | 記載なし | 7年 |
+| 助成金サポート | あり | なし | なし | あり |
+| 支払方法 | 分割・ローン可 | 一括のみ | 記載なし | 分割可 |
 ```
 
-**Pricing Strategy Assessment:**
-- Is the target priced above, below, or at market average?
-- Is pricing transparent or hidden (requiring sales calls)?
-- What pricing model is used (per-user, per-usage, flat-rate, tiered)?
-- Are there pricing anchoring tactics being used?
-- Does the pricing page communicate value before showing numbers?
+**価格戦略の評価：**
 
-### 2.3 Feature Comparison Matrix
+- 対象社は相場より高いか、安いか、同水準か
+- 価格が公開されているか、問い合わせが必要か
+- 価格の見せ方（総額、坪単価、㎡単価）
+- 価格の基準づくりの工夫があるか
+- 金額を示す前に価値を伝えているか
 
-Build a comprehensive feature comparison:
+**建設業の重要な観点：** 「費用を一切載せていない」競合が多い場合、費用を明示するだけで差別化になります。逆に全社が載せている場合は、載せていないことが致命的な不利になります。
+
+### 2.3 サービス内容の比較
 
 ```markdown
-| Feature Category | Feature | [Target] | Comp A | Comp B | Comp C |
-|-----------------|---------|----------|--------|--------|--------|
-| Core | [Feature 1] | Full | Full | Partial | No |
-| Core | [Feature 2] | Full | Full | Full | Full |
-| Core | [Feature 3] | Partial | Full | No | Full |
-| Advanced | [Feature 4] | No | Full | No | Full |
-| Advanced | [Feature 5] | Full | No | Full | No |
-| Integration | [Feature 6] | Full | Full | No | Partial |
-| Support | [Feature 7] | Full | Partial | Full | Full |
+| 分類 | 項目 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|---|
+| 基本 | 無料現地調査 | あり | あり | あり | あり |
+| 基本 | 自社職人による施工 | あり | なし（下請け） | あり | 不明 |
+| 基本 | 建設業許可の明示 | あり | あり | なし | あり |
+| 付加 | 工事保証書の発行 | あり | あり | 不明 | あり |
+| 付加 | 定期点検 | あり（年1回） | なし | なし | あり |
+| 付加 | 施工中の写真共有 | あり | なし | なし | なし |
+| 付加 | 近隣挨拶の実施 | あり | 不明 | 不明 | あり |
+| 対応 | 土日祝の対応 | あり | 平日のみ | あり | あり |
+| 対応 | LINEでの相談 | あり | なし | あり | なし |
 ```
 
-Use: Full, Partial, No, or Beta to categorize.
+判定は「あり／一部／なし／不明」で記載します。
 
-Highlight:
-- Features where the target has an advantage (competitive moats)
-- Features where the target has a gap (vulnerability)
-- Features unique to one competitor (potential differentiators)
+以下を強調してください。
 
-### 2.4 SEO Competition Analysis
+- 対象社が優位な項目（競争優位の源泉）
+- 対象社が劣っている項目（弱点）
+- 1社だけが持っている項目（差別化の可能性）
 
-For each competitor, analyze:
+### 2.4 SEO・検索での競合分析
 
-**Content Strategy:**
-| Metric | [Target] | Comp A | Comp B | Comp C |
-|--------|----------|--------|--------|--------|
-| Blog posts (estimated) | X | X | X | X |
-| Publishing frequency | X/week | X/week | X/week | X/week |
-| Content depth | Shallow/Medium/Deep | | | |
-| Content types | Blog/Video/Podcast | | | |
-| Key topics | [list] | [list] | [list] | [list] |
+**コンテンツ戦略：**
 
-**Keyword Strategy:**
-- What keywords is each competitor clearly targeting?
-- Where do multiple competitors rank but the target does not? (content gaps)
-- Are competitors creating comparison/alternatives content?
-- What long-tail keywords are competitors ranking for?
+| 指標 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|
+| ブログ記事数（推定） | X | X | X | X |
+| 更新頻度 | 週X回 | 週X回 | 週X回 | 週X回 |
+| 施工事例の掲載数 | X件 | X件 | X件 | X件 |
+| 内容の深さ | 浅い/中/深い | | | |
+| コンテンツ形式 | 記事/動画/事例 | | | |
+| 主な話題 | [一覧] | [一覧] | [一覧] | [一覧] |
+| 地域別ページ | X市分 | X市分 | なし | X市分 |
 
-**Content Gap Analysis:**
-List topics that competitors cover but the target does not:
-```
-CONTENT GAPS (Competitors Cover, Target Does Not):
-  1. [Topic] — covered by Comp A, B (high search intent)
-  2. [Topic] — covered by Comp A, C (medium search intent)
-  3. [Topic] — covered by Comp B (high search intent)
-  4. [Topic] — covered by all competitors (critical gap)
-```
+**キーワード戦略：**
 
-### 2.5 Social Media Presence Comparison
+- 各競合が明確に狙っているキーワードは何か
+- 複数の競合が上位表示されていて、対象社がいないキーワードはどれか
+- 競合が比較・費用相場のコンテンツを作っているか
+- 競合が上位を取っている細かいキーワードは何か
 
-| Platform | [Target] | Comp A | Comp B | Comp C |
-|----------|----------|--------|--------|--------|
-| LinkedIn followers | X | X | X | X |
-| Twitter/X followers | X | X | X | X |
-| Instagram followers | X | X | X | X |
-| YouTube subscribers | X | X | X | X |
-| TikTok followers | X | X | X | X |
-| Posting frequency | X/week | X/week | X/week | X/week |
-| Engagement rate | X% | X% | X% | X% |
-| Top content type | [type] | [type] | [type] | [type] |
-
-### 2.6 Review Mining
-
-Analyze reviews on third-party platforms (G2, Capterra, Trustpilot, Reddit):
-
-**For each competitor, extract:**
-- Overall rating (stars)
-- Number of reviews
-- Top 3 praised features (what customers love)
-- Top 3 complaints (what customers hate)
-- Common switching reasons (why customers leave)
-- Use cases mentioned most frequently
-
-**Review Intelligence Matrix:**
-```markdown
-| Competitor | Rating | Reviews | Top Praise | Top Complaint | Switch Reason |
-|-----------|--------|---------|-----------|---------------|--------------|
-| Comp A | 4.5/5 | 500+ | Easy to use | Limited integrations | Price increase |
-| Comp B | 4.2/5 | 200+ | Powerful features | Steep learning curve | Poor support |
-| Comp C | 3.8/5 | 100+ | Good value | Buggy | Better alternatives |
-```
-
----
-
-## Phase 3: SWOT Analysis
-
-### 3.1 SWOT for Each Competitor
-
-For each identified competitor, produce a SWOT:
+**コンテンツの不足領域：**
 
 ```
-COMPETITOR: [Name]
-URL: [url]
-
-STRENGTHS:
-  - [Specific strength with evidence]
-  - [Specific strength with evidence]
-  - [Specific strength with evidence]
-
-WEAKNESSES:
-  - [Specific weakness with evidence]
-  - [Specific weakness with evidence]
-  - [Specific weakness with evidence]
-
-OPPORTUNITIES (for the target to exploit):
-  - [Opportunity based on competitor weakness]
-  - [Opportunity based on market gap]
-  - [Opportunity based on unserved segment]
-
-THREATS (competitor advantages to watch):
-  - [Threat with potential impact]
-  - [Threat with potential impact]
-  - [Threat with potential impact]
+コンテンツの穴（競合が扱い、対象社が扱っていない）:
+  1. [話題] — 競合A・Bが対応（検索需要：高）
+  2. [話題] — 競合A・Cが対応（検索需要：中）
+  3. [話題] — 競合Bが対応（検索需要：高）
+  4. [話題] — 全競合が対応（致命的な不足）
 ```
 
-### 3.2 Aggregate SWOT for the Target
+### 2.5 Googleビジネスプロフィールの比較（建設業では最重要）
 
-Combine all competitor intelligence into a single SWOT for the target brand:
+| 項目 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|
+| 地図検索での順位 | X位 | X位 | X位 | X位 |
+| クチコミ件数 | X件 | X件 | X件 | X件 |
+| クチコミ評点 | X.X | X.X | X.X | X.X |
+| 写真の掲載枚数 | X枚 | X枚 | X枚 | X枚 |
+| 投稿の頻度 | 週X回 | 月X回 | なし | 週X回 |
+| クチコミへの返信率 | X% | X% | X% | X% |
+| 登録カテゴリ | [カテゴリ] | [カテゴリ] | [カテゴリ] | [カテゴリ] |
 
-- **Strengths:** Where the target outperforms all or most competitors
-- **Weaknesses:** Where the target lags behind all or most competitors
-- **Opportunities:** Gaps in the market no competitor is addressing well
-- **Threats:** Areas where competitors are significantly stronger
+**建設業では、この表が競合レポートの中で最も実用的な部分になります。** サイトのSEOで勝っていても、地図検索で3位以内に入れなければ問い合わせは競合に流れます。
 
----
+### 2.6 SNSの比較
 
-## Phase 4: Strategic Recommendations
+| 媒体 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|
+| Instagram フォロワー | X | X | X | X |
+| Instagram 投稿頻度 | 週X回 | 週X回 | 週X回 | 週X回 |
+| LINE公式アカウント | あり/なし | | | |
+| Facebook フォロワー | X | X | X | X |
+| YouTube 登録者 | X | X | X | X |
+| X フォロワー | X | X | X | X |
+| 反応率 | X% | X% | X% | X% |
+| 主なコンテンツ形式 | [形式] | [形式] | [形式] | [形式] |
 
-### 4.1 "Steal-Worthy" Tactics
+### 2.7 クチコミの分析
 
-Identify specific marketing tactics from competitors worth adopting:
+Googleマップ、リフォームポータル、SNSでのクチコミを分析します。
 
-```
-STEAL-WORTHY TACTICS
-====================
+**各競合について抽出するもの：**
 
-1. [Competitor A] — [Tactic: e.g., "Interactive pricing calculator"]
-   Why it works: [explanation]
-   How to implement: [specific steps for the target]
-   Estimated effort: [Low/Medium/High]
-   Expected impact: [Low/Medium/High]
+- 総合評点
+- クチコミ件数
+- 褒められている点 上位3つ
+- 不満として挙がっている点 上位3つ
+- 他社に乗り換えた理由
+- 頻出する利用場面
 
-2. [Competitor B] — [Tactic: e.g., "Customer success story video series"]
-   Why it works: [explanation]
-   How to implement: [specific steps]
-   Estimated effort: [Low/Medium/High]
-   Expected impact: [Low/Medium/High]
-
-[Continue for 5-10 tactics]
-```
-
-Focus on tactics that are:
-- Proven (working for the competitor)
-- Adaptable (can be customized for the target)
-- Underutilized (the target is not currently doing this)
-
-### 4.2 Messaging Differentiation Strategy
-
-Based on the competitive analysis, recommend how the target should differentiate:
-
-**Differentiation Framework:**
-1. **Category:** Can the target create or own a sub-category? (e.g., "the [specific attribute] [category]")
-2. **Audience:** Can the target own a specific audience segment competitors ignore?
-3. **Feature:** Is there a unique feature or capability no competitor offers?
-4. **Philosophy:** Can the target differentiate on values, approach, or methodology?
-5. **Experience:** Can the target differentiate on customer experience, support, or community?
-
-For each viable differentiation angle, provide:
-- Positioning statement
-- Headline recommendation
-- Supporting evidence or proof points
-- How it would manifest across the website
-
-### 4.3 Alternative Page Strategy
-
-Recommend creating "[Competitor] Alternative" pages:
-
-**For each major competitor, outline:**
-```
-PAGE: [Target Brand] vs [Competitor Name]
-URL: /vs/[competitor-name] or /alternatives/[competitor-name]
-
-Headline: "Looking for a [Competitor] alternative? Here's why [X] teams chose [Target] instead."
-
-Sections:
-  1. Quick comparison table (features, pricing, ratings)
-  2. Where [Target] wins (3-4 advantages with evidence)
-  3. Where [Competitor] wins (honest, builds trust)
-  4. Who [Target] is best for (ideal customer profile)
-  5. Customer switching stories (testimonials from switchers)
-  6. Migration guide or switching offer
-  7. FAQ about switching
-  8. CTA: "Try [Target] free" or "See how [Target] compares"
-```
-
-**SEO value:** These pages target high-intent search queries like "[competitor] alternatives" and "[target] vs [competitor]" which are bottom-of-funnel searches.
-
-### 4.4 Switching Narrative Development
-
-Create a compelling narrative for customers considering switching from each competitor:
-
-```
-SWITCHING NARRATIVE: [Competitor] → [Target]
-
-Why customers switch:
-  1. [Primary reason based on review mining]
-  2. [Secondary reason]
-  3. [Tertiary reason]
-
-Switching story template:
-  "Like many [audience], [customer name] started with [Competitor] because
-   [initial appeal]. But after [time/event], they realized [pain point].
-   After switching to [Target], they [specific result with numbers]."
-
-Switching offer:
-  - Free migration assistance
-  - Extended trial for [Competitor] users
-  - Matching or discounting pricing
-  - Dedicated onboarding for switchers
-```
-
----
-
-## Phase 5: Monitoring and Ongoing Intelligence
-
-### 5.1 Competitive Monitoring Checklist
-
-Recommend ongoing monitoring activities:
-
-- [ ] Set Google Alerts for each competitor name
-- [ ] Follow competitors on social media platforms
-- [ ] Subscribe to competitor newsletters
-- [ ] Check competitor pricing pages monthly
-- [ ] Monitor competitor review sites quarterly
-- [ ] Track competitor content publishing (topics, frequency)
-- [ ] Watch for competitor product launches and feature updates
-- [ ] Monitor competitor job postings (reveals strategic priorities)
-- [ ] Track competitor ad spend and creative (use Meta Ad Library, Google Ads Transparency)
-- [ ] Review competitor backlink profiles quarterly
-
-### 5.2 Competitive Response Playbook
-
-Provide guidance on how to respond to competitor moves:
-
-| Competitor Move | Response Strategy | Timeline |
-|----------------|-------------------|----------|
-| Price cut | Emphasize value and quality, not price war | 1 week |
-| New feature launch | Assess relevance, communicate roadmap to customers | 2 weeks |
-| Aggressive ad campaign | Double down on owned channels and retention | Ongoing |
-| Negative comparison content | Create factual, balanced comparison content | 1 week |
-| Major funding / acquisition | Reassure customers, emphasize stability and focus | 1-2 days |
-| Customer reviews / complaints | Monitor for opportunities, address shared concerns | Ongoing |
-
----
-
-## Output Format: COMPETITOR-REPORT.md
-
-Write the full output to `COMPETITOR-REPORT.md`:
+**クチコミ分析表：**
 
 ```markdown
-# Competitive Intelligence Report: [Target Brand]
-**URL:** [url]
-**Date:** [current date]
-**Competitors Analyzed:** [count]
-**Competitive Position: [Strong/Moderate/Weak]**
+| 競合 | 評点 | 件数 | 主な高評価 | 主な不満 | 離脱理由 |
+|---|---|---|---|---|---|
+| 競合A | 4.5 | 86件 | 対応が丁寧 | 工期が延びた | 連絡が遅い |
+| 競合B | 4.2 | 33件 | 価格が安い | 仕上がりに斑 | 職人の質 |
+| 競合C | 3.8 | 12件 | 近所で安心 | 見積が不明瞭 | 追加費用 |
+```
+
+**競合の不満点は、そのまま自社の訴求点になります。** 「工期が延びた」という不満が多い地域なら、「工期厳守」を前面に出すのが有効です。
 
 ---
 
-## Executive Summary
-[3-4 paragraphs covering competitive landscape, target's position,
-biggest competitive advantage, biggest competitive threat, and
-top 3 strategic recommendations]
+## フェーズ3：SWOT分析
+
+### 3.1 競合ごとのSWOT
+
+各競合について作成します。
+
+```
+競合： [社名]
+URL： [url]
+
+強み（Strengths）:
+  - [根拠を伴う具体的な強み]
+  - [根拠を伴う具体的な強み]
+  - [根拠を伴う具体的な強み]
+
+弱み（Weaknesses）:
+  - [根拠を伴う具体的な弱み]
+  - [根拠を伴う具体的な弱み]
+  - [根拠を伴う具体的な弱み]
+
+機会（対象社が突けるところ）:
+  - [競合の弱みに基づく機会]
+  - [市場の空白に基づく機会]
+  - [手薄な顧客層に基づく機会]
+
+脅威（警戒すべき競合の強み）:
+  - [脅威と想定される影響]
+  - [脅威と想定される影響]
+  - [脅威と想定される影響]
+```
+
+### 3.2 対象社の総合SWOT
+
+すべての競合分析を統合し、対象ブランドのSWOTにまとめます。
+
+- **強み：** 全社または大半の競合を上回っている点
+- **弱み：** 全社または大半の競合に劣っている点
+- **機会：** どの競合も十分に取れていない市場の空白
+- **脅威：** 競合が明確に上回っている領域
 
 ---
 
-## Competitor Overview
+## フェーズ4：戦略提案
 
-### Direct Competitors
-[Summary table with name, URL, positioning, pricing, key differentiator]
+### 4.1 取り入れるべき施策
 
-### Indirect Competitors
-[Summary table]
+競合の施策から、採用する価値があるものを特定します。
 
-### Aspirational Competitors
-[Summary table]
+```
+取り入れるべき施策
+==================
 
----
+1. [競合A] — [施策：例「施工中の写真を毎日LINEで施主に共有」]
+   有効な理由： [説明]
+   実施方法　： [対象社が取るべき具体的な手順]
+   想定工数　： [低/中/高]
+   想定効果　： [低/中/高]
 
-## Detailed Competitor Profiles
+2. [競合B] — [施策：例「施工事例に必ず費用と工期を明記」]
+   有効な理由： [説明]
+   実施方法　： [具体的な手順]
+   想定工数　： [低/中/高]
+   想定効果　： [低/中/高]
 
-### [Competitor A Name]
-[Full analysis: messaging, pricing, features, SWOT, social presence, reviews]
+[5〜10施策まで続ける]
+```
 
-### [Competitor B Name]
-[Full analysis]
+以下の条件を満たす施策に絞ってください。
 
-[Repeat for each competitor]
+- 実証済み（競合で実際に機能している）
+- 応用可能（対象社の状況に合わせられる）
+- 未着手（対象社がまだやっていない）
 
----
+### 4.2 差別化の方針
 
-## Comparison Tables
+競合分析に基づき、どう差別化すべきかを提案します。
 
-### Feature Comparison
-[Full feature matrix]
+**差別化の切り口：**
 
-### Pricing Comparison
-[Full pricing matrix]
+1. **カテゴリ：** 小さな領域を作って独占できないか（例：「〇〇市の屋根専門店」）
+2. **顧客層：** 競合が無視している層を取れないか（例：築40年以上の住宅、共働き世帯）
+3. **サービス内容：** 他社にない対応はないか（例：施工中の写真共有、夜間の相談対応）
+4. **考え方：** 価値観や手法で違いを出せないか（例：自社職人のみ、下請けを使わない）
+5. **体験：** 対応品質、アフター、コミュニティで差をつけられないか
 
-### Review Ratings
-[Review intelligence matrix]
+各切り口について、以下を提示します。
 
-### Social Media Presence
-[Platform comparison table]
+- ポジショニングの一文
+- 推奨する見出し
+- 裏づけとなる根拠
+- サイト上でどう表現するか
 
----
+**建設業で有効な差別化の例：**
 
-## Positioning Map
-[Visual positioning map with explanation]
+- 「下請けを使わない自社職人施工」— 価格と品質の両面で説得力がある
+- 「〇〇市だけに特化」— 対応の速さと地域理解を訴求できる
+- 「工事中の写真を毎日共有」— 手抜き工事への不安に直接応える
+- 「相見積もり歓迎、他社の見積書も一緒に確認します」— 誠実さで信頼を得る
 
----
+### 4.3 比較ページの作成
 
-## Content & SEO Gap Analysis
-[Content gaps, keyword opportunities, comparison page strategy]
+主要な競合ごとに、比較ページの構成を提案します。
 
----
+```
+ページ： [対象社] と [競合社] の比較
+URL　 ： /compare/[競合名] または /vs/[競合名]
 
-## SWOT Analysis — [Target Brand]
-[Aggregate SWOT based on competitive intelligence]
+見出し： 「[競合社]と迷われている方へ。〇〇市で[対象社]が選ばれる3つの理由」
 
----
+構成:
+  1. 比較表（サービス内容、費用、保証、対応エリア）
+  2. [対象社]が優れている点（根拠つきで3〜4点）
+  3. [競合社]が優れている点（正直に書く。信頼を生む）
+  4. [対象社]が向いている方（理想的な顧客像）
+  5. 実際に切り替えたお客様の声
+  6. よくある質問
+  7. CTA：「無料で相談する」
+```
 
-## Strategic Recommendations
+**注意：** 日本では、特定の同業他社を実名で比較・批判する内容は、景品表示法上の問題や地域での評判低下を招くおそれがあります。**建設業のような地域密着業では、実名比較ページは推奨しません。** 代わりに「業者の選び方」「見積書の見方」といった中立的な体裁のページを作り、その判断基準の中に自社の強みが自然に含まれる構成にしてください。
 
-### Steal-Worthy Tactics
-[5-10 tactics with implementation guidance]
+**SEO上の価値：** 「[工種] 業者 選び方」「[地域名] [工種] 比較」といった検討段階のキーワードで流入が取れます。
 
-### Differentiation Strategy
-[Recommended positioning angles]
+### 4.4 乗り換えの物語
 
-### Alternative Pages to Create
-[Competitor vs pages with outlines]
+他社から切り替える顧客に向けた説明を用意します。
 
-### Switching Narratives
-[Switching stories and offers for each major competitor]
+```
+乗り換えの物語： [競合社] → [対象社]
 
----
+切り替えの理由:
+  1. [クチコミ分析から得られた主要な理由]
+  2. [二番目の理由]
+  3. [三番目の理由]
 
-## Competitive Monitoring Plan
-[Ongoing monitoring checklist and response playbook]
+物語の型:
+  「[顧客名]様も、最初は[競合社]に相談されていました。[当初の魅力]が
+   決め手だったそうです。しかし[時期・出来事]の際に[問題]が起き、
+   当社にご相談いただきました。その後[具体的な成果]という結果になりました」
 
----
-
-## Next Steps
-1. [Most critical competitive action]
-2. [Second priority]
-3. [Third priority]
+切り替えを促す施策:
+  - 他社の見積書の無料診断
+  - セカンドオピニオンとしての現地調査
+  - 前業者の施工不良への対応相談
 ```
 
 ---
 
-## Terminal Output
+## フェーズ5：継続的な監視
 
-```
-=== COMPETITIVE INTELLIGENCE REPORT ===
+### 5.1 監視の項目
 
-Target: [name]
-Competitors Analyzed: [count]
-Competitive Position: [Strong/Moderate/Weak]
+継続的に確認すべき活動を提案します。
 
-Competitive Landscape:
-  Direct:      [Comp A] (Rating: X/5), [Comp B] (Rating: X/5)
-  Indirect:    [Comp C], [Comp D]
-  Aspirational: [Comp E]
+- [ ] 各競合名でGoogleアラートを設定する
+- [ ] 競合のSNSアカウントをフォローする
+- [ ] 競合のメール配信に登録する
+- [ ] 競合の費用ページを月1回確認する
+- [ ] 競合のクチコミを四半期ごとに確認する
+- [ ] 競合の投稿内容と頻度を追う
+- [ ] 競合の新サービス・キャンペーンを把握する
+- [ ] 競合の求人情報を確認する（事業の方向性が表れる）
+- [ ] 競合の広告を確認する（Meta広告ライブラリ、Google広告の透明性センター）
+- [ ] Googleマップでの競合の順位を月1回確認する（建設業では最重要）
 
-Key Findings:
-  Biggest Advantage: [specific advantage]
-  Biggest Threat: [specific threat]
-  Biggest Opportunity: [specific opportunity]
+### 5.2 競合の動きへの対応
 
-Feature Gaps: [X] features competitors have that target lacks
-Content Gaps: [X] topics competitors cover that target doesn't
-Pricing Position: [Above/At/Below] market average
+| 競合の動き | 対応方針 | 対応時期 |
+|---|---|---|
+| 値下げ | 価格競争に乗らず、品質と価値を訴求する | 1週間以内 |
+| 新サービスの開始 | 自社にとっての必要性を判断し、方針を顧客に伝える | 2週間以内 |
+| 積極的な広告展開 | 既存顧客との関係強化とリピート・紹介に注力する | 継続 |
+| 自社を貶める内容の発信 | 事実に基づく中立的な比較情報を用意する | 1週間以内 |
+| 大型受注・事業拡大 | 既存顧客に安定性と方針を伝える | 1〜2日以内 |
+| 悪いクチコミの発生 | 自社の対応品質を見直す機会とする。競合批判はしない | 継続 |
 
-Top 3 Actions:
-  1. [action]
-  2. [action]
-  3. [action]
+**重要：** 地域密着の建設業では、競合を直接批判する行動が最も評判を損ないます。対応はすべて「自社を良くする」方向に限定してください。
 
-Full report saved to: COMPETITOR-REPORT.md
+---
+
+## 出力形式：COMPETITOR-REPORT.md
+
+`COMPETITOR-REPORT.md` に全文を出力します。
+
+```markdown
+# 競合インテリジェンス レポート：[対象社名]
+
+**対象URL：** [url]
+**実施日：** [日付]
+**分析した競合数：** [件数]
+**商圏：** [対応エリア]
+**競争上の位置：[優位/中位/劣位]**
+
+---
+
+## エグゼクティブ・サマリー
+[3〜4段落。競合環境、対象社の位置づけ、最大の優位点、最大の脅威、
+ 優先すべき3つの施策]
+
+---
+
+## 競合の一覧
+
+### 直接競合
+[社名、URL、ポジショニング、価格帯、主な差別化の一覧表]
+
+### 間接競合
+### 目標とする企業
+
+---
+
+## 競合ごとの詳細
+
+### [競合A]
+[訴求、価格、サービス内容、SWOT、SNS、クチコミの分析]
+
+### [競合B]
+[以下、各社について繰り返す]
+
+---
+
+## 比較表
+
+### サービス内容の比較
+### 価格の比較
+### Googleビジネスプロフィールの比較
+### クチコミの比較
+### SNSの比較
+
+---
+
+## ポジショニング図
+[配置図と解説]
+
+---
+
+## コンテンツ・SEOの不足領域
+[不足している話題、狙えるキーワード、作るべきページ]
+
+---
+
+## SWOT分析 — [対象社]
+[競合分析を統合したSWOT]
+
+---
+
+## 戦略提案
+
+### 取り入れるべき施策
+[5〜10施策と実施方法]
+
+### 差別化の方針
+[推奨するポジショニング]
+
+### 作成すべきページ
+[比較・選び方ページの構成案]
+
+### 乗り換えの物語
+[主要競合ごとの切り替え訴求]
+
+---
+
+## 継続監視の計画
+[監視項目と対応方針]
+
+---
+
+## 次のアクション
+1. [最優先の施策]
+2. [第2優先]
+3. [第3優先]
 ```
 
 ---
 
-## Cross-Skill Integration
+## ターミナル出力
 
-- If `MARKETING-AUDIT.md` exists, reference competitive positioning scores
-- If `COPY-SUGGESTIONS.md` exists, use messaging analysis for differentiation
-- If `FUNNEL-ANALYSIS.md` exists, compare funnel effectiveness with competitors
-- If `AD-CAMPAIGNS.md` exists, use competitor intelligence for ad angles
-- Suggest follow-up: `/market copy` for differentiated messaging, `/market ads` for competitive ad campaigns, `/market funnel` for conversion comparison
+```
+=== 競合インテリジェンス レポート ===
+
+対象社　　　： [名称]
+分析した競合： [件数]社
+競争上の位置： [優位/中位/劣位]
+
+競合環境:
+  直接競合　　： [競合A]（評点 X.X／X件）、[競合B]（評点 X.X／X件）
+  間接競合　　： [競合C]、[競合D]
+  目標企業　　： [競合E]
+
+主な所見:
+  最大の優位点： [具体的な優位点]
+  最大の脅威　： [具体的な脅威]
+  最大の機会　： [具体的な機会]
+
+サービスの不足： 競合にあって自社にない項目 [X]件
+コンテンツの穴： 競合が扱い自社が扱っていない話題 [X]件
+価格の位置　　： 相場より[高い/同水準/安い]
+地図検索順位　： X位（1位は[競合名]）
+
+優先アクション 上位3件:
+  1. [施策]
+  2. [施策]
+  3. [施策]
+
+詳細： COMPETITOR-REPORT.md
+```
+
+---
+
+## 他スキルとの連携
+
+- `MARKETING-AUDIT.md` があれば、競合ポジショニングのスコアを参照する
+- `COPY-SUGGESTIONS.md` があれば、訴求の分析結果を差別化に使う
+- `FUNNEL-ANALYSIS.md` があれば、競合と導線の効果を比較する
+- `AD-CAMPAIGNS.md` があれば、競合分析を広告の切り口に活かす
+- 深掘り用に `/market copy`（差別化した訴求）、`/market ads`（競合を意識した広告）、`/market funnel`（導線の比較）を提案する
