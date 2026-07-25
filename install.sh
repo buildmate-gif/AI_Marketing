@@ -23,15 +23,14 @@ echo ""
 if [ -n "$BASH_SOURCE" ] && [ "$BASH_SOURCE" != "bash" ] && [ -f "$BASH_SOURCE" ]; then
     SCRIPT_DIR="$(cd "$(dirname "$BASH_SOURCE")" && pwd)"
 else
-    # Running via curl | bash — need to clone
-    echo -e "${YELLOW}Running remote install — cloning repository...${NC}"
+    # curl | bash で実行された場合はリポジトリを取得する
+    echo -e "${YELLOW}リモートインストール — リポジトリを取得中...${NC}"
     TEMP_DIR=$(mktemp -d)
-    git clone --depth 1 https://github.com/zubair-trabzada/ai-marketing-claude.git "$TEMP_DIR/ai-marketing-claude" 2>/dev/null
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}Failed to clone repository.${NC}"
+    if ! git clone --depth 1 https://github.com/buildmate-gif/AI_Marketing.git "$TEMP_DIR/AI_Marketing" 2>/dev/null; then
+        echo -e "${RED}リポジトリの取得に失敗しました。${NC}"
         exit 1
     fi
-    SCRIPT_DIR="$TEMP_DIR/ai-marketing-claude"
+    SCRIPT_DIR="$TEMP_DIR/AI_Marketing"
 fi
 
 # Target directories
@@ -131,7 +130,7 @@ SCRIPT_FILES=(
     "analyze_page.py"
     "competitor_scanner.py"
     "social_calendar.py"
-    "generate_pdf_report.py"
+    "generate_pdf_jp.py"
 )
 
 SCRIPT_COUNT=0
@@ -201,22 +200,22 @@ echo -e "  Agents installed:    ${GREEN}$AGENT_COUNT${NC}"
 echo -e "  Scripts installed:   ${GREEN}$SCRIPT_COUNT${NC}"
 echo -e "  Templates installed: ${GREEN}$TEMPLATE_COUNT${NC}"
 echo ""
-echo -e "${CYAN}Available Commands:${NC}"
-echo "  /market audit <url>        Full marketing audit (5 parallel agents)"
-echo "  /market quick <url>        60-second marketing snapshot"
-echo "  /market copy <url>         Generate optimized copy"
-echo "  /market emails <topic>     Generate email sequences"
-echo "  /market social <topic>     Social media content calendar"
-echo "  /market ads <url>          Ad creative and copy"
-echo "  /market funnel <url>       Sales funnel analysis"
-echo "  /market competitors <url>  Competitive intelligence"
-echo "  /market landing <url>      Landing page CRO"
-echo "  /market launch <product>   Launch playbook"
-echo "  /market proposal <client>  Client proposal generator"
-echo "  /market report <url>       Marketing report (Markdown)"
-echo "  /market report-pdf <url>   Marketing report (PDF)"
-echo "  /market seo <url>          SEO content audit"
-echo "  /market brand <url>        Brand voice analysis"
+echo -e "${CYAN}使用できるコマンド:${NC}"
+echo "  /market audit <url>        完全マーケティング監査（5並列エージェント）"
+echo "  /market quick <url>        60秒スナップショット"
+echo "  /market copy <url>         コピー最適化生成"
+echo "  /market emails <工事種別>  メールシーケンス生成"
+echo "  /market social <工事種別>  SNSコンテンツカレンダー"
+echo "  /market ads <url>          広告クリエイティブ・広告文"
+echo "  /market funnel <url>       ファネル分析・最適化"
+echo "  /market competitors <url>  競合インテリジェンス"
+echo "  /market landing <url>      ランディングページCRO分析"
+echo "  /market launch <サービス>  ローンチプレイブック"
+echo "  /market proposal <会社名>  クライアント提案書生成"
+echo "  /market report <url>       マーケティングレポート（Markdown）"
+echo "  /market report-pdf <url>   マーケティングレポート（PDF）"
+echo "  /market seo <url>          SEO監査"
+echo "  /market brand <url>        ブランドボイス分析"
 echo ""
-echo -e "  ${YELLOW}Start a new Claude Code session to use the skills.${NC}"
+echo -e "  ${YELLOW}スキルを使うには Claude Code を新しく起動し直してください。${NC}"
 echo ""

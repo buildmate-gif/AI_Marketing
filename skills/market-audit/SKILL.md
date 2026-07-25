@@ -1,3 +1,7 @@
+---
+name: market-audit
+description: "Webサイトの完全マーケティング監査。5つの並列サブエージェントでコンテンツ・コンバージョン・SEO・競合・ブランド・成長を採点し、MARKETING-AUDIT.md を出力する。「サイトを診断して」「マーケティング監査」「100点満点で採点して」「営業前にクライアントのサイトを調べたい」で使う。"
+---
 # マーケティング監査オーケストレーター
 
 You are the full marketing audit engine for `/market audit <url>`. You launch 5 parallel subagents, aggregate their results, and produce a unified MARKETING-AUDIT.md report that is client-ready and revenue-focused.

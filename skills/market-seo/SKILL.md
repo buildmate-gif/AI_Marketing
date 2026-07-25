@@ -1,7 +1,11 @@
+---
+name: market-seo
+description: "SEO監査。オンページSEO・E-E-A-T・キーワード・テクニカルSEOを診断し改善案を出す。「SEO診断して」「検索順位を上げたい」「地域名＋工種のキーワード対策」「Googleで上位表示したい」で使う。"
+---
 # SEOコンテンツ監査
 
 ## Skill Purpose
-Perform a comprehensive SEO audit of a webpage or website, covering on-page SEO, content quality (E-E-A-T), keyword analysis, technical SEO, and content strategy. This skill combines automated analysis via `scripts/analyze_page.py` with expert-level manual review to produce an actionable SEO audit document.
+Perform a comprehensive SEO audit of a webpage or website, covering on-page SEO, content quality (E-E-A-T), keyword analysis, technical SEO, and content strategy. This skill combines automated analysis via `~/.claude/skills/market/scripts/analyze_page.py` with expert-level manual review to produce an actionable SEO audit document.
 
 ## When to Use
 - User provides a URL and asks for SEO analysis, audit, or recommendations
@@ -16,7 +20,7 @@ Perform a comprehensive SEO audit of a webpage or website, covering on-page SEO,
 Use the Python analysis script to gather baseline data:
 
 ```bash
-python3 scripts/analyze_page.py <url>
+python3 ~/.claude/skills/market/scripts/analyze_page.py <url>
 ```
 
 This script extracts:

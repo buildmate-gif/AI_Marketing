@@ -120,9 +120,9 @@ def create_bar_chart(categories):
     chart.valueAxis.valueStep = 25
     chart.valueAxis.labels.fontName = FONT_NAME
     
-    # バーの配色
+    # バーの配色（reportlabは (系列番号, バー番号) のタプル指定でバー単位の指定を行う）
     for i, score in enumerate(scores):
-        chart.bars[0][i].fillColor = get_score_color(score)
+        chart.bars[(0, i)].fillColor = get_score_color(score)
     
     d.add(chart)
     return d

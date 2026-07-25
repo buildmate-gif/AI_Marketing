@@ -1,3 +1,7 @@
+---
+name: market-landing
+description: "ランディングページのCRO分析。セクション単位で改善点を洗い出す。「LPを改善して」「ランディングページを診断」「CVRを上げたい」「問い合わせ率が低い」で使う。"
+---
 # ランディングページCRO分析
 
 ## Skill Purpose

@@ -1,7 +1,11 @@
+---
+name: market-report-pdf
+description: "分析結果を日本語PDFレポートとして出力する。スコアゲージ・グラフ・施策一覧を含む。「PDFでレポートを作って」「印刷して持参できる資料」「クライアントに渡すPDF」で使う。"
+---
 # PDFマーケティングレポート生成
 
 ## Skill Purpose
-Generate a professional, visually polished PDF marketing report using the Python script `scripts/generate_pdf_report.py`. This skill collects all available audit and analysis data, structures it into the expected JSON format, invokes the script, and produces a branded PDF with score gauges, bar charts, comparison tables, findings, and a prioritized action plan.
+Generate a professional, visually polished PDF marketing report using the Python script `~/.claude/skills/market/scripts/generate_pdf_jp.py`. This skill collects all available audit and analysis data, structures it into the expected JSON format, invokes the script, and produces a branded PDF with score gauges, bar charts, comparison tables, findings, and a prioritized action plan.
 
 ## When to Use
 - User wants a PDF version of the marketing report (not just Markdown)
@@ -38,10 +42,10 @@ Gather data from all previous skill runs. Check for these files in the project d
 **If no previous data exists:**
 1. Recommend the user run `/market audit <url>` first for the best results
 2. If the user insists on generating a report without prior audits, analyze the provided URL directly and build the data structure from scratch
-3. Use the analyze_page.py script to gather automated data: `python scripts/analyze_page.py <url>`
+3. Use the analyze_page.py script to gather automated data: `python3 ~/.claude/skills/market/scripts/analyze_page.py <url>`
 
 ### Step 2: Build the JSON Data Structure
-The `scripts/generate_pdf_report.py` script expects a JSON file as input with this exact structure:
+The `~/.claude/skills/market/scripts/generate_pdf_jp.py` script expects a JSON file as input with this exact structure:
 
 ```json
 {
@@ -221,7 +225,7 @@ python3 -c "import reportlab" 2>/dev/null || pip3 install reportlab
 
 **Generate the report:**
 ```bash
-python3 scripts/generate_pdf_report.py /tmp/report_data.json "MARKETING-REPORT-<domain>.pdf"
+python3 ~/.claude/skills/market/scripts/generate_pdf_jp.py /tmp/report_data.json "MARKETING-REPORT-<domain>.pdf"
 ```
 
 Replace `<domain>` with the target website's domain name (without protocol or www), using hyphens instead of dots. For example:
@@ -231,7 +235,7 @@ Replace `<domain>` with the target website's domain name (without protocol or ww
 **Demo mode (no arguments):**
 Running the script without arguments generates a sample report with placeholder data:
 ```bash
-python3 scripts/generate_pdf_report.py
+python3 ~/.claude/skills/market/scripts/generate_pdf_jp.py
 # Creates: MARKETING-REPORT-sample.pdf
 ```
 

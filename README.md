@@ -62,7 +62,7 @@ curl -fsSL https://raw.githubusercontent.com/buildmate-gif/AI_Marketing/main/ins
 
 ```bash
 git clone https://github.com/buildmate-gif/AI_Marketing.git
-cd ai-marketing-claude-jp
+cd AI_Marketing
 ./install.sh
 ```
 

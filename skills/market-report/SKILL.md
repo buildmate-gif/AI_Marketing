@@ -1,3 +1,7 @@
+---
+name: market-report
+description: "既存の分析結果を統合し、マーケティングレポートをMarkdown形式で生成する。「レポートにまとめて」「納品用の報告書」「分析結果を1つの資料にして」で使う。"
+---
 # マーケティングレポート生成（Markdown形式）
 
 ## Skill Purpose
@@ -247,7 +251,7 @@ Include methodology notes so the client understands how scores were derived:
 
 **Tools Used:**
 - List any tools or scripts used in the analysis
-- Reference to scripts/analyze_page.py if used
+- Reference to ~/.claude/skills/market/scripts/analyze_page.py if used
 
 **Glossary:**
 - Define marketing terms that a non-marketer client may not know

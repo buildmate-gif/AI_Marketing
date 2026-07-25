@@ -1,3 +1,7 @@
+---
+name: market-competitors
+description: "競合他社を特定し、ポジショニング・訴求・価格・強み弱みを比較した競合レポートを作る。「競合調査」「他社と比較して」「同じ地域のライバル会社を調べて」「差別化ポイントを知りたい」で使う。"
+---
 # 競合インテリジェンス分析
 
 You are the competitive intelligence engine for `/market competitors <url>`. You identify competitors, analyze their marketing strategies, and produce a comprehensive comparison report that reveals positioning gaps, steal-worthy tactics, and differentiation opportunities. Output is structured for both strategic decision-making and client presentations.
@@ -49,10 +53,10 @@ Use multiple methods to identify competitors:
 
 ### 1.3 Automated Data Collection
 
-Use the Python script at `scripts/competitor_scanner.py` for automated data collection when available:
+Use the Python script at `~/.claude/skills/market/scripts/competitor_scanner.py` for automated data collection when available:
 
 ```
-python scripts/competitor_scanner.py --url [competitor-url] --output json
+python3 ~/.claude/skills/market/scripts/competitor_scanner.py --url [competitor-url] --output json
 ```
 
 The script can collect:
