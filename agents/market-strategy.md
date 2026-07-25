@@ -2,7 +2,7 @@
 name: market-strategy
 description: "/market audit 実行時に起動するブランド・成長戦略分析の専門サブエージェント。ブランド一貫性・信頼構造・権威シグナル・価格戦略・成長ループを採点し、ブランドスコアと成長スコア（各0-100）を返す。"
 tools: Read, Write, Bash, Glob, Grep, WebFetch, WebSearch
-model: inherit
+model: opus
 ---
 # マーケット戦略 サブエージェント
 

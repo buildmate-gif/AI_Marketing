@@ -64,10 +64,13 @@ mkdir -p "$SKILLS_DIR"
 mkdir -p "$AGENTS_DIR"
 
 # Install main skill orchestrator
-echo -e "${BLUE}Installing main skill...${NC}"
+echo -e "${BLUE}メインスキルを導入中...${NC}"
 mkdir -p "$SKILLS_DIR/market"
-cp "$SCRIPT_DIR/market/SKILL.md" "$SKILLS_DIR/market/SKILL.md"
-echo -e "  ${GREEN}✓${NC} market/SKILL.md (orchestrator)"
+cp "$SCRIPT_DIR/skills/market/SKILL.md" "$SKILLS_DIR/market/SKILL.md"
+if [ -d "$SCRIPT_DIR/skills/market/references" ]; then
+    cp -R "$SCRIPT_DIR/skills/market/references" "$SKILLS_DIR/market/"
+fi
+echo -e "  ${GREEN}✓${NC} market/SKILL.md（オーケストレーター）"
 
 # Install sub-skills
 echo -e "\n${BLUE}Installing sub-skills...${NC}"
@@ -93,10 +96,16 @@ for skill in "${SKILLS[@]}"; do
     if [ -f "$SCRIPT_DIR/skills/$skill/SKILL.md" ]; then
         mkdir -p "$SKILLS_DIR/$skill"
         cp "$SCRIPT_DIR/skills/$skill/SKILL.md" "$SKILLS_DIR/$skill/SKILL.md"
-        echo -e "  ${GREEN}✓${NC} $skill"
+        # references/ を含めて導入する（本文の大半はこちらにある）
+        REF_COUNT=0
+        if [ -d "$SCRIPT_DIR/skills/$skill/references" ]; then
+            cp -R "$SCRIPT_DIR/skills/$skill/references" "$SKILLS_DIR/$skill/"
+            REF_COUNT=$(ls -1 "$SKILLS_DIR/$skill/references" | wc -l | tr -d ' ')
+        fi
+        echo -e "  ${GREEN}✓${NC} $skill（参照ファイル ${REF_COUNT}件）"
         SKILL_COUNT=$((SKILL_COUNT + 1))
     else
-        echo -e "  ${YELLOW}⚠${NC} $skill (not found, skipping)"
+        echo -e "  ${YELLOW}⚠${NC} $skill（見つからないためスキップ）"
     fi
 done
 
@@ -135,8 +144,8 @@ SCRIPT_FILES=(
 
 SCRIPT_COUNT=0
 for script in "${SCRIPT_FILES[@]}"; do
-    if [ -f "$SCRIPT_DIR/scripts/$script" ]; then
-        cp "$SCRIPT_DIR/scripts/$script" "$SCRIPTS_TARGET/$script"
+    if [ -f "$SCRIPT_DIR/skills/market/scripts/$script" ]; then
+        cp "$SCRIPT_DIR/skills/market/scripts/$script" "$SCRIPTS_TARGET/$script"
         chmod +x "$SCRIPTS_TARGET/$script"
         echo -e "  ${GREEN}✓${NC} $script"
         SCRIPT_COUNT=$((SCRIPT_COUNT + 1))
@@ -151,8 +160,8 @@ TEMPLATES_TARGET="$SKILLS_DIR/market/templates"
 mkdir -p "$TEMPLATES_TARGET"
 
 TEMPLATE_COUNT=0
-if [ -d "$SCRIPT_DIR/templates" ]; then
-    for template in "$SCRIPT_DIR/templates"/*.md; do
+if [ -d "$SCRIPT_DIR/skills/market/templates" ]; then
+    for template in "$SCRIPT_DIR/skills/market/templates"/*.md; do
         if [ -f "$template" ]; then
             cp "$template" "$TEMPLATES_TARGET/$(basename "$template")"
             echo -e "  ${GREEN}✓${NC} $(basename "$template")"

@@ -52,13 +52,23 @@ Claude Code でコマンドを入力するだけで、建設会社のウェブ�
 
 ## インストール
 
-### ワンコマンドでインストール
+### 方法1：プラグインとして導入（推奨）
+
+Claude Code のプラグインとして導入します。更新も `/plugin` から行えます。
+
+```bash
+claude plugin marketplace add buildmate-gif/AI_Marketing
+```
+
+追加後、`/plugin` から `ai-marketing-jp` を有効化してください。
+
+### 方法2：ワンコマンドでインストール
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/buildmate-gif/AI_Marketing/main/install.sh | bash
 ```
 
-### 手動インストール
+### 方法3：手動インストール
 
 ```bash
 git clone https://github.com/buildmate-gif/AI_Marketing.git
@@ -66,7 +76,7 @@ cd AI_Marketing
 ./install.sh
 ```
 
-### オプション：PDFレポート機能を使う場合
+### PDFレポート機能を使う場合
 
 ```bash
 pip install reportlab
@@ -76,22 +86,47 @@ pip install reportlab
 
 ## コマンド一覧
 
-| コマンド | 内容 | 建設業界での活用例 |
-|---------|------|----------------|
+用途別に5つのグループに分かれています。**コマンドを覚えていなくても、「このサイトを診断して」「Instagramの投稿計画を作って」のように自然文で話しかければ、該当するスキルが自動で起動します。**
+
+### 1. 診断する
+
+| コマンド | 内容 | 建設業での活用例 |
+|---|---|---|
 | `/market audit <url>` | 完全マーケティング監査 | 営業前のクライアントサイト事前調査 |
 | `/market quick <url>` | 60秒スナップショット | 初回訪問前の即席チェック |
+| `/market seo <url>` | SEO監査・地域SEO診断 | 地域名＋施工内容のキーワード対策 |
+| `/market landing <url>` | ランディングページCRO分析 | 外構・リフォームLPの改善提案 |
+| `/market funnel <url>` | ファネル分析・最適化 | 問い合わせ→現地調査→見積→契約の導線分析 |
+
+### 2. 調べる
+
+| コマンド | 内容 | 建設業での活用例 |
+|---|---|---|
+| `/market competitors <url>` | 競合インテリジェンス | 同地域の競合建設会社との比較、Googleマップ順位の確認 |
+| `/market brand <url>` | ブランドボイス分析 | 敬語レベル・一人称の統一チェック |
+
+### 3. 作る
+
+| コマンド | 内容 | 建設業での活用例 |
+|---|---|---|
 | `/market copy <url>` | コピー最適化生成 | 施工実績・強みの訴求文改善 |
-| `/market emails <topic>` | メールシーケンス生成 | 問い合わせ後のフォローアップメール |
-| `/market social <topic>` | SNSカレンダー生成 | 現場写真・施工事例の投稿計画 |
+| `/market emails <工事種別>` | メールシーケンス生成 | 問い合わせ後の追客・見積提出後のフォロー |
+| `/market social <工事種別>` | SNSカレンダー生成 | 現場写真・施工事例の投稿計画 |
 | `/market ads <url>` | 広告クリエイティブ生成 | 地域ターゲティング広告の文案 |
-| `/market funnel <url>` | ファネル分析・最適化 | 問い合わせ→来場→見積→契約の導線分析 |
-| `/market competitors <url>` | 競合インテリジェンス | 同地域の競合建設会社との比較 |
-| `/market landing <url>` | ランディングページ分析 | 外構・リフォームLPの改善提案 |
-| `/market proposal <client>` | クライアント提案書生成 | DX・Web改善の提案書を自動作成 |
+
+### 4. 納品する
+
+| コマンド | 内容 | 建設業での活用例 |
+|---|---|---|
 | `/market report <url>` | マーケティングレポート | クライアントへの納品レポート |
 | `/market report-pdf <url>` | PDF形式レポート | 印刷・持参できるPDF提案資料 |
-| `/market seo <url>` | SEO監査 | 地域名＋施工内容のキーワード対策 |
-| `/market brand <url>` | ブランドボイス分析 | 「地域No.1」訴求の一貫性チェック |
+| `/market proposal <会社名>` | クライアント提案書生成 | DX・Web改善の提案書を自動作成 |
+
+### 5. 立ち上げる
+
+| コマンド | 内容 | 建設業での活用例 |
+|---|---|---|
+| `/market launch <サービス>` | ローンチプレイブック生成 | 完成見学会・新工種の立ち上げ計画 |
 
 ---
 

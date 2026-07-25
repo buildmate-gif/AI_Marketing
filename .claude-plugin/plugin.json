@@ -1,0 +1,28 @@
+{
+  "name": "ai-marketing-jp",
+  "version": "2.0.0",
+  "description": "建設業・工務店向けの日本語マーケティング分析・生成スイート。サイト監査、SEO、競合調査、コピー、広告、SNS、メール、提案書、PDFレポートを日本市場の基準で生成します。",
+  "author": {
+    "name": "BuildMate"
+  },
+  "repository": "https://github.com/buildmate-gif/AI_Marketing",
+  "license": "MIT",
+  "keywords": [
+    "marketing",
+    "japanese",
+    "construction",
+    "seo",
+    "cro",
+    "audit",
+    "landing-page",
+    "copywriting",
+    "competitor-analysis"
+  ],
+  "agents": [
+    "./agents/market-content.md",
+    "./agents/market-conversion.md",
+    "./agents/market-competitive.md",
+    "./agents/market-technical.md",
+    "./agents/market-strategy.md"
+  ]
+}

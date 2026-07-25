@@ -2,7 +2,7 @@
 name: market-competitive
 description: "/market audit 実行時に起動する競合ポジショニング分析の専門サブエージェント。差別化の明確さ・市場カテゴリ・価格帯・第三者評価を採点し、競合スコア（0-100）を返す。"
 tools: Read, Write, Bash, Glob, Grep, WebFetch, WebSearch
-model: inherit
+model: opus
 ---
 # マーケット競合インテリジェンス サブエージェント
 

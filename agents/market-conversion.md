@@ -2,7 +2,7 @@
 name: market-conversion
 description: "/market audit 実行時に起動するコンバージョン最適化の専門サブエージェント。CTA・フォームの摩擦・視覚導線・信頼シグナル・モバイル体験を採点し、CVスコア（0-100）を返す。"
 tools: Read, Write, Bash, Glob, Grep, WebFetch, WebSearch
-model: inherit
+model: sonnet
 ---
 # マーケットコンバージョン最適化 サブエージェント
 
