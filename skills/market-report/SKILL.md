@@ -43,6 +43,17 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 [ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
 ```
 
+## 提出前の検証
+
+この成果物はクライアントに渡るため、出力後に `market-critic` サブエージェントで検品してください。
+
+1. 生成したファイルのパスと業種を `market-critic` に渡す
+2. 5観点（具体性・数値根拠・実行可能性・日本語の自然さ・法令リスク）で採点される
+3. 「不合格」なら指摘に沿って書き直し、再検証する（書き直しは2回まで）
+
+手順の詳細は `../market/references/self-review.md` を参照してください。
+検証を省略した場合は、その旨を必ずユーザーに伝えてください。
+
 ## 出力
 
 - `MARKETING-REPORT.md`（カレントディレクトリ）

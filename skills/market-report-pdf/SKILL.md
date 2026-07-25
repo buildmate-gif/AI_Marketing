@@ -43,16 +43,64 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 [ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
 ```
 
+## 2つの生成方式
+
+同じJSONから、2つの方式でPDFを作れます。**特に理由がなければHTML版を使ってください。**
+
+| 方式 | スクリプト | 構成 | 見た目 | 必要なもの |
+|---|---|---|---|---|
+| **HTML版（推奨）** | `generate_report_html.py` | 表紙・スコア内訳・主要課題・アクションプラン・**競合比較**・**採点方法** | 書体と配色を整えたレイアウト | Chrome（PDF変換時） |
+| reportlab版 | `generate_pdf_jp.py` | 表紙・スコア内訳・主要課題・アクションプランの4ページ | 簡素 | reportlab |
+
+**HTML版でのみ、競合比較ページと採点方法ページが出力されます。** クライアント提出用は必ずHTML版を使ってください。
+
+### HTML版（推奨）
+
+```bash
+# HTMLとPDFを両方生成
+python3 "$MARKET_SCRIPTS/generate_report_html.py" /tmp/report_data.json \
+  "MARKETING-REPORT-<ドメイン>.html" --pdf "MARKETING-REPORT-<ドメイン>.pdf"
+```
+
+Chrome が見つからない環境では、HTMLだけ生成されます。その場合はブラウザで開き「印刷 → PDFとして保存」で変換するようユーザーに案内してください。
+
+競合比較ページを出すには、JSONに `competitors` を含めます。
+
+```json
+"competitors": [
+  {"name": "△△塗装工業", "positioning": "地域最大手", "pricing": "90〜160万円",
+   "social_proof": "施工事例80件", "content": "週2回更新",
+   "reviews": "4.5（86件）", "map_rank": "1位"}
+]
+```
+
+省略した場合、競合比較ページは「未取得」と表示されます。
+
+### reportlab版
+
 ```bash
 python3 "$MARKET_SCRIPTS/generate_pdf_jp.py" /tmp/report_data.json "MARKETING-REPORT-<ドメイン>.pdf"
 ```
+
+Chrome が使えない環境や、HTML経由を避けたい場合に使います。
 
 ## 必ず守ること
 
 - JSONは**UTF-8**で書き出す
 - `brand_name` を指定すると表紙に「〇〇 御中」が入る。クライアント提出時は必須
 - 重要度は `致命的 / 重大 / 中程度 / 軽微`（英語の Critical/High/Medium/Low も自動変換されます）
-- 生成されるのは**全4ページ**です。競合比較ページと採点方法ページは未対応のため、必要な場合は `/market report` を併用してください
+- HTML版のPDFは埋め込みフォントを含むため2MB前後になります。メール添付時は容量に注意してください
+
+## 提出前の検証
+
+この成果物はクライアントに渡るため、出力後に `market-critic` サブエージェントで検品してください。
+
+1. 生成したファイルのパスと業種を `market-critic` に渡す
+2. 5観点（具体性・数値根拠・実行可能性・日本語の自然さ・法令リスク）で採点される
+3. 「不合格」なら指摘に沿って書き直し、再検証する（書き直しは2回まで）
+
+手順の詳細は `../market/references/self-review.md` を参照してください。
+検証を省略した場合は、その旨を必ずユーザーに伝えてください。
 
 ## 出力
 

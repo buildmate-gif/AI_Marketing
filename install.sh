@@ -15,7 +15,7 @@ NC='\033[0m'
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║   AI Marketing Suite — Claude Code Skills    ║${NC}"
-echo -e "${CYAN}║   17 Skills · 5 Agents · 5 Scripts · PDF     ║${NC}"
+echo -e "${CYAN}║   17 Skills · 6 Agents · 6 Scripts · PDF     ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -119,6 +119,7 @@ AGENTS=(
     "market-competitive"
     "market-technical"
     "market-strategy"
+    "market-critic"
 )
 
 AGENT_COUNT=0
@@ -143,6 +144,7 @@ SCRIPT_FILES=(
     "social_calendar.py"
     "generate_pdf_jp.py"
     "track_history.py"
+    "generate_report_html.py"
 )
 
 SCRIPT_COUNT=0
