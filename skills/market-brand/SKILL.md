@@ -47,7 +47,7 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 
 ## 出力
 
-- `BRAND-VOICE.md`（カレントディレクトリ）
+- `<ドメイン>/BRAND-VOICE.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

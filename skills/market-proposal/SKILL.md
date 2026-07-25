@@ -43,6 +43,24 @@ description: "クライアント向けのマーケティング提案書を生成
 手順の詳細は `../market/references/self-review.md` を参照してください。
 検証を省略した場合は、その旨を必ずユーザーに伝えてください。
 
+## HTML・PDFへの変換
+
+検証に通った `CLIENT-PROPOSAL.md` は、`generate_proposal_pdf.py` でHTMLとPDFの両方に変換します。**HTMLファイルは中間生成物として消さず、共有用の成果物として残してください。**（PDFが開けない相手への代替、ブラウザでの手早い確認用）
+
+スクリプトの場所は、導入方法によって置き場所が変わるため、実行前に次の2行でパスを解決してください。
+
+```bash
+MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+
+python3 "$MARKET_SCRIPTS/generate_proposal_pdf.py" \
+  <ドメイン>/CLIENT-PROPOSAL.md <ドメイン>/CLIENT-PROPOSAL.pdf
+```
+
+Chromeが見つからない環境ではPDF変換のみ失敗しますが、HTMLは出力済みのため、その旨をユーザーに伝えてブラウザでの手動変換を案内してください。
+
 ## 出力
 
-- `CLIENT-PROPOSAL.md`（カレントディレクトリ）
+- `<ドメイン>/CLIENT-PROPOSAL.md`（規則は `../market/references/output-location.md`）
+- `<ドメイン>/CLIENT-PROPOSAL.html`（共有用。削除しない）
+- `<ドメイン>/CLIENT-PROPOSAL.pdf`

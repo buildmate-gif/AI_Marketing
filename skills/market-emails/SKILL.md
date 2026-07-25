@@ -42,7 +42,7 @@ description: "メールシーケンスを件名・本文・配信タイミング
 
 ## 出力
 
-- `EMAIL-SEQUENCES.md`（カレントディレクトリ）
+- `<ドメイン>/EMAIL-SEQUENCES.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

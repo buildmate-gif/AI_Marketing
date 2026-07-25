@@ -29,7 +29,7 @@ description: "Webサイトのコピー（見出し・本文・CTA）を採点し
 
 ## 出力
 
-- `COPY-SUGGESTIONS.md`（カレントディレクトリ）
+- `<ドメイン>/COPY-SUGGESTIONS.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

@@ -49,7 +49,7 @@ python3 "$MARKET_SCRIPTS/analyze_page.py" <url>
 
 ## 出力
 
-- `SEO-AUDIT.md`（カレントディレクトリ）
+- `<ドメイン>/SEO-AUDIT.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

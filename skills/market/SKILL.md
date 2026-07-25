@@ -96,6 +96,7 @@ description: "建設業・工務店向けAIマーケティングスイートの�
 | 8業種の判定シグナルと分析の重点 | `references/business-types.md` |
 | 建設業の4段階収益モデルと平均受注単価表 | `references/revenue-model.md` |
 | 成果物の自己検証ループ（market-critic の使い方） | `references/self-review.md` |
+| 出力先フォルダの規則（ドメイン名フォルダへの格納） | `references/output-location.md` |
 
 ## 出力基準
 
@@ -113,7 +114,7 @@ description: "建設業・工務店向けAIマーケティングスイートの�
 
 ## ファイル出力
 
-- カレントディレクトリに分かりやすいファイル名で保存する（`MARKETING-AUDIT.md` など）
+- 分析対象のドメイン名フォルダに、分かりやすいファイル名で保存する（例：`g-wic.jp/MARKETING-AUDIT.md`。規則は `references/output-location.md` を参照）
 - ファイル先頭にURL・日付・総合スコアを記載する
 - 見出しと表で構造化する
 - クライアント向けにはエグゼクティブ・サマリーを含める

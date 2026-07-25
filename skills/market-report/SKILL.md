@@ -56,5 +56,5 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 
 ## 出力
 
-- `MARKETING-REPORT.md`（カレントディレクトリ）
+- `<ドメイン>/MARKETING-REPORT.md`（規則は `../market/references/output-location.md`）
 - PDF形式が必要な場合は `/market report-pdf` を使ってください

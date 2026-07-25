@@ -34,7 +34,7 @@ description: "ランディングページのCRO分析。セクション単位で
 
 ## 出力
 
-- `LANDING-CRO.md`（カレントディレクトリ）
+- `<ドメイン>/LANDING-CRO.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

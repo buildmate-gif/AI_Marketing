@@ -34,7 +34,7 @@ description: "新サービス・新商品のローンチ計画を週単位のプ
 
 ## 出力
 
-- `LAUNCH-PLAYBOOK.md`（カレントディレクトリ）
+- `<ドメイン>/LAUNCH-PLAYBOOK.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

@@ -44,20 +44,20 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 
 ```bash
 # スコアを記録する
-python3 "$MARKET_SCRIPTS/track_history.py" record MARKET-HISTORY.json \
+python3 "$MARKET_SCRIPTS/track_history.py" record <ドメイン>/MARKET-HISTORY.json \
   --url <url> --date YYYY-MM-DD --overall <点数> \
   --scores '{"カテゴリ名": 点数, ...}' \
   --metrics '{"月間問い合わせ件数": 12, ...}' \
   --note "この期間に実施した施策"
 
 # 推移レポートを出力する
-python3 "$MARKET_SCRIPTS/track_history.py" report MARKET-HISTORY.json
+python3 "$MARKET_SCRIPTS/track_history.py" report <ドメイン>/MARKET-HISTORY.json
 
 # 直近2回の差分だけを見る
-python3 "$MARKET_SCRIPTS/track_history.py" diff MARKET-HISTORY.json
+python3 "$MARKET_SCRIPTS/track_history.py" diff <ドメイン>/MARKET-HISTORY.json
 ```
 
-履歴は `MARKET-HISTORY.json` に蓄積されます。**このファイルは消さないでください。** 継続支援の全ての根拠がここに入ります。
+履歴は `<ドメイン>/MARKET-HISTORY.json` に蓄積されます（規則は `../market/references/output-location.md`）。**このファイルは消さないでください。** 継続支援の全ての根拠がここに入ります。
 
 ## 必ず守ること
 
@@ -69,8 +69,8 @@ python3 "$MARKET_SCRIPTS/track_history.py" diff MARKET-HISTORY.json
 
 ## 出力
 
-- `MARKET-HISTORY.json`（履歴データ。継続して使う）
-- `TRACK-REPORT.md`（クライアント提出用の推移レポート）
+- `<ドメイン>/MARKET-HISTORY.json`（履歴データ。継続して使う）
+- `<ドメイン>/TRACK-REPORT.md`（クライアント提出用の推移レポート）
 
 ## 他スキルとの連携
 

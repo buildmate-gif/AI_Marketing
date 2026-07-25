@@ -32,7 +32,7 @@ description: "問い合わせから成約までの導線を可視化し、離脱
 
 ## 出力
 
-- `FUNNEL-ANALYSIS.md`（カレントディレクトリ）
+- `<ドメイン>/FUNNEL-ANALYSIS.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

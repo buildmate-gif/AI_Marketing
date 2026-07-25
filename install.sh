@@ -15,7 +15,7 @@ NC='\033[0m'
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║   AI Marketing Suite — Claude Code Skills    ║${NC}"
-echo -e "${CYAN}║   17 Skills · 6 Agents · 6 Scripts · PDF     ║${NC}"
+echo -e "${CYAN}║   17 Skills · 6 Agents · 7 Scripts · PDF     ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -145,6 +145,7 @@ SCRIPT_FILES=(
     "generate_pdf_jp.py"
     "track_history.py"
     "generate_report_html.py"
+    "generate_proposal_pdf.py"
 )
 
 SCRIPT_COUNT=0

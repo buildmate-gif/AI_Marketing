@@ -104,4 +104,4 @@ Chrome が使えない環境や、HTML経由を避けたい場合に使います
 
 ## 出力
 
-- `MARKETING-REPORT-<ドメイン>.pdf`（カレントディレクトリ）
+- `<ドメイン>/MARKETING-REPORT.pdf`（規則は `../market/references/output-location.md`。フォルダ名にドメインが含まれるためファイル名にドメインは付けない）

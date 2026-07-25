@@ -32,7 +32,7 @@
 
 ## ファイル出力
 
-詳細な出力はカレントディレクトリのMarkdownファイルに保存します：
+詳細な出力は対象ドメインのフォルダ（`output-location.md` 参照）のMarkdownファイルに保存します：
 - わかりやすいファイル名を使用：`MARKETING-AUDIT.md`、`COMPETITOR-REPORT.md` など
 - ファイル先頭にURL・日付・総合スコアを記載
 - 見出しと表で明確に構造化する

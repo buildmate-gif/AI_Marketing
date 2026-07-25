@@ -59,7 +59,7 @@ description: "サイトのスクリーンショットを撮り、見た目その
 
 ## 出力
 
-- `VISUAL-AUDIT.md`（カレントディレクトリ）
+- `<ドメイン>/VISUAL-AUDIT.md`（規則は `../market/references/output-location.md`）
 - 総合ビジュアルスコア（0〜100）
 
 ## 他スキルとの連携

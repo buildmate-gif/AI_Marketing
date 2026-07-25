@@ -42,7 +42,7 @@ description: "Webサイトの完全マーケティング監査。5つの並列�
 
 ## 出力
 
-- `MARKETING-AUDIT.md`（カレントディレクトリ）
+- `<ドメイン>/MARKETING-AUDIT.md`（規則は `../market/references/output-location.md`）
 - ターミナルに要約スコアカード
 
 ## エラー処理

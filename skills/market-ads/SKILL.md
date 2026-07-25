@@ -43,7 +43,7 @@ description: "広告クリエイティブと広告文を媒体別に生成する
 
 ## 出力
 
-- `AD-CAMPAIGNS.md`（カレントディレクトリ）
+- `<ドメイン>/AD-CAMPAIGNS.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

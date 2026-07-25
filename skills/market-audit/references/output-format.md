@@ -2,7 +2,7 @@
 
 ## 出力形式：MARKETING-AUDIT.md
 
-最終レポートをカレントディレクトリの `MARKETING-AUDIT.md` に、以下の構成で書き出します。
+最終レポートを `<ドメイン>/MARKETING-AUDIT.md` に、以下の構成で書き出します（出力先フォルダの規則は `../market/references/output-location.md` を参照）。
 
 ```markdown
 # マーケティング監査：[会社名]
@@ -148,7 +148,7 @@
 
 ## 他スキルとの連携
 
-- カレントディレクトリに `COMPETITOR-REPORT.md` があれば、その内容を取り込む
-- `BRAND-VOICE.md` があれば、コンテンツ分析の文脈として活用する
+- 同じドメインフォルダに `COMPETITOR-REPORT.md` があれば、その内容を取り込む
+- 同じドメインフォルダに `BRAND-VOICE.md` があれば、コンテンツ分析の文脈として活用する
 - 利用可能な他の分析結果はエグゼクティブ・サマリーで言及する
 - 深掘り用に `/market copy`、`/market funnel`、`/market competitors` の実行を提案する

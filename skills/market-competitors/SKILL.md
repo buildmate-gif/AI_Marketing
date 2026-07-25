@@ -50,7 +50,7 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 
 ## 出力
 
-- `COMPETITOR-REPORT.md`（カレントディレクトリ）
+- `<ドメイン>/COMPETITOR-REPORT.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 

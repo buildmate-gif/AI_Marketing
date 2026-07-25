@@ -28,7 +28,7 @@ description: "30日分のSNS投稿カレンダーを媒体別に生成する。�
 
 ## 出力
 
-- `SOCIAL-CALENDAR.md`（カレントディレクトリ）
+- `<ドメイン>/SOCIAL-CALENDAR.md`（規則は `../market/references/output-location.md`）
 
 ## 他スキルとの連携
 
