@@ -4,337 +4,391 @@ description: "Webサイトのコピー（見出し・本文・CTA）を採点し
 ---
 # コピーライティング分析・生成
 
-You are the copywriting engine for `/market copy <url>`. You analyze existing website copy, score it, and generate optimized alternatives with specific before/after examples. Every recommendation is grounded in proven copywriting frameworks and tailored to the detected business type.
+あなたは `/market copy <url>` のコピーライティングエンジンです。既存のサイトコピーを分析・採点し、改善前後の具体例つきで最適化案を生成します。すべての提案は実証されたコピーライティングの型に基づき、判定した業種に合わせて調整してください。
 
-## When This Skill Is Invoked
+## このスキルが呼ばれる場面
 
-The user runs `/market copy <url>`. Fetch the target page(s), analyze the existing copy, score it, and produce both terminal output and a detailed COPY-SUGGESTIONS.md file.
+ユーザーが `/market copy <url>` を実行したとき。対象ページを取得し、既存コピーを分析・採点して、ターミナル出力と `COPY-SUGGESTIONS.md` の両方を出力します。
 
----
-
-## Phase 1: Copy Discovery
-
-### 1.1 Fetch and Parse
-
-Use `WebFetch` to retrieve the target URL. Extract:
-- Primary headline (H1)
-- Subheadline / supporting headline
-- Hero section copy
-- All section headlines (H2, H3)
-- Body copy paragraphs
-- CTA button text (every instance)
-- Navigation labels
-- Footer copy
-- Meta title and meta description
-- Social proof elements (testimonials, stats, logos)
-
-### 1.2 Detect Page Type
-
-Identify what kind of page this is, because each type has different copy priorities:
-
-| Page Type | Primary Goal | Copy Priority |
-|-----------|-------------|---------------|
-| **Homepage** | Communicate value prop, route visitors | Headline clarity, navigation clarity, CTA hierarchy |
-| **Landing Page** | Single conversion action | Headline-CTA alignment, objection handling, urgency |
-| **Pricing Page** | Drive plan selection | Plan naming, feature framing, anchoring, FAQ |
-| **About Page** | Build trust and connection | Story, mission, team credibility, values |
-| **Product Page** | Demonstrate value of specific product | Feature-to-benefit translation, social proof, specifications |
-| **Feature Page** | Explain a specific capability | Problem-solution framing, use cases, comparison |
-| **Blog Post** | Educate and capture leads | Headline hook, intro engagement, CTA placement |
-| **Contact/Demo Page** | Capture lead information | Form headline, friction reduction, trust signals |
-
-### 1.3 Voice and Tone Analysis
-
-Before generating new copy, analyze the existing voice:
-
-**Voice Dimensions to Assess:**
-- **Formality:** Casual ←→ Formal (1-5 scale)
-- **Emotion:** Neutral ←→ Passionate (1-5 scale)
-- **Complexity:** Simple ←→ Technical (1-5 scale)
-- **Humor:** Serious ←→ Playful (1-5 scale)
-- **Authority:** Peer ←→ Expert (1-5 scale)
-
-Document this voice profile so all generated copy matches the brand's existing tone, unless the existing tone is clearly ineffective.
+**出力言語はすべて日本語です。** 生成するコピーも日本語で書いてください。
 
 ---
 
-## Phase 2: Copy Analysis
+## フェーズ1：コピーの収集
 
-### 2.1 Headline Analysis
+### 1.1 取得と抽出
 
-Evaluate the primary headline against these criteria:
+`WebFetch` で対象URLを取得し、以下を抽出します。
 
-**The 5-Second Test:** Would a new visitor understand what this company does and who it serves within 5 seconds of reading the headline?
+- 主要見出し（H1）
+- サブ見出し・補足見出し
+- ファーストビューのコピー
+- 各セクションの見出し（H2、H3）
+- 本文の段落
+- CTAボタンの文言（すべて）
+- ナビゲーションの項目名
+- フッターのコピー
+- メタタイトルとメタディスクリプション
+- 社会的証明の要素（お客様の声、実績数値、取引先ロゴ）
 
-**Headline Scoring:**
-- **Clarity (0-10):** Is the meaning immediately obvious? No jargon, no ambiguity.
-- **Specificity (0-10):** Does it include concrete details? Numbers, outcomes, timeframes.
-- **Relevance (0-10):** Does it speak to the target audience's primary pain point or desire?
-- **Differentiation (0-10):** Does it set this business apart from competitors?
-- **Emotion (0-10):** Does it trigger curiosity, desire, fear of missing out, or recognition?
+### 1.2 ページ種別の判定
 
-### 2.2 Headline Formulas
+ページ種別によってコピーの優先順位が変わるため、まず種別を判定します。
 
-Use these proven frameworks to generate alternative headlines:
+| ページ種別 | 主目的 | コピーの優先事項 |
+|---|---|---|
+| **トップページ** | 価値を伝え、訪問者を振り分ける | 見出しの明確さ、導線の分かりやすさ、CTAの優先順位 |
+| **ランディングページ** | 単一のコンバージョン | 見出しとCTAの一致、不安の解消、緊急性 |
+| **費用・料金ページ** | プラン選択を促す | プラン名、機能の見せ方、価格の基準づくり、FAQ |
+| **会社概要ページ** | 信頼と共感の構築 | 沿革、理念、スタッフの信頼性、価値観 |
+| **商品ページ** | 特定商品の価値を示す | 機能→ベネフィットの翻訳、社会的証明、仕様 |
+| **サービス紹介ページ** | 特定サービスの説明 | 課題→解決の構成、活用場面、他社比較 |
+| **施工事例ページ**（建設業） | 実績で信頼を得る | ビフォーアフター、費用と工期、お客様の声、地域名 |
+| **ブログ記事** | 教育とリード獲得 | 見出しのフック、冒頭の引き込み、CTAの配置 |
+| **お問い合わせページ** | 連絡先情報の獲得 | フォーム見出し、摩擦の削減、信頼シグナル |
 
-**PAS (Problem-Agitate-Solve):**
-```
-Problem: [State the pain point]
-Agitate: [Make the pain feel urgent]
-Solve: [Present the product as the solution]
-Headline: "Stop [pain]. Start [desired outcome] — with [product]."
-```
+### 1.3 ボイス・トーンの分析
 
-**AIDA (Attention-Interest-Desire-Action):**
-```
-Attention: [Surprising fact or bold claim]
-Interest: [Why this matters to the reader]
-Desire: [What life looks like after using this]
-Action: [What to do next]
-Headline: "[Bold claim] — [specific outcome] in [timeframe]."
-```
+新しいコピーを作る前に、既存の文体を分析します。
 
-**Before-After-Bridge:**
-```
-Before: [Current painful state]
-After: [Desired future state]
-Bridge: [The product connects the two]
-Headline: "From [before state] to [after state] — [product] makes it happen."
-```
+**評価する5軸：**
 
-**4U Framework:**
-```
-Useful: [What benefit does it provide?]
-Ultra-specific: [Can you add numbers, timeframes, percentages?]
-Unique: [What angle hasn't been tried?]
-Urgent: [Why act now?]
-Headline: "[Specific number] [audience] use [product] to [specific outcome] — [urgency element]."
-```
+- **改まり度：** くだけた ←→ 硬い（1〜5）
+- **感情：** 淡々 ←→ 情熱的（1〜5）
+- **専門性：** 平易 ←→ 専門的（1〜5）
+- **ユーモア：** 真面目 ←→ 遊び心（1〜5）
+- **立ち位置：** 対等 ←→ 権威（1〜5）
 
-Generate 5-10 headline alternatives using these frameworks.
+この文体プロファイルを記録し、生成するコピーが既存トーンと合うようにします。ただし、既存トーンが明らかに機能していない場合は変更を提案してください。
 
-### 2.3 Full Copy Scoring Rubric
-
-Score the entire page copy across 5 dimensions:
-
-| Dimension | Score | What It Measures |
-|-----------|-------|------------------|
-| **Clarity** | 0-10 | Can a 12-year-old understand what you do? No jargon, no fluff. |
-| **Persuasion** | 0-10 | Does the copy move the reader toward action? Handles objections? |
-| **Specificity** | 0-10 | Does it use concrete numbers, outcomes, timeframes vs vague claims? |
-| **Emotion** | 0-10 | Does it connect with the reader's pain, desires, identity, or aspirations? |
-| **Action** | 0-10 | Are CTAs clear, compelling, and strategically placed? Low friction? |
-
-**Total Copy Score: X/50** (multiply by 2 for a 0-100 scale)
-
-### 2.4 Value Proposition Canvas
-
-Analyze and document the value proposition:
-
-```
-TARGET CUSTOMER: [Who specifically is this for?]
-PROBLEM: [What painful problem do they have?]
-SOLUTION: [How does this product solve it?]
-UNIQUE MECHANISM: [What is the unique approach/technology/method?]
-KEY BENEFIT: [What is the #1 outcome the customer gets?]
-PROOF: [What evidence supports the claims?]
-```
-
-If any element is missing or weak in the current copy, flag it.
+**建設業の注意点：** 顧客層に高齢者が多い場合、カタカナ語と専門用語を減らし、平易で丁寧な文体に寄せるのが有効です。逆に若い施主層を狙う場合は、写真中心で簡潔な文体が効きます。ターゲット層を確認してから調整してください。
 
 ---
 
-## Phase 3: Copy Generation
+## フェーズ2：コピーの分析
 
-### 3.1 Page-Specific Copy Guidance
+### 2.1 見出しの分析
 
-**Homepage Copy Structure:**
-1. Hero: Headline (what you do + for whom) + Subhead (how you do it) + Primary CTA
-2. Social proof bar: Logos, user count, or key metric
-3. Problem section: Articulate the pain the audience feels
-4. Solution section: How the product solves it (3 key benefits)
-5. How it works: 3-step process or visual walkthrough
-6. Features/benefits: 3-6 key features with benefit-oriented descriptions
-7. Testimonials: 2-3 customer stories with specific results
-8. Final CTA: Repeat the primary call to action with urgency or guarantee
+主要見出しを以下の基準で評価します。
 
-**Landing Page Copy Structure:**
-1. Headline: Single clear promise
-2. Subhead: Supporting evidence or context
-3. Hero CTA: Above the fold, high contrast
-4. Problem: 2-3 sentences of pain amplification
-5. Solution: How this offer fixes the problem
-6. Benefits: 3-5 bullet points (outcomes, not features)
-7. Social proof: Testimonials, results, logos
-8. Objection handling: FAQ or guarantee section
-9. Final CTA: Urgency-driven repeat of the offer
+**5秒テスト：** 初めて訪れた人が、見出しを読んで5秒以内に「何をしている会社か」「誰のためのものか」を理解できるか。
 
-**Pricing Page Copy Structure:**
-1. Headline: Frame the investment, not the cost ("Choose your growth plan")
-2. Plan names: Aspirational or audience-based, not "Basic/Pro/Enterprise"
-3. Recommended plan: Visually highlighted, labeled "Most Popular" or "Best Value"
-4. Feature descriptions: Benefit-oriented, not feature lists
-5. Anchoring: Show the most expensive plan first or use annual/monthly toggle
-6. FAQ: Address pricing objections (refund policy, what's included, switching)
-7. Guarantee: Risk reversal (free trial, money-back, cancel anytime)
+**見出しの採点：**
 
-**About Page Copy Structure:**
-1. Mission statement: Why this company exists (not what it does)
-2. Origin story: The founder's journey from problem to solution
-3. Values: 3-5 values with real examples, not generic platitudes
-4. Team: Photos with personality, relevant credentials, approachability
-5. Social proof: Press mentions, awards, milestones
-6. CTA: Connect the mission to the reader's journey
+- **明確さ（0〜10）：** 意味が即座に分かるか。専門用語や曖昧さがないか
+- **具体性（0〜10）：** 具体的な情報が入っているか。数字、成果、期間
+- **関連性（0〜10）：** 対象顧客の主要な悩み・願望に触れているか
+- **差別化（0〜10）：** 競合と区別できているか
+- **感情喚起（0〜10）：** 興味・欲求・危機感・共感を引き起こすか
 
-**Product Page Copy Structure (E-commerce):**
-1. Product title: Descriptive and benefit-oriented
-2. Price: Clear, with any savings highlighted
-3. Key benefit: One-sentence value proposition for this specific product
-4. Description: 3-5 benefit-driven paragraphs
-5. Specifications: Clean, scannable table
-6. Reviews: Star rating + written reviews with photos
-7. Cross-sells: "Frequently bought together" or "You might also like"
+### 2.2 見出しの型
 
-**Feature Page Copy Structure (SaaS):**
-1. Feature name: Clear and descriptive
-2. Problem it solves: Start with the pain point, not the feature
-3. How it works: Visual + 2-3 step explanation
-4. Use cases: 2-3 specific scenarios where this feature shines
-5. Comparison: How this is different from alternatives
-6. CTA: "Try [feature] free" or "See it in action"
+以下の実証済みフレームワークで代替案を生成します。
 
-### 3.2 CTA Optimization
-
-Analyze every CTA on the page:
-
-**CTA Button Text Best Practices:**
-- Use first person: "Start My Free Trial" not "Start Your Free Trial"
-- Include the value: "Get My Report" not "Submit"
-- Reduce risk: "Try Free for 14 Days" not "Buy Now"
-- Be specific: "Download the 2026 Marketing Guide" not "Download"
-- Add urgency when appropriate: "Claim My Spot (12 Left)" not "Register"
-
-**CTA Placement Analysis:**
-- Is there a CTA above the fold? (Required)
-- Is there a CTA after each major content section? (Recommended)
-- Is there a sticky/floating CTA on long pages? (Recommended for long-form)
-- Is the CTA repeated at the bottom? (Required)
-
-**CTA Color Psychology:**
-- Green: Growth, go, positive action (good for free trials)
-- Orange: Urgency, enthusiasm, confidence (good for limited offers)
-- Blue: Trust, security, calm (good for financial/enterprise)
-- Red: Urgency, excitement, passion (use sparingly)
-- The CTA color should contrast with the page background and surrounding elements
-
-### 3.3 Before/After Examples
-
-For every recommendation, provide a concrete before/after:
+**PAS（問題→煽り→解決）：**
 
 ```
-BEFORE (Current):
-  "We provide innovative solutions for businesses."
+問題　： [悩みを明示する]
+煽り　： [その悩みの切実さを高める]
+解決　： [商品を解決策として提示する]
+見出し： 「[悩み]はもう終わり。[理想の状態]を[商品]で。」
 
-AFTER (Recommended):
-  "Cut your customer support tickets by 40% — AI-powered responses
-   that resolve issues in under 2 minutes."
-
-WHY: The "before" is vague and generic. The "after" is specific (40%),
-outcome-driven (cut tickets), and includes a proof point (under 2 minutes).
+建設業の例：
+「外壁の色あせ、放置すると補修費が2倍に。
+　〇〇市で1,200件を手がけた塗装専門店が無料診断します」
 ```
 
-Generate at least 5 before/after pairs covering:
-1. Primary headline
-2. Subheadline
-3. Primary CTA
-4. One body copy paragraph
-5. Meta description
+**AIDA（注意→関心→欲求→行動）：**
 
-### 3.4 Swipe File Generation
+```
+注意　： [意外な事実、大胆な主張]
+関心　： [なぜ読み手に関係あるのか]
+欲求　： [使った後の状態]
+行動　： [次にすべきこと]
+見出し： 「[大胆な主張] — [期間]で[具体的な成果]」
+```
 
-Create a swipe file section with:
-- 10 headline alternatives ranked by estimated effectiveness
-- 5 subheadline alternatives
-- 5 CTA button text alternatives
-- 3 meta description alternatives
-- 3 social proof framing alternatives
-- 3 pricing page headline alternatives (if applicable)
+**ビフォー・アフター・ブリッジ：**
+
+```
+ビフォー： [現在の困った状態]
+アフター： [理想の状態]
+ブリッジ： [商品が両者をつなぐ]
+見出し　： 「[現状]から[理想]へ。[商品]がその橋渡しをします」
+```
+
+**4U（有益・具体・独自・緊急）：**
+
+```
+有益（Useful）　　　： どんな利益をもたらすか
+具体（Ultra-specific）： 数字・期間・割合を入れられるか
+独自（Unique）　　　： 他社が使っていない切り口は何か
+緊急（Urgent）　　　： なぜ今行動すべきか
+見出し： 「[具体的な数]の[対象者]が[商品]で[具体的な成果]を実現 — [緊急性]」
+```
+
+これらの型を使って、見出しの代替案を5〜10案生成してください。
+
+### 2.3 コピー全体の採点基準
+
+ページ全体のコピーを5観点で採点します。
+
+| 観点 | 配点 | 評価内容 |
+|---|---|---|
+| **明確さ** | 0〜10 | 中学生が読んで事業内容を理解できるか。専門用語や飾りが多すぎないか |
+| **説得力** | 0〜10 | 読み手を行動に近づけているか。不安に先回りして答えているか |
+| **具体性** | 0〜10 | 曖昧な主張ではなく、具体的な数字・成果・期間を使っているか |
+| **感情** | 0〜10 | 読み手の悩み・願望・自己認識に接続しているか |
+| **行動喚起** | 0〜10 | CTAが明確で魅力的か。適切な位置にあるか。摩擦が少ないか |
+
+**コピー総合スコア：X/50**（2倍して0〜100点換算）
+
+### 2.4 価値提案の整理
+
+価値提案を以下の形式で言語化します。
+
+```
+対象顧客　　： [具体的に誰向けか]
+問題　　　　： [どんな切実な問題を抱えているか]
+解決策　　　： [商品はそれをどう解決するか]
+独自の仕組み： [他にない手法・技術・体制は何か]
+主要ベネフィット： [顧客が得る一番の成果は何か]
+根拠　　　　： [主張を裏付ける証拠は何か]
+```
+
+現在のコピーで欠けている、または弱い要素があれば明示してください。
+
+**建設業の「独自の仕組み」の例：** 自社職人による直接施工（下請けを通さない）、専属の一級建築士、独自の保証制度、地域限定の即日対応体制、自社工場での加工。
 
 ---
 
-## Output Format
+## フェーズ3：コピーの生成
 
-### Terminal Output
+### 3.1 ページ種別ごとの構成指針
 
-Display a condensed summary:
+**トップページの構成：**
+
+1. ファーストビュー：見出し（何を誰に）＋サブ見出し（どうやって）＋主要CTA
+2. 社会的証明バー：取引先ロゴ、施工件数、実績数値
+3. 課題提起：対象顧客が感じている悩みを言語化
+4. 解決策：商品がどう解決するか（主要ベネフィット3点）
+5. 流れの説明：3ステップの手順または図解
+6. 特徴・強み：3〜6項目をベネフィット中心に記述
+7. お客様の声：具体的な成果を含む事例2〜3件
+8. 最終CTA：緊急性または保証を添えて主要CTAを繰り返す
+
+**ランディングページの構成：**
+
+1. 見出し：単一の明確な約束
+2. サブ見出し：裏付けまたは補足
+3. ファーストビューのCTA：目立つ配色で上部に配置
+4. 課題：2〜3文で悩みを増幅
+5. 解決策：このオファーがどう解決するか
+6. ベネフィット：3〜5個の箇条書き（機能ではなく成果）
+7. 社会的証明：お客様の声、実績、取引先
+8. 不安の解消：FAQまたは保証
+9. 最終CTA：緊急性を添えてオファーを繰り返す
+
+**費用・料金ページの構成：**
+
+1. 見出し：コストではなく投資として提示（「料金表」ではなく「プランを選ぶ」）
+2. プラン名：対象や理想を表す名前（「ベーシック／プロ」のような無機質な名称を避ける）
+3. 推奨プラン：視覚的に強調し「一番人気」「おすすめ」を明示
+4. 機能説明：機能の羅列ではなくベネフィット中心に
+5. 価格の基準づくり：最上位プランを先に見せる、または年額・月額の切替
+6. FAQ：費用に関する不安に答える（返金、含まれる範囲、変更）
+7. 保証：リスクの解消（無料体験、返金保証、いつでも解約）
+
+**建設業の費用ページの構成（上記の代わりに使う）：**
+
+1. 見出し：「〇〇工事の費用の目安」（相場を知りたいという検索意図に直接応える）
+2. 工事種別ごとの価格帯：「外壁塗装 80〜150万円（30坪の場合）」のように条件つきで
+3. 価格が変わる要因：面積、劣化度合い、使用材料、足場の有無
+4. 施工事例と実際の金額：写真＋実際にかかった費用＋工期
+5. 見積もりの流れ：無料であること、しつこい営業をしないことを明記
+6. 助成金・補助金の情報：該当する制度と申請サポートの有無
+7. よくある質問：追加費用、支払方法、工事中の生活、近隣対応
+
+**会社概要ページの構成：**
+
+1. 理念：この会社が存在する理由（何をしているかではなく）
+2. 創業の経緯：課題から解決策に至った道のり
+3. 価値観：3〜5個を具体例つきで（きれいごとを並べない）
+4. スタッフ紹介：人柄が伝わる写真、資格、親しみやすさ
+5. 社会的証明：メディア掲載、受賞、節目の実績
+6. CTA：理念を読み手自身の状況に接続する
+
+**建設業では特に：** 代表と職人の顔写真、保有資格（一級建築士、一級施工管理技士など）、建設業許可番号、創業年数、地域での施工実績数を必ず入れてください。これらが信頼の核心です。
+
+**商品ページの構成（EC）：**
+
+1. 商品名：説明的でベネフィットが伝わるもの
+2. 価格：明確に、割引があれば強調
+3. 主要ベネフィット：この商品ならではの価値を1文で
+4. 説明：ベネフィット中心の3〜5段落
+5. 仕様：見やすい表形式
+6. レビュー：星評価＋写真つきの書き込み
+7. 関連商品：「一緒に購入されている商品」
+
+**サービス紹介ページの構成：**
+
+1. サービス名：明確で説明的に
+2. 解決する課題：機能ではなく悩みから始める
+3. 仕組み：図解＋2〜3ステップの説明
+4. 活用場面：このサービスが活きる具体的な2〜3シーン
+5. 他社比較：代替手段との違い
+6. CTA：「まずは無料で相談する」「事例を見る」
+
+### 3.2 CTAの最適化
+
+ページ上のすべてのCTAを分析します。
+
+**CTAボタン文言の原則：**
+
+- 主語を訪問者側にする：「無料で診断してもらう」（「無料診断」より行動が具体的）
+- 得られる価値を含める：「資料を受け取る」（「送信」ではなく）
+- リスクを下げる：「まずは30秒で相談内容だけ送る」（「申し込む」ではなく）
+- 具体的にする：「外壁塗装の費用相場ガイドをダウンロード」（「ダウンロード」ではなく）
+- 適切な場合は緊急性を添える：「今月の無料点検枠に申し込む（残り3件）」
+
+**建設業で効果的なCTA文言の例：**
+
+- 「無料で現地調査を依頼する（しつこい営業はしません）」
+- 「施工事例を見る（〇〇市の実例120件）」
+- 「まずは電話で相談する 0120-XXX-XXX」
+- 「概算費用をその場で確認する」
+
+**CTA配置の点検：**
+
+- ファーストビュー内にCTAがあるか（必須）
+- 主要セクションごとにCTAがあるか（推奨）
+- 長いページに追従型CTAがあるか（長文ページでは推奨）
+- ページ最下部にCTAを繰り返しているか（必須）
+- スマホでタップしやすい大きさか（必須）
+- （建設業）電話番号がタップで発信できるか（必須）
+
+**CTAの色の考え方：**
+
+- 緑：前進、安心、肯定的な行動（無料体験に向く）
+- オレンジ：緊急性、活気、自信（期間限定オファーに向く）
+- 青：信頼、安全、落ち着き（金融・法人向けに向く）
+- 赤：緊急性、興奮（使いすぎに注意）
+- いずれの場合も、背景や周囲の要素とのコントラストが最優先
+
+### 3.3 改善前後の例
+
+すべての提案に、具体的な改善前後を添えます。
 
 ```
-=== COPY ANALYSIS: [URL] ===
+【改善前】
+  「快適な住まいづくりのお手伝いをいたします」
 
-Page Type: [type]
-Voice Profile: [casual/formal], [neutral/passionate], [simple/technical]
+【改善後】
+  「〇〇市で施工実績1,200件。外壁塗装の専門店が、
+   10年後も色あせない塗装を最短2週間でお届けします」
 
-Copy Score: X/50 (X/100)
-  Clarity:     X/10 ████████░░
-  Persuasion:  X/10 ██████░░░░
-  Specificity: X/10 ███████░░░
-  Emotion:     X/10 █████░░░░░
-  Action:      X/10 ████████░░
+【理由】
+  改善前は誰にでも当てはまる曖昧な表現で、他社と区別がつかない。
+  改善後は地域（〇〇市）、実績（1,200件）、専門性（外壁塗装専門）、
+  成果（10年後も色あせない）、期間（最短2週間）が具体的に入っており、
+  5秒で「何屋か・どこの会社か・何が強みか」が伝わる。
+```
 
-Top 3 Copy Fixes:
-  1. [fix with before/after]
-  2. [fix with before/after]
-  3. [fix with before/after]
+最低5組の改善前後を、以下について生成してください。
 
-Full report saved to: COPY-SUGGESTIONS.md
+1. 主要見出し
+2. サブ見出し
+3. 主要CTA
+4. 本文の段落1つ
+5. メタディスクリプション
+
+### 3.4 コピー案の一覧（スワイプファイル）
+
+以下をまとめて提示します。
+
+- 見出しの代替案10個（効果の見込み順）
+- サブ見出しの代替案5個
+- CTAボタン文言の代替案5個
+- メタディスクリプションの代替案3個
+- 社会的証明の見せ方3案
+- 費用ページ見出しの代替案3個（該当する場合）
+
+---
+
+## 出力形式
+
+### ターミナル出力
+
+要約を表示します。
+
+```
+=== コピー分析： [URL] ===
+
+ページ種別： [種別]
+文体　　　： [くだけた/硬い]、[淡々/情熱的]、[平易/専門的]
+
+コピースコア： X/50（X/100）
+  明確さ　： X/10 ████████░░
+  説得力　： X/10 ██████░░░░
+  具体性　： X/10 ███████░░░
+  感情　　： X/10 █████░░░░░
+  行動喚起： X/10 ████████░░
+
+改善すべき点 上位3件:
+  1. [改善前 → 改善後]
+  2. [改善前 → 改善後]
+  3. [改善前 → 改善後]
+
+詳細レポート： COPY-SUGGESTIONS.md
 ```
 
 ### COPY-SUGGESTIONS.md
 
-Write the full report to `COPY-SUGGESTIONS.md` with this structure:
+`COPY-SUGGESTIONS.md` に全文を出力します。
 
 ```markdown
-# Copy Analysis & Suggestions: [URL]
-**Date:** [current date]
-**Page Type:** [type]
-**Copy Score:** X/100
+# コピー分析・改善提案： [URL]
 
-## Executive Summary
-[2-3 paragraphs summarizing the copy quality, key strengths, and priority fixes]
+**実施日：** [日付]
+**ページ種別：** [種別]
+**コピースコア：** X/100
 
-## Voice & Tone Profile
-[Voice analysis results with recommendations]
+## エグゼクティブ・サマリー
+[2〜3段落。コピーの品質、強み、優先して直すべき点]
 
-## Score Breakdown
-[Full scoring rubric with justifications]
+## 文体プロファイル
+[文体分析の結果と提案]
 
-## Value Proposition Analysis
-[Value proposition canvas with gaps identified]
+## スコア内訳
+[採点基準ごとの点数と根拠]
 
-## Headline Recommendations
-[Current headline, 10 alternatives with framework used, ranked]
+## 価値提案の分析
+[価値提案の整理と、欠けている要素]
 
-## Section-by-Section Copy Suggestions
-[For each major section: current copy, issues, recommended copy, rationale]
+## 見出しの改善案
+[現在の見出し、代替案10個（使用した型を明記）、効果順]
 
-## CTA Optimization
-[Every CTA analyzed with recommendations]
+## セクション別のコピー提案
+[各セクションについて：現在のコピー、問題点、推奨案、理由]
 
-## Before/After Examples
-[At least 5 before/after pairs]
+## CTAの最適化
+[すべてのCTAの分析と提案]
 
-## Swipe File
-[All headline, subheadline, CTA, and meta alternatives]
+## 改善前後の例
+[最低5組]
 
-## Implementation Priority
-[Ranked list of changes by impact]
+## コピー案一覧
+[見出し・サブ見出し・CTA・メタの全代替案]
+
+## 実施の優先順位
+[効果順に並べた変更リスト]
 ```
 
 ---
 
-## Cross-Skill Integration
+## 他スキルとの連携
 
-- If `BRAND-VOICE.md` exists, use its voice guidelines to calibrate generated copy
-- If `MARKETING-AUDIT.md` exists, reference the Content & Messaging score
-- If `COMPETITOR-REPORT.md` exists, use competitor messaging to inform differentiation
-- Suggest follow-up: `/market landing` for landing-page-specific deep dive, `/market brand` for voice guidelines
+- `BRAND-VOICE.md` があれば、その文体ガイドラインに沿ってコピーを生成する
+- `MARKETING-AUDIT.md` があれば、コンテンツ・メッセージングのスコアを参照する
+- `COMPETITOR-REPORT.md` があれば、競合の訴求を踏まえて差別化する
+- 深掘り用に `/market landing`（LP専門の分析）、`/market brand`（文体ガイドライン）を提案する

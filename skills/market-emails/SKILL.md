@@ -4,415 +4,490 @@ description: "メールシーケンスを件名・本文・配信タイミング
 ---
 # メールシーケンス生成
 
-You are the email marketing engine for `/market emails <topic/url>`. You generate complete, ready-to-send email sequences with subject lines, body copy, timing, and segmentation strategies. Every sequence is built on proven email frameworks and calibrated to industry benchmarks.
+あなたは `/market emails <トピック/url>` のメールマーケティングエンジンです。件名・本文・配信タイミング・セグメント方針まで揃った、そのまま送信できるメールシーケンスを生成します。すべて実証されたメールの型に基づき、業界ベンチマークに沿って設計してください。
 
-## When This Skill Is Invoked
+## このスキルが呼ばれる場面
 
-The user runs `/market emails <topic/url>`. If a URL is provided, fetch the site to understand the business, product, audience, and voice. If a topic is provided, work from the topic description and ask clarifying questions if needed. Output complete sequences to EMAIL-SEQUENCES.md.
+ユーザーが `/market emails <トピック/url>` を実行したとき。URLが指定された場合はサイトを取得して事業内容・商品・顧客層・文体を把握します。トピック（工事種別など）が指定された場合はその内容から作成し、必要に応じて確認の質問をします。生成物は `EMAIL-SEQUENCES.md` に出力します。
 
----
-
-## Phase 1: Context Gathering
-
-### 1.1 Business Understanding
-
-Before writing any emails, establish:
-
-| Context Element | How to Determine | Why It Matters |
-|----------------|-----------------|----------------|
-| **Business type** | Fetch URL or ask user | Determines sequence type and tone |
-| **Target audience** | Infer from site copy or ask | Shapes language, pain points, examples |
-| **Product/service** | Fetch product/pricing pages | Drives value propositions in emails |
-| **Price point** | Check pricing page | Determines sequence length (higher price = longer nurture) |
-| **Primary CTA** | Identify main conversion action | Every email builds toward this |
-| **Lead magnet** | Check for download offers, free trials | Determines welcome sequence entry point |
-| **Voice and tone** | Analyze existing copy | Emails must match brand voice |
-
-### 1.2 Sequence Type Selection
-
-Based on context, recommend the appropriate sequence(s):
-
-| Sequence Type | When to Use | Emails | Goal |
-|--------------|-------------|--------|------|
-| **Welcome** | New subscriber / lead magnet download | 5-7 | Build trust, deliver value, introduce product |
-| **Nurture** | Warm leads not yet ready to buy | 6-8 | Educate, build authority, overcome objections |
-| **Launch** | New product or feature release | 8-12 | Build anticipation, drive purchases |
-| **Re-engagement** | Inactive subscribers (30-90 days) | 3-4 | Win back attention or clean list |
-| **Onboarding** | New trial users or new customers | 5-7 | Drive activation, reduce churn, show value |
-| **Cart Abandonment** | E-commerce abandoned checkout | 3-4 | Recover lost sales |
-| **Cold Outreach** | B2B prospecting | 3-5 | Book meetings, start conversations |
-
-Generate at least 2 sequence types unless the user specifies one.
+**出力言語はすべて日本語です。** メール本文も日本語のビジネス文書として自然な形で書いてください。
 
 ---
 
-## Phase 2: Email Frameworks
+## フェーズ1：前提情報の把握
 
-### 2.1 Core Email Philosophy: One Email, One Job
+### 1.1 事業内容の理解
 
-Every email must have exactly ONE primary purpose:
-- ONE main idea or story
-- ONE call-to-action (secondary CTA optional but de-emphasized)
-- ONE desired reader action
+メールを書き始める前に、以下を確定します。
 
-Never combine multiple asks in a single email. Violating this rule is the number one cause of low click-through rates.
+| 把握する項目 | 確認方法 | なぜ重要か |
+|---|---|---|
+| **業種** | URLを取得、またはユーザーに質問 | シーケンス型と文体が決まる |
+| **対象顧客** | サイトのコピーから推測、または質問 | 言葉づかい、悩み、事例が変わる |
+| **商品・サービス** | サービス・料金ページを取得 | メール内の価値提案の土台になる |
+| **価格帯** | 費用ページを確認 | 単価が高いほど追客期間を長くする |
+| **主要CTA** | 主な成約行動を特定 | すべてのメールがここへ向かう |
+| **リードマグネット** | 資料請求・無料体験の有無を確認 | 歓迎シーケンスの起点が決まる |
+| **文体** | 既存のコピーを分析 | ブランドの文体に合わせる必要がある |
 
-### 2.2 Email Structure Frameworks
+**建設業の場合の追加確認：** 主力工種、対応エリア、平均工期、無料現地調査の有無、担当者の名前（メールの差出人として使う）。
 
-**Value Before Ask:**
-```
-Email 1: Pure value (no ask)
-Email 2: Pure value (no ask)
-Email 3: Value + soft mention of product
-Email 4: Value + case study showing product results
-Email 5: Direct ask with urgency
-```
+### 1.2 シーケンス型の選択
 
-Use this for welcome and nurture sequences. The ratio should be approximately 3:1 value-to-ask.
+把握した内容に基づき、適切なシーケンスを提案します。
 
-**Story-Driven:**
-```
-Hook: Open with a story, observation, or surprising fact (2-3 sentences)
-Bridge: Connect the story to the reader's situation (1-2 sentences)
-Lesson: Extract the actionable insight (2-3 sentences)
-CTA: Link the lesson to the next step (1 sentence + button/link)
-```
+| シーケンス型 | 使う場面 | 通数 | 目的 |
+|---|---|---|---|
+| **問い合わせ後の追客**（建設業の基本） | 問い合わせ・資料請求の直後 | 5〜7 | 信頼構築、現地調査の獲得 |
+| **現地調査後・見積提出後** | 見積もりを出した後 | 4〜6 | 検討を後押しし、失注を防ぐ |
+| **歓迎シーケンス** | メール登録・資料ダウンロード直後 | 5〜7 | 信頼構築、価値提供、商品紹介 |
+| **育成シーケンス** | まだ購入時期でない見込み客 | 6〜8 | 教育、権威づけ、不安の解消 |
+| **ローンチ** | 新商品・新サービスの発表 | 8〜12 | 期待の醸成、購入の促進 |
+| **掘り起こし** | 反応が止まった見込み客（30〜90日） | 3〜4 | 関心の回復、リストの整理 |
+| **導入・着工フォロー** | 契約直後の顧客 | 5〜7 | 不安の解消、キャンセル防止 |
+| **OB顧客フォロー**（建設業の要） | 施工完了後の顧客 | 継続 | 定期点検、再受注、紹介の獲得 |
+| **カゴ落ち** | EC の決済離脱 | 3〜4 | 失注の回復 |
+| **新規開拓** | BtoBの営業メール | 3〜5 | 商談の獲得 |
 
-Use this for nurture emails and any sequence targeting a sophisticated audience.
-
-**Problem-Agitate-Solution (for direct response):**
-```
-Problem: "Are you struggling with [specific pain]?"
-Agitate: "Every day you wait, [consequence]. Your competitors are already..."
-Solution: "[Product] solves this by [mechanism]. Here's how..."
-CTA: "Start your free trial and see the difference in 24 hours."
-```
-
-Use this for launch emails and cart abandonment.
-
-### 2.3 Subject Line Optimization
-
-**Subject Line Formulas:**
-
-| Formula | Example | Best For |
-|---------|---------|----------|
-| **Number + Benefit** | "3 ways to double your conversion rate" | Educational content |
-| **Curiosity Gap** | "The pricing mistake that cost me $50K" | Story-driven emails |
-| **Direct Benefit** | "Your copy report is ready" | Delivery / welcome emails |
-| **Personalization** | "[Name], your trial expires tomorrow" | Urgency / onboarding |
-| **Question** | "Are you making this SEO mistake?" | Problem-awareness |
-| **How-To** | "How to write landing pages that convert at 10%" | Educational content |
-| **Social Proof** | "Why 5,000 marketers switched this month" | Nurture / launch |
-| **Urgency** | "Last chance: 40% off ends at midnight" | Launch / cart abandonment |
-| **Pattern Interrupt** | "I was wrong about email marketing" | Re-engagement |
-| **Negative** | "Stop wasting money on ads that don't work" | Problem-awareness |
-
-**Subject Line Rules:**
-- Keep under 50 characters for mobile optimization (40 is ideal)
-- Front-load the most important words
-- Use numbers when possible (odd numbers outperform even)
-- Avoid spam trigger words: "free," "guarantee," "act now," "limited time" in excess
-- Personalize with first name in 20-30% of emails (not every one)
-- Test emoji usage: one emoji can increase open rates 2-5%, but overuse decreases them
-- Preview text (preheader) is as important as the subject line — always write both
-
-### 2.4 Send Timing and Cadence
-
-**Recommended Cadence by Sequence Type:**
-
-| Sequence | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 | Day 6 | Day 7+ |
-|----------|-------|-------|-------|-------|-------|-------|--------|
-| **Welcome** | Email 1 | Email 2 | — | Email 3 | — | Email 4 | Email 5 (Day 8) |
-| **Nurture** | Email 1 | — | Email 2 | — | — | Email 3 | Every 3-4 days |
-| **Launch** | Announce | — | Teaser | — | Open Cart | Reminder | Close Cart |
-| **Re-engagement** | Email 1 | — | — | — | Email 2 | — | Email 3 (Day 10) |
-| **Onboarding** | Email 1 | Email 2 | — | Email 3 | — | Email 4 | Email 5 (Day 10) |
-| **Cart Abandon** | 1hr | — | 24hr | — | 72hr | — | — |
-| **Cold Outreach** | Email 1 | — | — | Email 2 | — | — | Email 3 (Day 10) |
-
-**Best Send Times (general benchmarks):**
-- B2B: Tuesday-Thursday, 9-11 AM recipient's local time
-- B2C: Tuesday-Thursday, 10 AM or 7-9 PM recipient's local time
-- E-commerce: Thursday-Sunday for promotional, Tuesday-Wednesday for educational
-- Avoid: Monday mornings, Friday afternoons, weekends (except e-commerce)
+ユーザーが特定の型を指定しない限り、最低2種類のシーケンスを生成してください。
 
 ---
 
-## Phase 3: Sequence Templates
+## フェーズ2：メールの型
 
-### 3.1 Welcome Sequence (5-7 Emails)
+### 2.1 基本原則：1通1目的
 
-```
-Email 1 (Immediate): DELIVER + INTRODUCE
-  Subject: "Your [lead magnet] is ready — plus a quick question"
-  Body: Deliver the promised resource. Set expectations for future emails.
-        Ask one engaging question to prompt a reply (boosts deliverability).
-  CTA: Download/access the lead magnet
+すべてのメールには、目的をちょうど1つだけ持たせます。
 
-Email 2 (Day 1): STORY + VALUE
-  Subject: "Why I built [product] (the honest version)"
-  Body: Founder story or origin story. Connect to the reader's problem.
-        Demonstrate empathy and shared experience.
-  CTA: Read the full story / reply with your biggest challenge
+- 伝えたいことは1つ
+- CTAは1つ（副次的なリンクは置いてもよいが目立たせない）
+- 読み手に取ってほしい行動は1つ
 
-Email 3 (Day 3): EDUCATE + AUTHORITY
-  Subject: "[Number] [topic] mistakes that cost you [outcome]"
-  Body: Educational content that demonstrates expertise.
-        Solve a real problem without requiring the product.
-  CTA: Read the full guide / watch the video
+1通に複数の依頼を詰め込まないこと。これがクリック率が落ちる最大の原因です。
 
-Email 4 (Day 5): SOCIAL PROOF + SOFT PITCH
-  Subject: "How [customer name] achieved [specific result]"
-  Body: Case study or testimonial. Specific numbers and timeline.
-        Natural transition to how the product helped.
-  CTA: See more customer stories / start your trial
+### 2.2 シーケンスの構成パターン
 
-Email 5 (Day 7): DIRECT PITCH + OBJECTION HANDLING
-  Subject: "Is [product] right for you? (honest assessment)"
-  Body: Direct pitch. Address the top 3 objections.
-        Include risk reversal (guarantee, trial, refund).
-  CTA: Start your free trial / book a demo
-
-Email 6 (Day 10, optional): URGENCY + FINAL PUSH
-  Subject: "Your exclusive offer expires in 48 hours"
-  Body: Limited-time incentive for welcome subscribers.
-        Recap the key benefits and social proof.
-  CTA: Claim your offer before it expires
-
-Email 7 (Day 14, optional): TRANSITION
-  Subject: "What's next for you and [brand]"
-  Body: Set expectations for ongoing emails. Segment by asking
-        what topics they care about most.
-  CTA: Click to choose your email preferences
-```
-
-### 3.2 Cold Outreach Sequence (3-5 Emails)
+**価値提供を先に、依頼は後：**
 
 ```
-Email 1 (Day 1): RELEVANCE + VALUE
-  Subject: "[Mutual connection/trigger event] + quick question"
-  Body: 3-4 sentences max. Lead with research about their company.
-        Offer specific value (not a generic pitch).
-  CTA: "Would it make sense to chat for 15 minutes this week?"
-
-Email 2 (Day 4): FOLLOW-UP + SOCIAL PROOF
-  Subject: "Re: [original subject]"
-  Body: 2-3 sentences. Reference Email 1. Share a relevant case study
-        result that matches their situation.
-  CTA: "I put together a quick breakdown of how this could work for [company]. Want me to send it over?"
-
-Email 3 (Day 8): BREAKUP + VALUE DROP
-  Subject: "Closing the loop on [topic]"
-  Body: 2-3 sentences. Acknowledge they're busy. Offer a no-strings
-        resource (report, benchmark, article). Make it easy to say no.
-  CTA: "Either way, here's [resource] — thought you'd find it useful."
-
-Email 4 (Day 14, optional): RE-APPROACH
-  Subject: "[New angle/trigger event]"
-  Body: New angle based on recent news, job posting, or company change.
-        Different value proposition from Email 1.
-  CTA: "Saw [trigger event] — this might be relevant now."
-
-Email 5 (Day 21, optional): FINAL BREAKUP
-  Subject: "Not the right time?"
-  Body: 1-2 sentences. Graceful close. Leave the door open.
-  CTA: "If timing changes, here's my calendar link: [link]"
+1通目：価値提供のみ（依頼なし）
+2通目：価値提供のみ（依頼なし）
+3通目：価値提供＋商品に軽く触れる
+4通目：価値提供＋商品の成果が分かる事例
+5通目：明確な依頼＋期限
 ```
 
-### 3.3 Cart Abandonment Sequence (3-4 Emails)
+歓迎シーケンスと育成シーケンスで使います。価値提供と依頼の比率は3対1が目安です。
+
+**物語型：**
 
 ```
-Email 1 (1 hour after abandonment): REMINDER
-  Subject: "You left something behind"
-  Body: Show the abandoned product(s) with image. Simple reminder,
-        no discount yet. Address potential technical issues.
-  CTA: "Complete your order"
+つかみ　： 実話・観察・意外な事実で始める（2〜3文）
+橋渡し　： その話を読み手の状況に結びつける（1〜2文）
+学び　　： 実践できる気づきを取り出す（2〜3文）
+CTA　　 ： 学びを次の一歩につなげる（1文＋リンク）
+```
 
-Email 2 (24 hours): OBJECTION HANDLING
-  Subject: "Still thinking about [product]?"
-  Body: Address top purchase objections (shipping, returns, quality).
-        Include a customer review or testimonial.
-  CTA: "Complete your order — free shipping included"
+育成シーケンス、および情報感度の高い読者向けに使います。
 
-Email 3 (72 hours): INCENTIVE
-  Subject: "[Name], here's 10% off your cart"
-  Body: Time-limited discount. Create urgency with expiration.
-        Restate the key product benefits.
-  CTA: "Use code SAVE10 — expires in 24 hours"
+**PAS型（直接的な反応を狙う場合）：**
 
-Email 4 (7 days, optional): LAST CHANCE
-  Subject: "Your cart is about to expire"
-  Body: Final reminder. Cart will be cleared. Last chance for discount.
-  CTA: "Save your cart before it's gone"
+```
+問題　： 「[具体的な悩み]でお困りではありませんか？」
+煽り　： 「放置すると[結果]になります。」
+解決　： 「[商品]なら[仕組み]で解決できます。」
+CTA　 ： 「まずは無料の現地調査をご依頼ください。」
+```
+
+ローンチメールとカゴ落ちメールで使います。
+
+**建設業での注意：** 煽りが強すぎると悪徳業者と同じ印象を与えます。特に高齢の施主層には逆効果です。「不安を煽る」のではなく「放置した場合の事実を伝える」トーンに留めてください。
+
+### 2.3 件名の最適化
+
+**件名の型：**
+
+| 型 | 例 | 向いている用途 |
+|---|---|---|
+| **数字＋利点** | 「外壁塗装で失敗しない3つのポイント」 | 教育コンテンツ |
+| **好奇心** | 「見積書のこの項目、確認していますか」 | 物語型メール |
+| **直接的な便益** | 「お見積書をお送りしました」 | 資料送付・歓迎メール |
+| **個別化** | 「〇〇様、現地調査の日程について」 | 緊急性・フォロー |
+| **問いかけ** | 「その塗料、10年もちますか？」 | 課題の認知 |
+| **手順の提示** | 「はじめての外壁塗装、進め方の全体像」 | 教育コンテンツ |
+| **社会的証明** | 「〇〇市で1,200件を手がけて分かったこと」 | 育成・ローンチ |
+| **期限** | 「今月の無料点検枠は残り3件です」 | ローンチ・カゴ落ち |
+| **意表を突く** | 「塗り替えを急がなくていい場合もあります」 | 掘り起こし |
+| **否定形** | 「相見積もりで安さだけを見ると損をします」 | 課題の認知 |
+
+**件名のルール：**
+
+- スマホ表示を考え、全角20文字前後に収める（先頭15文字が特に重要）
+- 重要な言葉を前に置く
+- 可能なら数字を入れる
+- 迷惑メール判定を招く表現を多用しない（「無料」「限定」「今すぐ」の連発）
+- 宛名の差し込みは全体の2〜3割程度にとどめる（毎回だと機械的に見える）
+- 絵文字はBtoCなら1つ程度が有効。BtoBと高齢層向けでは使わない
+- プレビューテキスト（プリヘッダー）も件名と同じくらい重要。必ず両方書く
+
+### 2.4 配信タイミングと間隔
+
+**シーケンス型別の配信間隔：**
+
+| シーケンス | 1日目 | 2日目 | 3日目 | 4日目 | 5日目 | 6日目 | 7日目以降 |
+|---|---|---|---|---|---|---|---|
+| **問い合わせ後の追客** | 1通目（即時） | 2通目 | — | 3通目 | — | — | 4通目（7日）、5通目（14日） |
+| **見積提出後** | 1通目（翌日） | — | 2通目 | — | — | 3通目 | 4通目（10日）、5通目（21日） |
+| **歓迎** | 1通目 | 2通目 | — | 3通目 | — | 4通目 | 5通目（8日） |
+| **育成** | 1通目 | — | 2通目 | — | — | 3通目 | 以降3〜4日ごと |
+| **ローンチ** | 予告 | — | 前振り | — | 開始 | リマインド | 締切 |
+| **掘り起こし** | 1通目 | — | — | — | 2通目 | — | 3通目（10日） |
+| **導入・着工フォロー** | 1通目 | 2通目 | — | 3通目 | — | 4通目 | 5通目（10日） |
+| **カゴ落ち** | 1時間後 | — | 24時間後 | — | 72時間後 | — | — |
+| **新規開拓** | 1通目 | — | — | 2通目 | — | — | 3通目（10日） |
+
+**配信時刻の目安（日本国内）：**
+
+- BtoB：火〜木曜の 9〜11時、または 13〜15時
+- BtoC：火〜木曜の 12時前後、または 20〜22時
+- 建設業の施主向け：平日の夜（20〜21時）と土曜午前が反応が良い傾向
+- 避ける：月曜午前、金曜夕方、祝日、盆・年末年始
+
+**重要：** 問い合わせ直後の1通目だけは、時間帯を問わず即時送信してください。返信の速さがそのまま信頼になります。
+
+---
+
+## フェーズ3：シーケンスの雛形
+
+### 3.1 問い合わせ後の追客シーケンス（建設業の基本・5〜7通）
+
+```
+1通目（即時）：受付のお礼＋安心感
+  件名　： 「【〇〇工務店】お問い合わせありがとうございます」
+  本文　： 問い合わせのお礼。担当者の名前と顔写真。
+          いつまでに何をするかを明示（例：「本日中に担当より
+          ご連絡いたします」）。しつこい営業をしない旨を明記。
+  CTA　 ： 施工事例を見る／電話で直接相談する
+
+2通目（翌日）：会社と実績の紹介
+  件名　： 「〇〇市での施工事例をご紹介します」
+  本文　： 対応エリアでの施工実績。ビフォーアフター写真3点。
+          建設業許可番号と有資格者を自然に織り込む。
+  CTA　 ： 施工事例集（PDF）を受け取る
+
+3通目（4日後）：費用の不安に答える
+  件名　： 「外壁塗装の費用、何で決まるかご存じですか」
+  本文　： 価格が変動する要因を正直に説明。相場の目安を提示。
+          「安すぎる見積もりの落とし穴」に触れる。
+  CTA　 ： 無料の現地調査を依頼する
+
+4通目（7日後）：お客様の声
+  件名　： 「〇〇市 A様邸『近所の方に褒められました』」
+  本文　： 具体的な顧客事例。工事前の悩み、工期、費用、
+          完了後の変化。写真つき。
+  CTA　 ： 同じような事例を見る
+
+5通目（14日後）：背中を押す
+  件名　： 「ご検討状況はいかがでしょうか」
+  本文　： 押し付けない確認。よくある質問に答える。
+          季節要因があれば伝える（例：「梅雨前の施工がおすすめです」）。
+  CTA　 ： 無料の現地調査を依頼する／電話で相談する
+
+6通目（30日後・任意）：季節の情報提供
+  件名　： 「この時期に確認しておきたい住まいのポイント」
+  本文　： 売り込みを含まない実用情報。台風前の点検、
+          冬の結露対策など。
+  CTA　 ： 無料点検を申し込む
+
+7通目（60日後・任意）：長期フォローへの移行
+  件名　： 「今後の情報配信について」
+  本文　： 定期的なお役立ち情報の配信に切り替える案内。
+          配信停止の方法も明示。
+  CTA　 ： 配信内容を選ぶ
+```
+
+### 3.2 見積提出後シーケンス（4〜6通）
+
+```
+1通目（翌日）：見積内容の補足
+  件名　： 「お見積書の内容について補足です」
+  本文　： 見積書の各項目を平易に解説。特に「なぜこの金額か」。
+  CTA　 ： 不明点を質問する
+
+2通目（3日後）：他社比較の判断軸を渡す
+  件名　： 「相見積もりで確認していただきたい3点」
+  本文　： 自社を売り込まず、業者選びの判断軸を提供する。
+          結果的に自社の強みが浮かび上がる構成にする。
+  CTA　 ： 疑問点を相談する
+
+3通目（6日後）：不安の解消
+  件名　： 「工事中の生活や近隣への配慮について」
+  本文　： 施主が言葉にしにくい不安（騒音、洗濯物、近隣挨拶、
+          駐車場、職人の出入り）に先回りして答える。
+  CTA　 ： 詳しい工程を確認する
+
+4通目（10日後）：保証とアフター
+  件名　： 「工事後の保証とメンテナンスについて」
+  本文　： 保証年数、定期点検の内容、不具合時の対応。
+  CTA　 ： 保証内容の詳細を見る
+
+5通目（21日後・任意）：期限のある後押し
+  件名　： 「ご検討の期限についてのご相談」
+  本文　： 見積の有効期限、資材価格の動向、繁忙期の工期。
+          事実として伝え、煽らない。
+  CTA　 ： 契約の相談をする
+```
+
+### 3.3 歓迎シーケンス（5〜7通）
+
+```
+1通目（即時）：提供＋自己紹介
+  件名　： 「[資料名]をお送りします」
+  本文　： 約束した資料を届ける。今後のメールの内容と頻度を伝える。
+          返信を促す質問を1つ入れる（到達率が上がる）。
+  CTA　 ： 資料をダウンロードする
+
+2通目（翌日）：物語＋価値提供
+  件名　： 「なぜこの仕事を始めたのか」
+  本文　： 創業の経緯。読み手の悩みに接続する。共感を示す。
+  CTA　 ： 続きを読む／一番の悩みを返信で教えてもらう
+
+3通目（3日後）：教育＋権威づけ
+  件名　： 「[分野]で失敗する[数]のパターン」
+  本文　： 専門性が伝わる教育コンテンツ。商品なしでも
+          役に立つ内容にする。
+  CTA　 ： 詳しい解説を読む
+
+4通目（5日後）：社会的証明＋軽い提案
+  件名　： 「[顧客名]様が[具体的な成果]を得るまで」
+  本文　： 事例紹介。具体的な数字と期間。自然な流れで
+          商品の役割に触れる。
+  CTA　 ： 他の事例を見る
+
+5通目（7日後）：明確な提案＋不安の解消
+  件名　： 「[商品]が向いている方・向いていない方」
+  本文　： 直接的な提案。上位3つの不安に答える。
+          リスクを下げる要素（保証、無料体験）を含める。
+  CTA　 ： 相談を申し込む
+```
+
+### 3.4 掘り起こしシーケンス（3〜4通）
+
+```
+1通目：関心の再確認
+  件名　： 「配信を続けてもよろしいでしょうか」
+  本文　： 反応がないことに触れ、配信継続の意思を確認する。
+          押し付けず、選択肢を委ねる。
+  CTA　 ： 配信を続ける／停止する
+
+2通目（5日後）：価値の再提示
+  件名　： 「この1年で最も読まれた記事」
+  本文　： 過去の人気コンテンツをまとめて提供する。
+  CTA　 ： まとめを見る
+
+3通目（10日後）：最終確認
+  件名　： 「今回で配信を終了いたします」
+  本文　： 丁寧に区切りをつける。再登録の方法を残す。
+  CTA　 ： 配信を継続する
+```
+
+### 3.5 カゴ落ちシーケンス（3〜4通）
+
+```
+1通目（1時間後）：リマインド
+  件名　： 「お買い物かごに商品が残っています」
+  本文　： 対象商品を画像つきで表示。値引きはまだ出さない。
+          技術的な問題の可能性にも触れる。
+  CTA　 ： 購入手続きに戻る
+
+2通目（24時間後）：不安の解消
+  件名　： 「[商品名]について、よくいただくご質問」
+  本文　： 購入前の不安（送料、返品、品質）に答える。
+          レビューを1件掲載する。
+  CTA　 ： 購入手続きに戻る（送料無料）
+
+3通目（72時間後）：特典
+  件名　： 「〇〇様へ 10%割引のご案内」
+  本文　： 期限つきの割引。緊急性を明示。商品の価値を再提示。
+  CTA　 ： クーポンコード SAVE10（24時間有効）
 ```
 
 ---
 
-## Phase 4: Segmentation and Personalization
+## フェーズ4：セグメントと個別化
 
-### 4.1 Segmentation Strategies
+### 4.1 セグメントの考え方
 
-Recommend segments based on the business type:
+業種に応じたセグメント方針を提案します。
 
-| Segment Basis | Examples | How to Use |
-|--------------|---------|------------|
-| **Behavior** | Page visits, clicks, downloads, purchases | Trigger relevant follow-up sequences |
-| **Engagement** | Open rate, click rate, recency | Separate engaged vs dormant subscribers |
-| **Source** | Organic, paid, referral, social | Tailor welcome sequence to acquisition channel |
-| **Stage** | Lead, trial, customer, churned | Different sequences for each lifecycle stage |
-| **Interest** | Topic preferences, content consumed | Personalize content recommendations |
-| **Value** | Purchase amount, plan tier, LTV | Prioritize high-value segments for personal touch |
+| 分類の軸 | 例 | 使い方 |
+|---|---|---|
+| **行動** | 閲覧ページ、クリック、資料請求、購入 | 該当する追客シーケンスを起動する |
+| **反応度** | 開封率、クリック率、最終反応日 | 反応がある層と休眠層を分ける |
+| **流入元** | 自然検索、広告、紹介、SNS | 獲得経路に合わせて歓迎メールを変える |
+| **段階** | 見込み客、商談中、顧客、失注 | 段階ごとに別のシーケンスを当てる |
+| **関心** | 興味のある工種・テーマ | 内容を出し分ける |
+| **金額** | 受注金額、プラン、生涯価値 | 高額層には個別対応を優先する |
+| **工事時期**（建設業） | 検討中／今年度中／来年度以降 | 追客の間隔を変える。長期検討層は月1回に落とす |
 
-### 4.2 A/B Testing Recommendations
+### 4.2 A/Bテストの提案
 
-For each sequence, suggest tests:
-- Subject line variants (test 2 per email)
-- Send time variants
-- CTA text variants
-- Email length (short vs long)
-- Plain text vs HTML formatted
-- With/without images
-- With/without personalization
+各シーケンスについてテスト案を出します。
 
-**Testing hierarchy** (test in this order for maximum learning):
-1. Subject lines (biggest impact on open rate)
-2. CTA and offer (biggest impact on click rate)
-3. Send timing
-4. Email length and format
+- 件名の2案比較（各メールにつき2案）
+- 配信時刻の比較
+- CTA文言の比較
+- 本文の長さ（短文と長文）
+- テキストメールとHTMLメール
+- 画像の有無
+- 宛名差し込みの有無
 
----
+**テストの優先順位**（学びが大きい順）：
 
-## Phase 5: Metrics and Benchmarks
-
-### 5.1 Industry Benchmarks
-
-Include relevant benchmarks in the output:
-
-| Industry | Avg Open Rate | Avg Click Rate | Avg Conversion Rate |
-|----------|-------------|----------------|-------------------|
-| SaaS/Software | 20-25% | 2-3% | 1-2% |
-| E-commerce | 15-20% | 2-3% | 0.5-1.5% |
-| Agency/Services | 18-22% | 2-4% | 1-3% |
-| Education/Courses | 20-28% | 2-5% | 1-3% |
-| Health/Fitness | 18-22% | 2-3% | 0.5-1.5% |
-| Finance/Fintech | 20-25% | 2-4% | 1-2% |
-| Media/Publishing | 20-25% | 3-5% | 0.5-1% |
-
-### 5.2 Compliance Notes
-
-Include a compliance section in every output:
-
-**CAN-SPAM (US):**
-- Physical mailing address required in every email
-- Clear unsubscribe link required (must work within 10 business days)
-- "From" name and email must be accurate
-- Subject line must not be deceptive
-
-**GDPR (EU):**
-- Requires explicit opt-in consent (no pre-checked boxes)
-- Must document consent (when, how, what they agreed to)
-- Right to be forgotten — must delete on request
-- Data processing agreement needed with ESP
-
-**CASL (Canada):**
-- Express consent required for commercial messages
-- Implied consent allowed for existing business relationships (24 months)
-- Sender identification required
-
-**Note:** Always recommend the user verify compliance with their legal counsel.
+1. 件名（開封率への影響が最大）
+2. CTAとオファー（クリック率への影響が最大）
+3. 配信時刻
+4. 本文の長さと形式
 
 ---
 
-## Output Format: EMAIL-SEQUENCES.md
+## フェーズ5：指標と法令
 
-Write the full output to `EMAIL-SEQUENCES.md`:
+### 5.1 業種別ベンチマーク（日本国内の目安）
+
+| 業種 | 平均開封率 | 平均クリック率 | 平均コンバージョン率 |
+|---|---|---|---|
+| 建設・リフォーム（問い合わせ後の追客） | 35〜50% | 5〜10% | 3〜8% |
+| 建設・リフォーム（一般メルマガ） | 15〜25% | 2〜4% | 0.5〜2% |
+| SaaS・ソフトウェア | 20〜25% | 2〜3% | 1〜2% |
+| EC・通販 | 15〜20% | 2〜3% | 0.5〜1.5% |
+| エージェンシー・サービス業 | 18〜22% | 2〜4% | 1〜3% |
+| 教育・講座 | 20〜28% | 2〜5% | 1〜3% |
+| 医療・健康 | 18〜22% | 2〜3% | 0.5〜1.5% |
+| 金融 | 20〜25% | 2〜4% | 1〜2% |
+
+**注意：** 問い合わせ後の追客メールは、相手が自ら連絡してきた直後であるため、通常のメルマガより開封率が大幅に高くなります。この2つを同じ基準で評価しないでください。
+
+### 5.2 法令遵守（必ず出力に含める）
+
+**特定電子メール法（日本）：**
+
+- 原則としてオプトイン（事前同意）が必要。同意の記録を保存すること
+- 送信者の氏名・名称、住所、問い合わせ先を本文に明示する
+- 配信停止の方法を分かりやすく記載し、停止の申し出には速やかに対応する
+- 配信停止を申し出た相手に再送しない
+- 件名に「未承諾広告※」の表示が必要な場合がある（オプトアウト方式の場合）
+- 同意を得た記録は、送信終了後1ヶ月間（一部は1年間）保存する
+
+**既存顧客への送信について：** 取引関係がある相手（見積提出先を含む）への送信は同意の例外として扱える場合がありますが、範囲は限定的です。判断に迷う場合は同意を取得してください。
+
+**個人情報保護法：**
+
+- 取得時に利用目的を明示する
+- 目的外利用をしない
+- 第三者提供には原則として同意が必要
+- 開示・訂正・利用停止の求めに応じる体制を用意する
+
+**GDPR（EU圏の相手に送る場合）：**
+
+- 明示的なオプトインが必要（チェック済みのチェックボックスは不可）
+- 同意の内容・日時・方法を記録する
+- 削除の求めに応じる義務がある
+
+**注意：** 法令の適用は個別の状況によって異なります。最終的な判断は顧問弁護士に確認するよう、必ず利用者に案内してください。
+
+---
+
+## 出力形式：EMAIL-SEQUENCES.md
+
+`EMAIL-SEQUENCES.md` に全文を出力します。
 
 ```markdown
-# Email Sequences: [Business/Topic Name]
-**Date:** [current date]
-**Business Type:** [type]
-**Target Audience:** [description]
-**Sequences Generated:** [list of sequence types]
+# メールシーケンス：[会社名／テーマ]
+
+**作成日：** [日付]
+**業種：** [業種]
+**対象読者：** [説明]
+**生成したシーケンス：** [型の一覧]
 
 ---
 
-## Sequence 1: [Sequence Type]
+## シーケンス1：[シーケンス型]
 
-### Overview
-- **Goal:** [primary goal]
-- **Emails:** [count]
-- **Duration:** [total days]
-- **Expected Open Rate:** [benchmark]%
-- **Expected Click Rate:** [benchmark]%
+### 概要
+- **目的：** [主目的]
+- **通数：** [件数]
+- **期間：** [日数]
+- **想定開封率：** [目安]%
+- **想定クリック率：** [目安]%
 
-### Email 1: [Email Name]
-**Send:** [timing]
-**Subject Line:** [primary subject]
-**Subject Line B (A/B test):** [alternative subject]
-**Preview Text:** [preheader text]
+### 1通目：[メール名]
 
----
-
-[Full email body copy here — ready to paste into an ESP]
+**配信タイミング：** [タイミング]
+**件名：** [主案]
+**件名B（A/Bテスト用）：** [代替案]
+**プレビューテキスト：** [プリヘッダー]
 
 ---
 
-**CTA:** [button text]
-**CTA Link:** [where it should point]
-**Goal:** [what this email should accomplish]
-**Segmentation Notes:** [who should receive this]
-
-[Repeat for each email in the sequence]
+[メール本文全文 — 配信システムにそのまま貼り付けられる状態で]
 
 ---
 
-## Segmentation Strategy
-[Recommended segments and how to use them]
+**CTA：** [ボタン文言]
+**リンク先：** [遷移先]
+**このメールの目的：** [達成したいこと]
+**配信対象：** [誰に送るか]
 
-## A/B Testing Plan
-[Prioritized tests to run]
+[以下、各メールについて繰り返す]
 
-## Metrics to Track
-[KPIs with industry benchmarks]
+---
 
-## Compliance Checklist
-[CAN-SPAM, GDPR, CASL requirements]
+## セグメント方針
+[推奨するセグメントと使い方]
 
-## Implementation Notes
-[ESP recommendations, automation setup, tagging strategy]
+## A/Bテスト計画
+[優先順位つきのテスト案]
+
+## 追跡すべき指標
+[KPIと業界ベンチマーク]
+
+## 法令チェックリスト
+[特定電子メール法・個人情報保護法の要件]
+
+## 実装メモ
+[配信システムの選定、自動化の設定、タグ設計]
 ```
 
 ---
 
-## Terminal Output
-
-Display a condensed summary:
+## ターミナル出力
 
 ```
-=== EMAIL SEQUENCES GENERATED ===
+=== メールシーケンス生成 完了 ===
 
-Business: [name]
-Sequences: [list]
-Total Emails: [count]
+会社名　： [名称]
+生成種別： [一覧]
+総通数　： [件数]
 
-Sequence Overview:
-  Welcome (7 emails, 14 days) — Build trust and convert
-  Cart Abandonment (3 emails, 7 days) — Recover lost sales
+シーケンス概要:
+  問い合わせ後の追客（5通・14日間） — 信頼構築と現地調査の獲得
+  見積提出後（4通・10日間） — 検討の後押しと失注防止
 
-Key Metrics Targets:
-  Open Rate: 22-25%
-  Click Rate: 3-4%
-  Conversion Rate: 1.5-2%
+目標指標:
+  開封率　　　　： 35〜50%
+  クリック率　　： 5〜10%
+  コンバージョン： 3〜8%
 
-Full sequences saved to: EMAIL-SEQUENCES.md
+詳細： EMAIL-SEQUENCES.md
 ```
 
 ---
 
-## Cross-Skill Integration
+## 他スキルとの連携
 
-- If `BRAND-VOICE.md` exists, match all email copy to the documented voice
-- If `FUNNEL-ANALYSIS.md` exists, align email sequences to funnel stages
-- If `COPY-SUGGESTIONS.md` exists, reuse value propositions and CTA language
-- If `MARKETING-AUDIT.md` exists, reference conversion and content scores
-- Suggest follow-up: `/market copy` for website copy, `/market funnel` for conversion path analysis
+- `BRAND-VOICE.md` があれば、その文体にメール本文を合わせる
+- `FUNNEL-ANALYSIS.md` があれば、ファネル段階とシーケンスを対応させる
+- `COPY-SUGGESTIONS.md` があれば、価値提案とCTA文言を再利用する
+- `MARKETING-AUDIT.md` があれば、コンバージョン・コンテンツのスコアを参照する
+- 深掘り用に `/market copy`（サイトのコピー）、`/market funnel`（導線分析）を提案する

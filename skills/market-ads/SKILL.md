@@ -4,459 +4,552 @@ description: "広告クリエイティブと広告文を媒体別に生成する
 ---
 # 広告クリエイティブ・コピー生成
 
-You are the advertising engine for `/market ads <url>`. You generate complete ad campaigns across platforms with full copy variations, audience targeting strategies, budget recommendations, and creative specifications. Every ad is ready for production or handoff to a media buyer.
+あなたは `/market ads <url>` の広告エンジンです。媒体ごとに、広告文の複数案・ターゲティング方針・予算配分・クリエイティブ仕様を含む完全なキャンペーン構成を生成します。すべての広告は、そのまま入稿できるか、運用代行者にそのまま渡せる状態にしてください。
 
-## When This Skill Is Invoked
+## このスキルが呼ばれる場面
 
-The user runs `/market ads <url>`. Fetch the target site to understand the business, product, audience, and value propositions. Generate complete campaign structures across relevant platforms. Output everything to AD-CAMPAIGNS.md.
+ユーザーが `/market ads <url>` を実行したとき。対象サイトを取得して事業内容・商品・顧客層・価値提案を把握し、適した媒体のキャンペーン構成を生成します。生成物は `AD-CAMPAIGNS.md` に出力します。
 
----
-
-## Phase 1: Campaign Foundation
-
-### 1.1 Business and Offer Analysis
-
-Before writing any ads, establish:
-
-| Context Element | Source | Purpose |
-|----------------|--------|---------|
-| **Product/Service** | URL analysis | Core of all ad messaging |
-| **Price point** | Pricing page | Determines funnel depth and ad strategy |
-| **Target audience** | Site copy, user input | Audience targeting parameters |
-| **Unique selling proposition** | Homepage, features | Primary ad differentiation |
-| **Conversion action** | CTAs on site | What the ad should drive toward |
-| **Social proof** | Testimonials, numbers | Trust elements for ad copy |
-| **Objections** | FAQ, competitor analysis | Objection-handling ad angles |
-| **Competitors** | Industry knowledge | Competitive positioning angles |
-
-### 1.2 Campaign Objective Mapping
-
-Map the business goal to the right campaign objective:
-
-| Business Goal | Campaign Objective | Primary Platform | Ad Format |
-|--------------|-------------------|-----------------|-----------|
-| Brand awareness | Reach / Impressions | Meta, YouTube, TikTok | Video, Display |
-| Lead generation | Lead Gen / Conversions | Meta, LinkedIn, Google | Lead forms, Landing pages |
-| Trial signups | Conversions | Google, Meta, LinkedIn | Search, Landing pages |
-| E-commerce sales | Sales / ROAS | Google Shopping, Meta, TikTok | Shopping, Carousel |
-| App installs | App Install | Meta, Google, TikTok | App install ads |
-| Event registration | Conversions | Meta, LinkedIn | Event ads, Landing pages |
-| Content promotion | Engagement / Traffic | Meta, Twitter, LinkedIn | Boosted posts, Video |
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
 ---
 
-## Phase 2: Platform-Specific Ad Generation
+## フェーズ1：キャンペーンの土台
 
-### 2.1 Google Ads
+### 1.1 事業とオファーの分析
 
-**Search Ads (Responsive Search Ads):**
+広告を書き始める前に、以下を確定します。
 
-Character limits:
-- Headlines: Up to 15 headlines, 30 characters each
-- Descriptions: Up to 4 descriptions, 90 characters each
-- Display URL path: 2 fields, 15 characters each
+| 把握する項目 | 情報源 | 目的 |
+|---|---|---|
+| **商品・サービス** | URL分析 | 広告メッセージの核 |
+| **価格帯** | 費用ページ | ファネルの深さと戦略が決まる |
+| **対象顧客** | サイトのコピー、ユーザー入力 | ターゲティング条件 |
+| **独自の強み** | トップページ、特徴ページ | 広告の差別化軸 |
+| **コンバージョン** | サイト上のCTA | 広告が誘導する先 |
+| **社会的証明** | お客様の声、実績数値 | 広告文の信頼要素 |
+| **不安・反論** | FAQ、競合分析 | 不安を解消する切り口 |
+| **競合** | 業界知識 | 競合との差別化 |
+| **商圏**（建設業） | 会社概要、対応エリア | 地域指定の範囲 |
 
-Generate at least:
-- 10 headlines covering these angles:
-  - Brand name + value prop
-  - Pain point + solution
-  - Specific benefit + number
-  - Social proof headline
-  - Urgency / offer headline
-  - Question headline
-  - How-to headline
-  - Comparison headline
-  - Feature-focused headline
-  - Action-oriented headline
-- 4 descriptions covering:
-  - Value proposition + CTA
-  - Features + benefits
-  - Social proof + trust
-  - Urgency + offer details
+### 1.2 目的と媒体の対応
 
-**Keyword Strategy:**
-- 10-15 high-intent keywords per ad group
-- Match types: mix of exact, phrase, and broad match modified
-- Negative keywords list (10-20 irrelevant terms to exclude)
-- Organize into 3-5 ad groups by theme
+事業目標を、適切なキャンペーン目的に対応させます。
 
-**Performance Max Campaigns:**
-- Asset groups organized by audience segment
-- Headline variations (15 short + 5 long)
-- Description variations (5)
-- Image specs: 1200x1200 (square), 1200x628 (landscape), 960x1200 (portrait)
-- Video assets: 10-30 seconds recommended
-- Audience signals: custom segments, in-market, affinity
+| 事業目標 | キャンペーン目的 | 主な媒体 | 広告形式 |
+|---|---|---|---|
+| 問い合わせ獲得（建設業） | コンバージョン | Google広告、Yahoo!広告 | 検索広告、ランディングページ |
+| 地域での認知 | リーチ | Meta広告、Googleディスプレイ | 動画、ディスプレイ |
+| 資料請求・リード獲得 | リード獲得 | Meta広告、Google広告 | リードフォーム、LP |
+| 無料体験の申込 | コンバージョン | Google広告、Meta広告 | 検索広告、LP |
+| EC の売上 | 売上・ROAS | Googleショッピング、Meta広告 | ショッピング、カルーセル |
+| アプリのインストール | アプリインストール | Meta広告、Google広告 | アプリ広告 |
+| イベント・見学会の集客 | コンバージョン | Meta広告、LINE広告 | イベント広告、LP |
+| コンテンツの拡散 | エンゲージメント | Meta広告、X広告 | 投稿の宣伝、動画 |
 
-### 2.2 Meta Ads (Facebook + Instagram)
-
-**Ad Formats and Specs:**
-
-| Format | Placement | Image Spec | Video Spec | Text Limits |
-|--------|-----------|-----------|-----------|-------------|
-| Single Image | Feed, Stories, Reels | 1080x1080 (feed), 1080x1920 (stories) | N/A | Primary: 125 chars, Headline: 40, Description: 30 |
-| Video | Feed, Stories, Reels | N/A | 1080x1080 or 1080x1920, <240 min | Same as image |
-| Carousel | Feed, Stories | 1080x1080 per card, 2-10 cards | 1080x1080, <240 min | Same as image |
-| Collection | Feed | 1200x628 cover | 1200x628 cover | Same as image |
-
-**Generate for each ad concept:**
-- Primary text (3 variations: short, medium, long)
-- Headline (5 variations)
-- Description (3 variations)
-- CTA button (select from: Learn More, Sign Up, Shop Now, Get Offer, Book Now, Download, Contact Us)
-
-**Ad Copy Angles (generate 5-10 per campaign):**
-
-```
-Angle 1: PAIN POINT
-  "Tired of [specific frustration]? [Product] eliminates [pain] so you can
-   focus on [desired outcome]."
-
-Angle 2: SOCIAL PROOF
-  "[Number] [audience] already use [product] to [benefit].
-   See why [specific customer] calls it '[quote].'"
-
-Angle 3: BEFORE/AFTER
-  "Before [product]: [painful state]
-   After [product]: [desired state]
-   The difference? [Unique mechanism]."
-
-Angle 4: OBJECTION HANDLING
-  "Think [product type] is [common objection]? [Counter with evidence].
-   Try it free for [trial period] — no [risk]."
-
-Angle 5: URGENCY/SCARCITY
-  "[Limited offer detail]. [Number] spots left this month.
-   [Product] helps you [benefit] — lock in [offer] before [deadline]."
-
-Angle 6: CURIOSITY
-  "The [industry] secret that [specific result] (most [audience] miss this)."
-
-Angle 7: DIRECT BENEFIT
-  "Get [specific outcome] in [timeframe] with [product].
-   No [common objection]. Just [benefit]."
-
-Angle 8: COMPARISON
-  "Still using [competitor/old way]? [Product] gives you [advantage]
-   at [fraction/price benefit]."
-
-Angle 9: TESTIMONIAL
-  "'[Specific quote from customer about specific result]'
-   — [Customer name], [title/company]"
-
-Angle 10: HOW-TO
-  "How to [achieve desired outcome] in 3 steps:
-   1. [Step using product]  2. [Step]  3. [Result]"
-```
-
-### 2.3 LinkedIn Ads
-
-**Ad Formats:**
-- Sponsored Content (single image, video, carousel)
-- Message Ads (InMail)
-- Text Ads
-- Conversation Ads
-- Document Ads (PDF carousel)
-
-**Character Limits:**
-- Sponsored Content: Intro text 600 chars, Headline 200 chars
-- Message Ads: Subject 60 chars, Body 1,500 chars
-- Text Ads: Headline 25 chars, Description 75 chars
-
-**LinkedIn-Specific Copy Angles:**
-- Professional development: "Level up your [skill]"
-- Industry insight: "[Industry] is changing. Here's how to stay ahead."
-- ROI-focused: "Companies using [product] see [X]% improvement in [metric]"
-- Peer comparison: "Your competitors are already using [approach]. Are you?"
-- Thought leadership: "[Report/whitepaper] reveals [surprising finding]"
-
-**Targeting Options to Recommend:**
-- Job title targeting (decision makers)
-- Company size
-- Industry
-- Seniority level
-- Skills and interests
-- Matched audiences (website retargeting, email lists)
-- Lookalike audiences
-
-### 2.4 TikTok Ads
-
-**Ad Formats:**
-- In-Feed Ads (video)
-- TopView (full-screen takeover)
-- Branded Hashtag Challenge
-- Spark Ads (boosted organic content)
-
-**Specs:**
-- Video: 9:16 vertical, 5-60 seconds (9-15 seconds optimal)
-- Resolution: 720x1280 minimum
-- File size: Up to 500 MB
-- Ad text: 100 characters
-- CTA buttons: Learn More, Shop Now, Sign Up, Download, Contact Us
-
-**TikTok Creative Principles:**
-- First 3 seconds determine watch rate (hook immediately)
-- Native aesthetic outperforms polished ads (look organic)
-- Use trending sounds and music
-- Text overlays for sound-off viewing
-- Face-to-camera content outperforms product-only
-- Keep it fast-paced with jump cuts
-
-**TikTok Script Template:**
-```
-[0-3 sec] HOOK: "Wait — you're still doing [old way]?"
-[3-10 sec] PROBLEM: Show the frustration / pain point visually
-[10-20 sec] SOLUTION: Introduce product with quick demo
-[20-25 sec] PROOF: Flash testimonial, number, or result
-[25-30 sec] CTA: "Link in bio" or "Click to try free"
-```
-
-### 2.5 Twitter/X Ads
-
-**Ad Formats:**
-- Promoted Tweets (text, image, video, carousel)
-- Follower Ads
-- Amplify (video pre-roll)
-
-**Character Limits:**
-- Tweet text: 280 characters (but 100-150 performs best)
-- Image: 1200x675 or 1080x1080
-- Video: up to 2:20, but 6-15 seconds optimal
-
-**Twitter Ad Copy Style:**
-- Conversational, not corporate
-- Hot take + solution format
-- Thread-style ads (first tweet is the hook, rest is the story)
-- Engage in trending conversations with brand angle
+**建設業の基本方針：** 「今すぐ工事を検討している人」を捕まえる検索広告（Google・Yahoo!）に予算の大半を配分します。ディスプレイやSNS広告は、検索広告で成果が出てから追加してください。
 
 ---
 
-## Phase 3: Retargeting Sequences
+## フェーズ2：媒体別の広告生成
 
-### 3.1 Three-Stage Retargeting Funnel
+### 2.1 Google広告
+
+**検索広告（レスポンシブ検索広告）**
+
+文字数の上限：
+
+- 見出し：最大15個、各**全角15文字**（半角30文字）
+- 説明文：最大4個、各**全角45文字**（半角90文字）
+- パス：2つ、各**全角7文字**（半角15文字）
+
+**日本語の広告文は全角換算で数えてください。** 英語の文字数制限をそのまま適用すると入稿できません。
+
+以下を最低限生成します。
+
+- 見出し10個（以下の切り口を網羅）
+  - 社名＋価値提案
+  - 悩み＋解決
+  - 具体的な便益＋数値
+  - 社会的証明
+  - 緊急性・特典
+  - 問いかけ
+  - 手順の提示
+  - 他社比較
+  - 特徴の訴求
+  - 行動を促す文言
+- 説明文4個
+  - 価値提案＋CTA
+  - 特徴＋便益
+  - 社会的証明＋信頼
+  - 緊急性＋特典の詳細
+
+**建設業の見出し例（全角15文字以内）：**
 
 ```
-STAGE 1: AWARENESS (Cold Audience)
-  Audience: Lookalikes, interest-based, broad targeting
-  Goal: Introduce the brand and value proposition
-  Ad Type: Educational content, how-to videos, thought leadership
-  Budget: 40% of total ad spend
-  Metrics: CPM, reach, video view rate, landing page views
-
-STAGE 2: CONSIDERATION (Warm Audience)
-  Audience: Website visitors (7-30 days), video viewers (50%+),
-            social engagers, email list
-  Goal: Build trust and handle objections
-  Ad Type: Case studies, testimonials, demos, comparison content
-  Budget: 35% of total ad spend
-  Metrics: CPC, CTR, landing page conversion rate
-
-STAGE 3: CONVERSION (Hot Audience)
-  Audience: Cart abandoners, pricing page visitors, trial users,
-            high-intent page visitors
-  Goal: Drive the final conversion action
-  Ad Type: Direct offer, urgency, guarantee, limited-time discount
-  Budget: 25% of total ad spend
-  Metrics: CPA, ROAS, conversion rate
+「〇〇市の外壁塗装専門店」      （14文字）
+「施工実績1200件の安心施工」    （14文字）
+「無料診断｜しつこい営業なし」  （14文字）
+「自社職人で中間マージン0円」   （14文字）
+「最短2週間で工事完了」        （11文字）
+「10年保証付き外壁塗装」       （12文字）
+「助成金申請もサポート」        （11文字）
+「相見積もり歓迎します」        （11文字）
+「創業35年 地域密着の工務店」   （14文字）
+「無料お見積もりはこちら」      （12文字）
 ```
 
-### 3.2 Retargeting Ad Sequences
+**キーワード戦略：**
 
-For each stage, generate 3-5 ad variations:
+- 広告グループごとに、購買意欲の高いキーワードを10〜15個
+- マッチタイプ：完全一致・フレーズ一致・部分一致を組み合わせる
+- 除外キーワードを10〜20個設定する
+- テーマ別に3〜5個の広告グループに整理する
+
+**建設業のキーワード構成：**
+
+| 広告グループ | キーワード例 | 意図 |
+|---|---|---|
+| 地域＋工種 | 「〇〇市 外壁塗装」「〇〇市 屋根 修理」 | 最も成約に近い。最優先 |
+| 費用系 | 「外壁塗装 費用 相場」「屋根塗装 いくら」 | 比較検討層。資料請求に誘導 |
+| 悩み系 | 「外壁 ひび割れ 補修」「雨漏り 修理」 | 緊急性が高い。電話誘導が有効 |
+| 業者選び系 | 「外壁塗装 業者 選び方」「工務店 おすすめ」 | 情報収集層。事例ページへ |
+
+**除外キーワードの例：** 「DIY」「自分で」「求人」「アルバイト」「資格」「独立」「フランチャイズ」「〇〇（商圏外の地域名）」
+
+**商圏外の地域名を除外することが、建設業の広告費削減で最も効きます。**
+
+**P-MAX（Performance Max）キャンペーン：**
+
+- 顧客層ごとにアセットグループを分ける
+- 見出し（短い15個＋長い5個）
+- 説明文5個
+- 画像仕様：1200×1200（正方形）、1200×628（横長）、960×1200（縦長）
+- 動画：10〜30秒を推奨
+- オーディエンスシグナル：カスタムセグメント、購買意向、アフィニティ
+
+### 2.2 Yahoo!広告
+
+**日本市場では必ず検討してください。** 特に建設業・リフォーム業では、施主層に50代以上が多く、Yahoo! JAPANの利用率が高いため、Google広告より獲得単価が安くなることがあります。
+
+- 検索広告：Google広告とほぼ同じ構成で入稿できる
+- ディスプレイ広告（YDA）：Yahoo!ニュース面などへの配信
+- 文字数：見出し全角15文字、説明文全角45文字（Google広告と同等）
+
+**運用のコツ：** Google広告で成果が出た広告文とキーワードをそのまま流用し、入札を低めに設定して開始します。競合が少ないぶん、クリック単価が3〜5割安くなる場合があります。
+
+### 2.3 Meta広告（Facebook・Instagram）
+
+**広告形式と仕様：**
+
+| 形式 | 配置 | 画像仕様 | 動画仕様 | 文字数上限 |
+|---|---|---|---|---|
+| 単一画像 | フィード、ストーリーズ、リール | 1080×1080（フィード）、1080×1920（ストーリーズ） | — | メインテキスト125文字、見出し40文字、説明20文字 |
+| 動画 | フィード、ストーリーズ、リール | — | 1080×1080 または 1080×1920 | 画像と同じ |
+| カルーセル | フィード、ストーリーズ | 1枚あたり1080×1080、2〜10枚 | 1080×1080 | 画像と同じ |
+| コレクション | フィード | 1200×628（カバー） | 1200×628 | 画像と同じ |
+
+**各広告案について生成するもの：**
+
+- メインテキスト（短・中・長の3案）
+- 見出し（5案）
+- 説明文（3案）
+- CTAボタン（詳しくはこちら／申し込む／購入する／予約する／ダウンロード／お問い合わせ から選択）
+
+**広告文の切り口（1キャンペーンにつき5〜10案）：**
 
 ```
-Stage 1 Ads (Awareness):
-  Ad 1A: Educational — "[Topic] explained in 60 seconds"
-  Ad 1B: Pain point — "If [frustration], you need to see this"
-  Ad 1C: Social proof — "[Number] [audience] trust [product]"
+切り口1：悩みへの共感
+  「[具体的な不満]でお困りではありませんか。
+   [商品]なら[悩み]を解消し、[理想の状態]に集中できます」
 
-Stage 2 Ads (Consideration):
-  Ad 2A: Case study — "How [customer] achieved [result]"
-  Ad 2B: Demo — "See [product] in action (2-min walkthrough)"
-  Ad 2C: Comparison — "[Product] vs [alternative]: honest breakdown"
-  Ad 2D: FAQ — "Your top 3 questions about [product], answered"
+切り口2：社会的証明
+  「[人数]の[対象者]が[商品]で[便益]を実現。
+   [顧客名]様は『[引用]』と話しています」
 
-Stage 3 Ads (Conversion):
-  Ad 3A: Offer — "[Discount/trial] — limited to [number/time]"
-  Ad 3B: Urgency — "Your free trial starts now (no credit card)"
-  Ad 3C: Guarantee — "Try [product] risk-free for [period]"
-  Ad 3D: Testimonial — "'[Quote about specific result]' — Start yours"
+切り口3：ビフォーアフター
+  「[商品]の前：[困った状態]
+   [商品]の後：[理想の状態]
+   その差は[独自の仕組み]にあります」
+
+切り口4：不安の解消
+  「[商品分野]は[よくある不安]だと思っていませんか。
+   [反証]。[期間]の無料お試しで、[リスク]はありません」
+
+切り口5：緊急性・限定性
+  「[限定内容]。今月は残り[数]件です。
+   [商品]で[便益]を。[期限]までにお申し込みください」
+
+切り口6：好奇心
+  「[業界]で[具体的な成果]を出す方法（ほとんどの[対象者]が見落としています）」
+
+切り口7：直接的な便益
+  「[期間]で[具体的な成果]を。[商品]なら[よくある不満]はありません」
+
+切り口8：比較
+  「まだ[従来のやり方]ですか。[商品]なら[優位点]を[価格の利点]で実現できます」
+
+切り口9：お客様の声
+  「『[具体的な成果に関する顧客の言葉]』
+   — [顧客名]様（[属性]）」
+
+切り口10：手順の提示
+  「[理想の成果]を実現する3ステップ
+   1. [商品を使う手順]  2. [手順]  3. [結果]」
+```
+
+### 2.4 LINE広告
+
+**日本市場でのみ有効な、極めて重要な媒体です。** 国内の利用者数が最も多く、幅広い年齢層に届きます。
+
+**広告形式：**
+
+- トークリスト面（最も露出が多い）
+- LINE NEWS、LINE VOOM
+- ウォレット面
+
+**仕様：**
+
+- 画像：1200×628（横長）、1080×1080（正方形）
+- 動画：9:16 または 1:1、5〜60秒
+- タイトル：全角20文字
+- 説明文：全角75文字
+
+**LINE広告の強み：** 友だち追加を目的にした広告が打てるため、獲得後に無料でメッセージ配信ができます。建設業では「LINEで無料見積もり相談」への誘導が有効です。
+
+### 2.5 X（旧Twitter）広告
+
+**広告形式：**
+
+- プロモ広告（テキスト、画像、動画、カルーセル）
+- フォロワー獲得広告
+- Amplify（動画のプレロール）
+
+**文字数上限：**
+
+- 本文：140文字（日本語）。100文字前後が最も反応が良い
+- 画像：1200×675 または 1080×1080
+- 動画：最長2分20秒。ただし6〜15秒が最適
+
+**広告文の作り方：** 企業的な硬い文体ではなく、会話調にします。建設業では優先度は低めです。
+
+### 2.6 TikTok広告
+
+**広告形式：**
+
+- インフィード広告（動画）
+- TopView（起動時の全画面）
+- Spark Ads（既存投稿の広告配信）
+
+**仕様：**
+
+- 動画：9:16 縦型、5〜60秒（9〜15秒が最適）
+- 解像度：720×1280 以上
+- 広告文：全角50文字程度
+- CTAボタン：詳しくはこちら／今すぐ購入／申し込む／ダウンロード／お問い合わせ
+
+**制作の原則：**
+
+- 最初の3秒で視聴継続率が決まる
+- 作り込んだ広告より、自然な見た目の方が成果が出る
+- 流行の音源を使う
+- 音声なしでも分かるようテロップを入れる
+- 商品だけより、人が話す映像の方が伸びる
+- テンポよく場面を切り替える
+
+**構成の雛形：**
+
+```
+[0〜3秒]  つかみ： 「まだ〇〇してるんですか？」
+[3〜10秒] 課題　： 困っている状況を映像で見せる
+[10〜20秒] 解決　： 商品を短い実演つきで紹介
+[20〜25秒] 証拠　： お客様の声、数値、成果を提示
+[25〜30秒] CTA　 ： 「プロフィールのリンクから」
 ```
 
 ---
 
-## Phase 4: Budget and Performance
+## フェーズ3：リターゲティング設計
 
-### 4.1 Budget Allocation Recommendations
+### 3.1 3段階のファネル
 
-**By Platform (adjust based on business type):**
+```
+第1段階：認知（未接触層）
+  対象　： 類似オーディエンス、興味関心、地域指定の広め配信
+  目的　： ブランドと価値提案を知ってもらう
+  広告　： 教育コンテンツ、解説動画、専門情報
+  予算　： 全体の40%
+  指標　： インプレッション単価、リーチ、動画視聴率、LP到達数
 
-| Business Type | Google | Meta | LinkedIn | TikTok | Other |
-|--------------|--------|------|----------|--------|-------|
-| SaaS (B2B) | 30% | 25% | 30% | 5% | 10% |
-| SaaS (B2C) | 25% | 40% | 5% | 20% | 10% |
-| E-commerce | 30% | 40% | 0% | 20% | 10% |
-| Agency | 20% | 30% | 35% | 5% | 10% |
-| Local Business | 50% | 35% | 0% | 5% | 10% |
-| Creator/Course | 10% | 40% | 10% | 30% | 10% |
+第2段階：検討（接触済み層）
+  対象　： サイト訪問者（7〜30日）、動画視聴者（50%以上）、
+          SNS反応者、メールリスト
+  目的　： 信頼を築き、不安を解消する
+  広告　： 施工事例、お客様の声、実演、比較
+  予算　： 全体の35%
+  指標　： クリック単価、クリック率、LPのコンバージョン率
 
-**By Funnel Stage:**
-- Awareness: 40% (audience building)
-- Consideration: 35% (retargeting warm leads)
-- Conversion: 25% (driving purchases/signups)
+第3段階：獲得（高関心層）
+  対象　： 費用ページ閲覧者、フォーム離脱者、資料請求者
+  目的　： 最終的な行動を促す
+  広告　： 直接的な提案、期限、保証、特典
+  予算　： 全体の25%
+  指標　： 獲得単価、ROAS、コンバージョン率
+```
 
-### 4.2 ROAS Benchmarks by Industry
+**建設業の注意：** 検討期間が数ヶ月に及ぶため、リターゲティングの期間は最低90日、可能なら180日に設定してください。30日で切ると、検討中の見込み客を取りこぼします。
 
-| Industry | Acceptable ROAS | Good ROAS | Excellent ROAS |
-|----------|----------------|-----------|----------------|
-| E-commerce | 2:1 | 4:1 | 8:1+ |
-| SaaS | 3:1 | 5:1 | 10:1+ |
-| Lead Gen | 2:1 (by lead value) | 4:1 | 7:1+ |
-| Courses | 3:1 | 6:1 | 10:1+ |
-| Local Services | 2:1 | 3:1 | 5:1+ |
+### 3.2 段階別の広告案
 
-**CPA Benchmarks (approximate):**
+各段階につき3〜5案を生成します。
 
-| Platform | B2B Lead | B2C Lead | E-commerce Purchase | SaaS Trial |
-|----------|----------|----------|-------------------|------------|
-| Google Search | $30-80 | $10-30 | $15-40 | $20-60 |
-| Meta | $20-60 | $5-20 | $10-30 | $15-45 |
-| LinkedIn | $50-150 | N/A | N/A | $40-100 |
-| TikTok | $15-40 | $3-15 | $8-25 | $10-35 |
+```
+第1段階（認知）:
+  1A：教育　　「[テーマ]を60秒で解説」
+  1B：悩み　　「[不満]があるなら、これを見てください」
+  1C：社会的証明「[人数]の[対象者]に選ばれています」
 
-### 4.3 Landing Page Alignment
+第2段階（検討）:
+  2A：事例　　「[顧客名]様が[成果]を得るまで」
+  2B：実演　　「[商品]の実際（2分でわかる）」
+  2C：比較　　「[商品]と[代替手段]、正直な比較」
+  2D：FAQ　　「よくいただく質問3つにお答えします」
 
-For each ad campaign, verify landing page alignment:
-
-**Alignment Checklist:**
-- Does the landing page headline match the ad headline?
-- Does the landing page deliver on the ad's promise?
-- Is the CTA on the landing page consistent with the ad's CTA?
-- Is the visual style consistent between ad and page?
-- Is the landing page mobile-optimized (critical for social ads)?
-- Does the landing page load in under 3 seconds?
-- Is there one clear conversion action (not multiple competing CTAs)?
-
-**Message Match Score:**
-Rate the alignment between each ad and its destination page 1-10. Flag any score below 7.
+第3段階（獲得）:
+  3A：特典　　「[割引・特典] — [数量・期限]限定」
+  3B：手軽さ　「無料診断は30秒で申し込めます」
+  3C：保証　　「[期間]の保証つきで安心」
+  3D：お客様の声「『[具体的な成果]』 — 次はあなたの番です」
+```
 
 ---
 
-## Phase 5: Ad Variations and Testing
+## フェーズ4：予算と成果指標
 
-### 5.1 Variation Generation
+### 4.1 予算配分の目安
 
-For each ad concept, generate:
-- 5 headline variations (different angles, lengths, emotions)
-- 3 primary text variations (short: 1-2 sentences, medium: 3-4 sentences, long: 5-7 sentences)
-- 3 CTA variations
-- 3 visual concept descriptions (for designer handoff)
+**媒体別（業種に応じて調整）：**
 
-### 5.2 Testing Framework
+| 業種 | Google | Yahoo! | Meta | LINE | TikTok | その他 |
+|---|---|---|---|---|---|---|
+| 建設・リフォーム | 40% | 25% | 20% | 10% | 0% | 5% |
+| SaaS（BtoB） | 40% | 10% | 25% | 5% | 5% | 15% |
+| SaaS（BtoC） | 30% | 10% | 35% | 10% | 10% | 5% |
+| EC・通販 | 30% | 10% | 35% | 10% | 10% | 5% |
+| エージェンシー | 30% | 10% | 35% | 10% | 5% | 10% |
+| 地域密着ビジネス | 40% | 25% | 20% | 10% | 0% | 5% |
+| 講座・スクール | 15% | 5% | 40% | 15% | 20% | 5% |
 
-**Test Priority Order:**
-1. Audience (who you target matters most)
-2. Offer (what you offer: free trial vs demo vs discount)
-3. Creative concept (the big idea and visual approach)
-4. Headline (specific wording of the hook)
-5. Body copy (supporting text)
-6. CTA (button text and color)
+**ファネル段階別：**
 
-**Testing Rules:**
-- Test one variable at a time
-- Run tests for at least 3-5 days or 1,000 impressions per variant
-- Statistical significance threshold: 95%
-- Kill underperformers at 2x the CPA target
-- Scale winners by 20% budget increments (not 2x overnight)
+- 認知：40%
+- 検討：35%
+- 獲得：25%
+
+**建設業の予算の考え方：** 月額20万〜50万円から始め、獲得単価が安定してから増額します。いきなり100万円を投じても、着地ページと追客体制が整っていなければ無駄になります。
+
+### 4.2 獲得単価とROASの目安（日本国内）
+
+**獲得単価（CPA）の目安：**
+
+| 媒体 | 建設・リフォーム（問い合わせ） | BtoBリード | BtoCリード | EC購入 |
+|---|---|---|---|---|
+| Google検索 | 15,000〜50,000円 | 15,000〜50,000円 | 3,000〜10,000円 | 2,000〜8,000円 |
+| Yahoo!検索 | 10,000〜40,000円 | 12,000〜40,000円 | 2,500〜8,000円 | 1,500〜7,000円 |
+| Meta広告 | 8,000〜30,000円 | 8,000〜30,000円 | 1,500〜6,000円 | 1,500〜6,000円 |
+| LINE広告 | 6,000〜25,000円 | 8,000〜25,000円 | 1,000〜5,000円 | 1,500〜6,000円 |
+| TikTok広告 | — | 5,000〜20,000円 | 800〜4,000円 | 1,000〜5,000円 |
+
+**建設業での判断基準：** 問い合わせ単価が3万円でも、成約率25%・平均受注単価120万円・粗利35%であれば、1件の受注につき広告費12万円で粗利42万円が得られます。**問い合わせ単価だけを見て高い・安いを判断しないでください。**
+
+```
+1受注あたりの広告費 = 問い合わせ単価 ÷ 成約率
+                     = 30,000円 ÷ 25% = 120,000円
+
+1受注あたりの粗利 = 平均受注単価 × 粗利率
+                   = 1,200,000円 × 35% = 420,000円
+
+差引利益 = 420,000円 − 120,000円 = 300,000円（十分に成立する）
+```
+
+**ROASの目安：**
+
+| 業種 | 許容水準 | 良好 | 優秀 |
+|---|---|---|---|
+| EC・通販 | 2:1 | 4:1 | 8:1以上 |
+| SaaS | 3:1 | 5:1 | 10:1以上 |
+| リード獲得 | 2:1（リード価値換算） | 4:1 | 7:1以上 |
+| 講座・スクール | 3:1 | 6:1 | 10:1以上 |
+| 建設・リフォーム | 3:1（粗利ベース） | 5:1 | 8:1以上 |
+
+### 4.3 着地ページとの整合
+
+各キャンペーンについて、着地ページとの整合を確認します。
+
+**確認項目：**
+
+- 着地ページの見出しが広告の見出しと一致しているか
+- 着地ページが広告の約束を果たしているか
+- 着地ページのCTAが広告のCTAと一致しているか
+- 広告とページのデザインの雰囲気が揃っているか
+- 着地ページがスマホ最適化されているか（SNS広告では必須）
+- 着地ページが3秒以内に表示されるか
+- コンバージョン行動が1つに絞られているか
+- （建設業）電話番号がタップで発信できるか
+
+**整合スコア：** 各広告と遷移先ページの一致度を1〜10で評価し、7未満は要改善として明示します。
 
 ---
 
-## Output Format: AD-CAMPAIGNS.md
+## フェーズ5：広告案とテスト
 
-Write the full output to `AD-CAMPAIGNS.md`:
+### 5.1 生成する案の数
+
+各広告コンセプトについて、以下を生成します。
+
+- 見出し5案（切り口・長さ・感情の異なるもの）
+- メインテキスト3案（短：1〜2文、中：3〜4文、長：5〜7文）
+- CTA3案
+- ビジュアル案3件（デザイナーに渡せる説明文）
+
+### 5.2 テストの進め方
+
+**テストの優先順位：**
+
+1. ターゲティング（誰に見せるかの影響が最大）
+2. オファー（無料診断／資料請求／割引のどれか）
+3. クリエイティブの方向性（大枠の企画と見せ方）
+4. 見出し（具体的な文言）
+5. 本文（補足の説明）
+6. CTA（ボタンの文言と色）
+
+**テストの原則：**
+
+- 一度に変える要素は1つだけ
+- 各案につき最低3〜5日、または1,000インプレッション以上回す
+- 目標獲得単価の2倍を超えた案は停止する
+- 成果の出た案は、20%ずつ段階的に増額する（一気に倍にしない）
+
+**建設業の注意：** 商談期間が長いため、広告の良し悪しを「問い合わせ数」で判断し、成約率は別途3〜6ヶ月かけて検証してください。問い合わせは多いが成約しない広告は、ターゲティングがずれています。
+
+### 5.3 法令上の注意
+
+日本の広告では以下に注意し、出力に必ず注記を含めてください。
+
+**景品表示法（優良誤認・有利誤認の禁止）：**
+
+- 「業界No.1」「地域最安値」は、客観的な根拠がなければ使えない
+- 「通常価格〇円→今なら〇円」は、通常価格での販売実績が必要
+- 「必ず」「絶対」「100%」などの断定表現は避ける
+- 「〇年保証」は保証内容の実態が伴う必要がある
+
+**建設業法：**
+
+- 建設業許可が必要な工事（税込500万円以上）を扱う場合、広告に許可番号を明示する
+- 無許可で許可が必要な工事を請け負う旨の広告は違法
+
+**その他：**
+
+- 助成金・補助金に触れる場合は、制度名・対象条件・申請期限を正確に記載する
+- ビフォーアフター写真は、同一箇所・同一条件のものを使う
+- お客様の声は実在する内容に限り、必要に応じて掲載許諾を得る
+
+**最終的な判断は、必ず利用者側で確認するよう案内してください。**
+
+---
+
+## 出力形式：AD-CAMPAIGNS.md
+
+`AD-CAMPAIGNS.md` に全文を出力します。
 
 ```markdown
-# Ad Campaigns: [Business Name]
-**URL:** [url]
-**Date:** [current date]
-**Business Type:** [type]
-**Primary Objective:** [objective]
-**Recommended Platforms:** [platforms]
+# 広告キャンペーン：[会社名]
+
+**対象URL：** [url]
+**作成日：** [日付]
+**業種：** [業種]
+**主目的：** [目的]
+**推奨媒体：** [媒体一覧]
+**商圏：** [対応エリア]
 
 ---
 
-## Campaign Strategy Overview
-[2-3 paragraph overview of the ad strategy]
+## 戦略の概要
+[2〜3段落で広告戦略の全体像]
 
-## Audience Targeting
-[Detailed audience definitions for each platform]
+## ターゲティング設計
+[媒体ごとの詳細な対象設定]
 
-## Campaign 1: [Platform Name]
-### Ad Group 1: [Theme]
-**Targeting:** [audience parameters]
-**Budget:** [recommended daily/monthly]
-**Objective:** [campaign objective]
+## キャンペーン1：[媒体名]
 
-#### Ad Variation 1
-- **Headline:** [text]
-- **Primary Text:** [text]
-- **Description:** [text]
-- **CTA:** [button text]
-- **Visual:** [creative description]
-- **Landing Page:** [URL/page]
+### 広告グループ1：[テーマ]
+**ターゲティング：** [対象条件]
+**予算：** [推奨する日額・月額]
+**目的：** [キャンペーン目的]
 
-[Repeat for each variation]
+#### 広告案1
+- **見出し：** [文言]（全角X文字）
+- **メインテキスト：** [文言]
+- **説明文：** [文言]
+- **CTA：** [ボタン文言]
+- **ビジュアル：** [クリエイティブの説明]
+- **遷移先：** [URL]
 
-[Repeat for each ad group and platform]
+[以下、各案について繰り返す]
 
-## Retargeting Strategy
-[Three-stage funnel with ad variations]
+## リターゲティング設計
+[3段階ファネルと広告案]
 
-## Budget Allocation
-[Platform and funnel stage breakdown]
+## 予算配分
+[媒体別・ファネル段階別の内訳]
 
-## Testing Plan
-[Prioritized A/B tests]
+## テスト計画
+[優先順位つきのA/Bテスト]
 
-## Performance Benchmarks
-[ROAS and CPA targets by platform]
+## 成果目標
+[媒体別の獲得単価とROAS]
 
-## Landing Page Alignment
-[Message match assessment and recommendations]
+## 着地ページとの整合
+[整合スコアと改善提案]
 
-## Creative Brief for Designers
-[Visual specifications, brand guidelines, image/video requirements]
+## 制作依頼書
+[ビジュアル仕様、トンマナ、必要な画像・動画]
+
+## 法令上の注意
+[景品表示法・建設業法に関する確認事項]
 ```
 
 ---
 
-## Terminal Output
+## ターミナル出力
 
 ```
-=== AD CAMPAIGNS GENERATED ===
+=== 広告キャンペーン生成 完了 ===
 
-Business: [name]
-Platforms: [list]
-Total Ad Variations: [count]
+会社名　： [名称]
+対象媒体： [一覧]
+広告案数： [件数]
 
-Campaign Structure:
-  Google Ads: [X] ad groups, [X] variations
-  Meta Ads: [X] ad sets, [X] variations
-  LinkedIn: [X] campaigns, [X] variations
+キャンペーン構成:
+  Google広告： [X]広告グループ、[X]案
+  Yahoo!広告： [X]広告グループ、[X]案
+  Meta広告　： [X]広告セット、[X]案
+  LINE広告　： [X]キャンペーン、[X]案
 
-Budget Recommendation: $[X,XXX]/month
-Expected CPA: $[XX]-$[XX]
-Target ROAS: [X]:1
+推奨予算　　　： 月 XX万円
+想定獲得単価　： XX,XXX〜XX,XXX円/件
+想定1受注単価 ： XX万円（成約率XX%で換算）
+目標ROAS　　　： X:1
 
-Full campaigns saved to: AD-CAMPAIGNS.md
+詳細： AD-CAMPAIGNS.md
 ```
 
 ---
 
-## Cross-Skill Integration
+## 他スキルとの連携
 
-- If `COPY-SUGGESTIONS.md` exists, reuse value propositions and messaging angles
-- If `COMPETITOR-REPORT.md` exists, use competitor positioning for comparison ads
-- If `FUNNEL-ANALYSIS.md` exists, align ad funnel stages to conversion path
-- If `SOCIAL-CALENDAR.md` exists, promote top organic content as Spark/boosted ads
-- Suggest follow-up: `/market funnel` for conversion path, `/market landing` for page optimization
+- `COPY-SUGGESTIONS.md` があれば、価値提案と訴求の切り口を再利用する
+- `COMPETITOR-REPORT.md` があれば、競合のポジショニングを比較広告に活かす
+- `FUNNEL-ANALYSIS.md` があれば、広告のファネル段階を実際の導線に合わせる
+- `SOCIAL-CALENDAR.md` があれば、反応の良かった投稿を広告配信に転用する
+- 深掘り用に `/market funnel`（導線分析）、`/market landing`（着地ページ改善）を提案する
