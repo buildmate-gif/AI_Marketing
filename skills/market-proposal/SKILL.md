@@ -4,382 +4,455 @@ description: "クライアント向けのマーケティング提案書を生成
 ---
 # クライアント提案書生成
 
-## Skill Purpose
-Generate a professional, client-ready marketing services proposal. This skill produces a complete proposal document that positions the agency/consultant as the clear choice, frames pricing with anchoring and tiered options, and includes ROI projections to justify the investment.
+## このスキルの目的
 
-## When to Use
-- User wants to create a proposal for a prospective marketing client
-- User has completed a discovery call and needs to formalize the engagement
-- User wants a template for their marketing agency's proposals
-- Triggered by `/market proposal` or `/market proposal <client name>`
+そのまま提出できる、プロ品質のマーケティング支援提案書を生成します。自社を「選ばれて当然の相手」として位置づけ、価格を段階提示（松竹梅）で見せ、投資対効果の試算で金額を正当化する提案書を作ります。
 
-## How to Execute
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
-### Step 1: Gather Proposal Inputs
-Collect these details from the user (ask if not provided):
+## 使う場面
 
-**About the Client:**
-1. Client name and company
-2. Industry and business model
-3. Current marketing situation (what they're doing now)
-4. Primary pain points or challenges
-5. Goals (revenue, growth, leads, brand awareness)
-6. Budget range (if known)
-7. Decision timeline
-8. Key stakeholders and decision-makers
+- 見込みクライアント向けの提案書を作りたいとき
+- ヒアリングを終えて、内容を提案書に落とし込みたいとき
+- 自社の提案書テンプレートが欲しいとき
+- `/market proposal` または `/market proposal <会社名>` が実行されたとき
 
-**About the Services:**
-1. What services are you proposing? (SEO, paid ads, content, social, email, full-stack)
-2. Engagement model (retainer, project, performance-based)
-3. Proposed timeline
-4. Your relevant case studies or results
+## 実行手順
 
-**If audit data exists:** Check for any previous `/market audit` results. If found, automatically incorporate the findings into the Situation Analysis section for a data-backed proposal.
+### ステップ1：提案に必要な情報の収集
 
-### Step 2: Discovery Call Question Framework
-If the user hasn't had the discovery call yet, provide these 10 essential questions:
+以下をユーザーから聞き取ります（提示されていなければ質問する）。
 
-**Business Understanding:**
-1. "Walk me through your business model. How do you make money?"
-2. "Who is your ideal customer? Describe them in detail."
-3. "What does your sales process look like from first touch to closed deal?"
+**クライアントについて：**
 
-**Current Marketing:**
-4. "What marketing are you doing today, and what's working or not working?"
-5. "What's your current monthly marketing spend, and what's the ROI?"
-6. "What tools and platforms are you using?"
+1. 担当者名と会社名
+2. 業種とビジネスモデル（建設業の場合は主力工種）
+3. 現在のマーケティング状況（今やっていること）
+4. 主要な悩み・課題
+5. 目標（売上、受注件数、問い合わせ数、認知度）
+6. 予算感（分かれば）
+7. 意思決定の時期
+8. 決裁者と関係者（建設業は社長決裁が多いが、二代目・専務が窓口のケースも多い）
 
-**Goals and Expectations:**
-7. "If we're wildly successful, what does that look like in 6 months? 12 months?"
-8. "What specific numbers are you trying to hit? (Revenue, leads, traffic)"
-9. "What's the lifetime value of a customer for you?"
+**提供するサービスについて：**
 
-**Decision and Process:**
-10. "Who else is involved in this decision, and what's your timeline for choosing a partner?"
+1. 何を提案するか（SEO、広告運用、コンテンツ制作、SNS、メール、総合支援）
+2. 契約形態（月額顧問、プロジェクト単発、成果報酬）
+3. 想定スケジュール
+4. 関連する自社の実績・事例
 
-**Bonus Questions:**
-- "What's your biggest frustration with marketing right now?"
-- "Have you worked with agencies or consultants before? What went well or poorly?"
-- "Is there anything that would make you say 'no' to working together?"
+**監査データがある場合：** カレントディレクトリに `/market audit` の結果があるか確認します。あれば「現状分析」の章に自動で取り込み、データに基づいた提案書にします。
 
-### Step 3: Build the Proposal Document
+### ステップ2：ヒアリングの質問フレームワーク
 
-#### Section 1: Cover Page
-```
-[Your Company Logo]
+まだヒアリングが済んでいない場合は、以下の10問を提示します。
 
-Marketing Strategy Proposal
-Prepared for: [Client Name]
-Prepared by: [Your Name / Agency]
-Date: [Date]
-Valid until: [Date + 30 days]
+**事業の理解：**
 
-CONFIDENTIAL
-```
+1. 「御社のビジネスモデルを教えてください。どこで利益が出ていますか？」
+2. 「理想的なお客様はどんな方ですか？具体的に教えてください」
+3. 「初回接触から契約までの流れを教えてください」（建設業は必須。数ヶ月かかる前提で聞く）
 
-#### Section 2: Executive Summary (1 page max)
-Write a concise summary that:
-- Acknowledges the client's situation and goals
-- States the core problem you will solve
-- Previews your recommended approach
-- Hints at the expected outcome
-- Creates urgency to act
+**現在のマーケティング：**
 
-**Template:**
-```
-[Client Name] is at an inflection point. With [current situation -- e.g., strong product-market fit but inconsistent lead generation], there's a significant opportunity to [desired outcome -- e.g., scale customer acquisition to support your growth targets].
+4. 「今どんな集客をされていて、手応えがあるもの・ないものは何ですか？」
+5. 「現在の月間の広告費・販促費と、その手応えを教えてください」
+6. 「どんなツール・媒体を使っていますか？」
 
-Based on our analysis of [what you reviewed -- their website, ads, competitors, etc.], we've identified [X] key areas where strategic improvements could drive [specific result -- e.g., a 40-60% increase in qualified leads within 6 months].
+**目標と期待：**
 
-This proposal outlines a [timeframe] engagement focused on [primary service areas], designed to [primary outcome]. Our approach is built on [your differentiator -- e.g., data-driven methodology, industry expertise, proven frameworks].
+7. 「半年後、1年後にこうなっていたら大成功、という状態を教えてください」
+8. 「具体的に狙っている数字はありますか？（売上・受注件数・問い合わせ数）」
+9. 「1件のお客様の平均受注単価と、リピート・紹介の割合を教えてください」
 
-We recommend beginning with [first phase] to establish baselines and quick wins, then scaling efforts based on performance data.
-```
+**意思決定：**
 
-#### Section 3: Situation Analysis (2-3 pages)
-Present your analysis of the client's current marketing. This is where audit data from `/market audit` is invaluable.
+10. 「今回の件は、どなたが最終判断されますか？またいつ頃までに決めたいですか？」
 
-**Structure:**
-1. **Current State Overview** -- What they're doing now and how it's performing
-2. **Opportunities Identified** -- Specific areas where improvement is possible
-3. **Competitive Landscape** -- How they compare to competitors (from `/market competitors` if available)
-4. **Key Challenges** -- Obstacles that need to be addressed
-5. **Market Context** -- Industry trends and benchmarks
+**追加で聞くと良い質問：**
 
-**Important:** Frame everything as opportunities, not failures. The client should feel understood, not criticized.
+- 「今のマーケティングで一番もどかしいと感じていることは何ですか？」
+- 「これまで制作会社やコンサルに依頼したことはありますか？良かった点・合わなかった点は？」
+- 「逆に、こういう提案だったら断る、という条件はありますか？」
+- （建設業）「受注の何割が紹介・口コミ経由ですか？」— ここが分かると提案の方向性が決まります
 
-Good: "Your website converts at approximately 1.8%, which is below the industry benchmark of 3.2%. We see a clear path to close this gap through targeted CRO initiatives."
+### ステップ3：提案書の作成
 
-Bad: "Your website has a terrible conversion rate and needs a complete overhaul."
-
-#### Section 4: Strategy and Approach (2-3 pages)
-Present your recommended strategy. Be specific enough to demonstrate expertise but not so detailed that they could execute it without you.
-
-**Structure:**
-1. **Strategic Framework** -- Your overall approach and methodology
-2. **Phase 1: Foundation** (Month 1-2) -- Setup, audits, baselines, quick wins
-3. **Phase 2: Growth** (Month 3-4) -- Core campaign execution, optimization
-4. **Phase 3: Scale** (Month 5-6) -- Expand what works, cut what doesn't, increase investment in winners
-5. **Ongoing: Optimize** -- Continuous improvement, reporting, strategy refinement
-
-For each phase, include:
-- Specific activities and deliverables
-- Expected outcomes
-- How success will be measured
-
-#### Section 5: Scope of Work (1-2 pages)
-Detail exactly what is included (and what is not).
-
-**Include:**
-- Specific deliverables with quantities (e.g., "8 blog posts per month, 1,500-2,000 words each")
-- Meeting cadence (e.g., "Bi-weekly strategy calls, monthly reporting")
-- Response time commitments (e.g., "24-hour response on business days")
-- Tools and platforms included
-- Reporting format and frequency
-
-**Explicitly Exclude:**
-- Items outside scope to prevent scope creep
-- Additional costs (ad spend, software, stock photos)
-- Assumptions about client responsibilities
-
-**Client Responsibilities Section:**
-List what you need from the client to be successful:
-- Timely feedback and approvals (specify SLA)
-- Access to accounts, tools, and data
-- Designated point of contact
-- Content approvals within X business days
-- Ad budget (separate from management fees)
-
-#### Section 6: Timeline (1 page)
-Visual timeline showing phases, milestones, and deliverables.
+#### 第1章：表紙
 
 ```
-Month 1    | Month 2    | Month 3    | Month 4    | Month 5    | Month 6
------------|------------|------------|------------|------------|----------
-FOUNDATION | FOUNDATION | GROWTH     | GROWTH     | SCALE      | SCALE
-Audit &    | Quick wins | Campaign   | Optimize   | Expand     | Full
-Setup      | & baselines| Launch     | & iterate  | winners    | throttle
+[自社ロゴ]
 
-Key Milestones:
-- Week 2: Complete audit and strategy document
-- Week 4: First campaigns live
-- Month 2: First performance report
-- Month 3: Optimization recommendations
-- Month 6: Comprehensive review and strategy refresh
+マーケティング戦略 ご提案書
+
+  ご提案先： [会社名] 御中
+  ご提案者： [自社名／担当者名]
+  作成日　： [日付]
+  有効期限： [日付＋30日]
+
+  ※本書には機密情報が含まれます
 ```
 
-#### Section 7: Investment (1-2 pages)
-Present pricing using the Good-Better-Best tier structure.
+#### 第2章：エグゼクティブ・サマリー（1ページ以内）
 
-**Three-Tier Pricing Model:**
+以下を満たす簡潔な要約を書きます。
 
-| Component | Growth | Accelerate | Dominate |
+- クライアントの状況と目標を正しく理解していることを示す
+- 解決すべき中核課題を明示する
+- 推奨するアプローチの概要を示す
+- 期待できる成果を示唆する
+- 今動くべき理由を示す
+
+**テンプレート：**
+
+```
+[会社名] 様は今、転換点にあります。[現状 — 例：施工品質と顧客満足度は高い一方で、
+Web経由の問い合わせが安定していない]という状況において、
+[目指す状態 — 例：紹介依存から脱却し、地域内で継続的に問い合わせが入る体制を作る]
+ための余地が大きく残されています。
+
+[調査対象 — 御社サイト、競合他社、検索状況]を分析した結果、
+[X]つの重点領域を特定しました。これらに手を入れることで、
+[具体的な成果 — 例：6ヶ月以内に問い合わせ件数を1.5〜2倍に]することが見込めます。
+
+本提案書は、[期間]の取り組みとして[主要サービス領域]に注力し、
+[主要成果]を実現する計画をまとめたものです。
+私たちの強みは[差別化要因 — 例：建設業に特化した実績、データに基づく改善手法]にあります。
+
+まずは[第1フェーズ]から着手し、現状の基準値を把握しながら
+早期に成果が出る施策を実行することをお勧めします。
+```
+
+#### 第3章：現状分析（2〜3ページ）
+
+クライアントの現在のマーケティングに関する分析を提示します。`/market audit` の監査データがあれば、ここで最大限に活用します。
+
+**構成：**
+
+1. **現状の概観** — 今やっていることと、その成果
+2. **特定した機会** — 改善余地がある具体的な領域
+3. **競合環境** — 競合との比較（`/market competitors` の結果があれば使用）
+4. **主要課題** — 解決すべき障害
+5. **市場背景** — 業界動向とベンチマーク
+
+**重要：すべてを「失敗」ではなく「機会」として提示してください。** クライアントには「批判された」ではなく「理解された」と感じてもらう必要があります。日本の商習慣では、特に経営者の面子を潰す表現は致命的です。
+
+良い例：「現在の問い合わせ率は約0.8%で、同業種の目安である1.5〜2.0%に対して伸びしろがあります。フォームとCTAの改善で、この差は十分に埋められると考えています」
+
+悪い例：「サイトのコンバージョン率が低すぎます。全面的な作り直しが必要です」
+
+#### 第4章：戦略とアプローチ（2〜3ページ）
+
+推奨する戦略を提示します。専門性が伝わる程度に具体的に、ただし自社なしで実行できてしまうほど詳細には書かないこと。
+
+**構成：**
+
+1. **戦略の全体像** — 全体方針と手法
+2. **第1フェーズ：基盤づくり**（1〜2ヶ月目）— 初期設定、監査、基準値の把握、即効性のある改善
+3. **第2フェーズ：成長**（3〜4ヶ月目）— 中核施策の実行、改善
+4. **第3フェーズ：拡大**（5〜6ヶ月目）— 効果のあった施策の拡大、効果のない施策の停止
+5. **継続：最適化** — 継続的な改善、レポーティング、戦略の見直し
+
+各フェーズについて、以下を記載します。
+
+- 具体的な活動と成果物
+- 期待される成果
+- 成果の測定方法
+
+**建設業向けの注意：** 商談サイクルが長いため、「3ヶ月で受注が増える」という書き方は避け、「3ヶ月で問い合わせが増え、その受注化は4〜6ヶ月目に表れる」と段階を分けて示してください。
+
+#### 第5章：業務範囲（1〜2ページ）
+
+何が含まれ、何が含まれないかを明確にします。
+
+**含まれるもの：**
+
+- 数量を明記した成果物（例：「ブログ記事 月8本、各3,000〜4,000文字」）
+- 打ち合わせの頻度（例：「隔週の定例会、月次レポート」）
+- 返信の目安（例：「営業日24時間以内に返信」）
+- 使用するツール・媒体
+- レポートの形式と頻度
+
+**含まれないもの（明示する）：**
+
+- 業務範囲外の項目（範囲の膨張を防ぐため）
+- 別途費用となるもの（広告費、ソフトウェア利用料、素材写真代、撮影費）
+- クライアント側の作業を前提とする事項
+
+**クライアント側にお願いする事項：**
+
+- 期限内のフィードバックと承認（期限を明記）
+- アカウント・ツール・データへのアクセス権
+- 窓口担当者の指定
+- 原稿・デザインの確認（X営業日以内）
+- 広告費の予算（運用手数料とは別）
+- （建設業）施工写真の提供、職人・スタッフの取材協力
+
+#### 第6章：スケジュール（1ページ）
+
+フェーズ・節目・成果物を視覚的に示します。
+
+```
+ 1ヶ月目   |  2ヶ月目   |  3ヶ月目   |  4ヶ月目   |  5ヶ月目   |  6ヶ月目
+-----------|------------|------------|------------|------------|------------
+ 基盤づくり | 基盤づくり |   成長     |   成長     |   拡大     |   拡大
+ 監査・     | 即効施策・ | 施策開始   | 改善・     | 効果施策の | 本格展開
+ 初期設定   | 基準値把握 |            | 反復       | 拡大       |
+
+主な節目:
+- 2週目 ： 監査完了・戦略書の提出
+- 4週目 ： 最初の施策を開始
+- 2ヶ月目： 初回の成果レポート
+- 3ヶ月目： 改善提案の提出
+- 6ヶ月目： 総括レビューと次期戦略の策定
+```
+
+#### 第7章：ご投資額（1〜2ページ）
+
+松竹梅の3段階で価格を提示します。
+
+**3段階の料金プラン：**
+
+| 内容 | ベーシック | スタンダード（推奨） | プレミアム |
 |---|---|---|---|
-| Strategy & Planning | Quarterly review | Monthly strategy | Weekly strategy |
-| Content Creation | 4 pieces/month | 8 pieces/month | 16 pieces/month |
-| Social Media | 3 platforms | 5 platforms | All platforms |
-| Paid Ads Management | Up to $5K spend | Up to $15K spend | Up to $50K spend |
-| SEO | Basic on-page | Full SEO program | Full SEO + link building |
-| Email Marketing | -- | Monthly newsletter | Full automation |
-| Reporting | Monthly report | Bi-weekly report | Weekly dashboard |
-| Meetings | Monthly call | Bi-weekly call | Weekly call |
-| **Monthly Investment** | **$X,XXX** | **$X,XXX** | **$X,XXX** |
+| 戦略・企画 | 四半期ごとの見直し | 月次の戦略会議 | 週次の戦略会議 |
+| コンテンツ制作 | 月4本 | 月8本 | 月16本 |
+| SNS運用 | 3媒体 | 5媒体 | 全媒体 |
+| 広告運用 | 広告費 月30万円まで | 広告費 月100万円まで | 広告費 月300万円まで |
+| SEO | 基本的な内部対策 | SEO施策一式 | SEO一式＋外部対策 |
+| メール施策 | — | 月1回のメルマガ | 自動化一式 |
+| レポート | 月次レポート | 隔週レポート | 週次ダッシュボード |
+| 打ち合わせ | 月1回 | 隔週 | 週1回 |
+| **月額** | **XX万円** | **XX万円** | **XX万円** |
 
-**Pricing Psychology Tips:**
-- Present three options; most clients choose the middle tier
-- Name the tiers with aspirational labels (not Bronze/Silver/Gold)
-- Anchor the highest tier first to make the middle tier feel reasonable
-- Include a "Most Popular" or "Recommended" badge on the middle tier
-- Show the math: "At [your LTV], you only need [X] new customers per month to see positive ROI"
+**価格提示のコツ：**
 
-**Pricing Models Reference:**
+- 3つの選択肢を出す。多くのクライアントは真ん中を選ぶ
+- プラン名は魅力的に（「松竹梅」「A/B/C」のような無機質な名称を避ける）
+- 最上位プランを先に見せると、真ん中が適正に感じられる
+- 真ん中に「おすすめ」「一番人気」の表示を入れる
+- 計算を見せる：「平均受注単価120万円・粗利35%なら、月1.2件の増加で費用を回収できます」
+- 建設業では「1件受注できれば元が取れる」という見せ方が最も効く
 
-| Model | When to Use | Typical Range |
+**契約形態の目安（日本市場）：**
+
+| 形態 | 適する場面 | 相場 |
 |---|---|---|
-| Monthly Retainer | Ongoing services, relationship-based | $2,000-$25,000/month |
-| Project-Based | Defined scope, one-time deliverable | $5,000-$100,000 per project |
-| Performance-Based | Client wants risk-sharing, you're confident | Base + % of revenue/leads |
-| Hybrid | Complex engagements | Base retainer + performance bonus |
-| Hourly | Consulting, advisory, ad-hoc | $150-$500/hour |
+| 月額顧問（リテイナー） | 継続的な支援、伴走型 | 月10万〜100万円 |
+| プロジェクト単発 | 範囲が明確な単発案件 | 1件30万〜500万円 |
+| 成果報酬型 | クライアントがリスク分担を求める場合 | 基本料＋成果連動 |
+| 併用型 | 複雑な案件 | 基本料＋成果報酬 |
+| 時間単価 | 相談・アドバイザリー | 1時間 1.5万〜5万円 |
+| Webサイト制作 | 制作を含む場合 | 50万〜300万円 |
+| 広告運用代行 | 広告運用のみ | 広告費の20%または最低月5万円 |
 
-#### Section 8: ROI Projection
-Show the client the expected return on their investment.
+**日本の商習慣で必ず押さえる点：**
 
-**ROI Calculation Framework:**
-```
-Current State:
-- Monthly website traffic: [X]
-- Current conversion rate: [X%]
-- Current leads/month: [X]
-- Close rate: [X%]
-- Average deal value: $[X]
-- Current monthly revenue from marketing: $[X]
+- 見積書は税抜・税込を併記する
+- 相見積もりが前提の場合が多い。他社比較で優位に立つ「独自の強み」を1つ明記する
+- 稟議・社内決裁が必要な場合、決裁用の1枚要約を別途用意すると通りやすい
+- 支払条件（月末締め翌月末払いなど）を明記する
+- 契約書・業務委託契約の締結時期を示す
 
-Projected State (6 months):
-- Projected traffic increase: [X%] -> [new traffic]
-- Projected conversion rate: [X%] -> [new leads/month]
-- Projected leads increase: [X%]
-- Projected revenue increase: $[X]/month
-- 6-month projected ROI: [X]x
+#### 第8章：投資対効果の見込み
 
-Investment: $[total 6-month cost]
-Projected Return: $[projected revenue increase]
-ROI: [X]x return
-```
+クライアントに期待できるリターンを示します。
 
-**Important:** Be conservative with projections. Under-promise and over-deliver. Use ranges rather than specific numbers. Add disclaimers that results depend on multiple factors.
-
-#### Section 9: Team (0.5-1 page)
-Introduce the team members who will work on this account.
-
-For each team member:
-- Name and title
-- Relevant experience and expertise
-- Role on this engagement
-- Brief bio (2-3 sentences max)
-
-#### Section 10: Case Studies (1-2 pages)
-Include 2-3 relevant case studies that demonstrate results similar to what you're promising.
-
-**Case Study Format:**
-```
-Client: [Industry and company type -- anonymize if needed]
-Challenge: [1-2 sentences about their situation]
-Solution: [1-2 sentences about what you did]
-Results:
-- [Specific metric 1: e.g., "Increased organic traffic 287% in 6 months"]
-- [Specific metric 2: e.g., "Reduced cost per lead from $45 to $12"]
-- [Specific metric 3: e.g., "Generated $180K in new revenue"]
-```
-
-#### Section 11: Next Steps (0.5 page)
-Make it crystal clear what happens next. Reduce friction.
+**建設業向けの試算フレーム：**
 
 ```
-Ready to move forward? Here's what happens next:
+【現状】
+  月間サイト訪問数　　　： [X]
+  現在の問い合わせ率　　： [X]%
+  月間問い合わせ件数　　： [X]件
+  問い合わせ→成約率　　 ： [X]%
+  平均受注単価　　　　　： [X]万円
+  粗利率　　　　　　　　： [X]%
+  Web経由の月間粗利　　 ： [X]万円
 
-1. Sign this proposal (e-signature link included)
-2. We'll schedule a kickoff call within 48 hours
-3. You'll receive our onboarding questionnaire and access request form
-4. We begin the Foundation phase immediately
+【6ヶ月後の見込み】
+  訪問数の増加　　　　　： +[X]% → [新しい訪問数]
+  問い合わせ率の改善　　： [X]% → [X]%
+  月間問い合わせ件数　　： [X]件 → [X]件
+  月間受注件数の増加　　： +[X]件
+  月間粗利の増加　　　　： +[X]万円
 
-Questions? Contact [Name] at [email] or [phone].
+  6ヶ月間のご投資額　　 ： [X]万円
+  6ヶ月間の粗利増加見込： [X]万円
+  投資対効果　　　　　　： [X]倍
 
-This proposal is valid until [date -- 30 days from now].
+  ※効果が表れ始めるのは3ヶ月目以降、
+    受注として計上されるのは4〜6ヶ月目以降を想定しています。
 ```
 
-### Step 4: Proposal Design and Formatting
+**重要：見込みは必ず保守的に置いてください。** 期待値を下げて実績で上回るのが鉄則です。単一の数字ではなく幅で示し、「成果は複数の要因に左右される」旨の注記を必ず添えてください。誇大な数字は、特に建設業の経営者に強い不信感を与えます。
 
-**Best Practices:**
-- Keep total proposal under 15 pages (excluding appendix)
-- Use consistent headers, fonts, and colors throughout
-- Include the client's logo alongside yours on the cover page
-- Use charts and visuals instead of dense text wherever possible
-- Bold key numbers and outcomes
-- Use whitespace generously -- don't cram content
-- Include page numbers and a table of contents for longer proposals
-- Save as PDF for professional presentation
+#### 第9章：体制（0.5〜1ページ）
 
-**Formatting in Markdown:**
-- Use H1 for the proposal title
-- Use H2 for major sections
-- Use H3 for subsections
-- Use tables for pricing, timelines, and comparisons
-- Use bold for emphasis on key points
-- Use blockquotes for client testimonials
+案件を担当するメンバーを紹介します。
 
-### Step 5: Follow-Up Sequence After Sending
+各メンバーについて：
 
-**Day 0 (Send Day):**
-Send proposal via email with a brief cover note. Subject: "Your Marketing Growth Plan -- [Client Name]"
+- 氏名と役職
+- 関連する経験・専門性
+- 本件での役割
+- 略歴（2〜3文以内）
 
-**Day 2:**
-Follow-up email: "I wanted to make sure you received the proposal. Happy to hop on a quick call to walk through it if that would be helpful."
+#### 第10章：実績・事例（1〜2ページ）
 
-**Day 5:**
-Value-add follow-up: Share a relevant article, case study, or insight related to their industry. Softly reference the proposal.
+提案内容に近い成果を出した事例を2〜3件掲載します。
 
-**Day 7:**
-Direct follow-up: "I'd love to hear your thoughts on the proposal. Do you have any questions I can address? I'm available [specific times] this week for a call."
+**事例の書式：**
 
-**Day 14:**
-Final follow-up: "I wanted to check in one more time about the proposal. I understand timing may not be right -- if that's the case, I'm happy to reconnect when it makes sense. Otherwise, I'd love to discuss next steps."
+```
+クライアント： [業種・企業規模 — 必要に応じて匿名化]
+課題　　　　： [状況を1〜2文で]
+実施内容　　： [取り組みを1〜2文で]
+成果:
+  - [具体的な数値1：例「自然検索の流入が6ヶ月で2.9倍」]
+  - [具体的な数値2：例「問い合わせ1件あたりの獲得コストを45,000円→12,000円に削減」]
+  - [具体的な数値3：例「Web経由の年間受注が1,800万円増加」]
+```
 
-**Day 21:**
-Breakup email: "I haven't heard back, so I'll assume the timing isn't right. I'll close out this proposal on [expiration date]. If things change, my door is always open. Wishing you and [Company] the best."
+#### 第11章：次のステップ（0.5ページ）
 
-### Step 6: Objection Handling
+次に何が起こるかを明確にし、心理的な障壁を下げます。
 
-Prepare responses for common client pushbacks:
+```
+ご検討いただき、ありがとうございます。
+お進めいただける場合の流れは以下の通りです。
 
-| Objection | Response Framework |
+  1. 本提案書へのご承認（ご返信またはご捺印）
+  2. 2営業日以内にキックオフのお打ち合わせを設定
+  3. 初期ヒアリングシートとアカウント連携のご案内を送付
+  4. 第1フェーズ（基盤づくり）に着手
+
+ご不明点は [担当者名]（[メールアドレス] / [電話番号]）まで
+お気軽にお問い合わせください。
+
+本提案書の有効期限は [日付] です。
+```
+
+### ステップ4：提案書のデザインと体裁
+
+**基本方針：**
+
+- 全体で15ページ以内に収める（付録を除く）
+- 見出し・書体・配色を最後まで統一する
+- 表紙にはクライアントのロゴと自社ロゴを並べる
+- 文字を詰め込まず、図表を積極的に使う
+- 重要な数値と成果は太字にする
+- 余白を十分に取る
+- ページ番号と目次を入れる（長い提案書の場合）
+- 提出はPDF形式にする
+
+**Markdown での書式：**
+
+- H1：提案書のタイトル
+- H2：大見出し
+- H3：小見出し
+- 表：料金、スケジュール、比較
+- 太字：重要ポイント
+- 引用：お客様の声
+
+### ステップ5：提出後のフォローアップ
+
+日本の商習慣では、催促が強すぎると印象を損ねます。以下の間隔を目安にしてください。
+
+**当日（提出日）：**
+メールに簡潔な挨拶文を添えて提案書を送付。件名：「【ご提案】[会社名] 様 マーケティング戦略のご提案」
+
+**2日後：**
+確認の連絡。「提案書は無事お手元に届きましたでしょうか。ご不明な点がございましたら、お電話でもご説明いたします」
+
+**5日後：**
+価値提供型の連絡。相手の業界に関連する記事・事例・情報を共有し、提案書には軽く触れる程度にとどめる。
+
+**7日後：**
+直接的な確認。「ご提案の件、いかがでしょうか。ご不明な点やご懸念があればお聞かせください。今週は [具体的な日時] にお時間を取れます」
+
+**14日後：**
+最終確認。「その後ご検討状況はいかがでしょうか。ご事情によりタイミングが合わない場合は、また改めてご相談させていただければ幸いです」
+
+**21日後：**
+区切りの連絡。「ご連絡がないため、今回はタイミングが合わなかったものと承知いたしました。本提案書は [有効期限] をもって一旦クローズいたします。状況が変わりましたら、いつでもご連絡ください。[会社名] 様のますますのご発展をお祈り申し上げます」
+
+### ステップ6：想定される反論への対応
+
+よくある反論への返し方を準備します。
+
+| 反論 | 対応の枠組み |
 |---|---|
-| "Too expensive" | Reframe as investment, show ROI math, offer smaller starting scope, compare to cost of inaction |
-| "We can do this in-house" | Highlight opportunity cost, specialized expertise, speed to results, and the real fully-loaded cost of in-house |
-| "We tried this before and it didn't work" | Ask what specifically didn't work, differentiate your approach, offer a pilot project with clear success criteria |
-| "We need to think about it" | Set a specific follow-up date, offer to address specific concerns, provide additional references |
-| "Can you guarantee results?" | Explain why guarantees are unrealistic in marketing but share historical results, offer performance-based component |
-| "We're talking to other agencies" | Welcome it, differentiate on methodology not price, offer a trial period, emphasize culture fit |
-| "The timeline is too long" | Explain why shortcuts fail, offer a quick-wins phase, show the phased approach with early value |
-| "We don't have the budget right now" | Offer a smaller starting engagement, defer some payment, show the cost of waiting |
+| 「費用が高い」 | コストではなく投資として再提示。投資対効果の計算を見せる。小さく始める選択肢を出す。「何もしない場合の損失」と比較する |
+| 「自社でできそう」 | 機会損失、専門性、成果までの速度を示す。社内でやる場合の人件費を含めた実質コストを提示する |
+| 「以前やって効果がなかった」 | 何が上手くいかなかったかを具体的に聞く。自社の手法との違いを示す。成功基準を明確にした試験導入を提案する |
+| 「社内で検討します」 | 次回連絡日を具体的に決める。懸念点を個別に潰す。稟議用の1枚要約を提供する |
+| 「成果を保証できますか」 | マーケティングで保証が非現実的な理由を説明したうえで、過去の実績を提示。成果連動の一部導入を提案する |
+| 「他社にも相談しています」 | 歓迎の姿勢を示す。価格ではなく手法で差別化する。試験導入期間を提案する |
+| 「期間が長い」 | 近道が失敗する理由を説明。早期に成果が出るフェーズを先に置く提案に組み替える |
+| 「今は予算がない」 | 小規模な着手プランを提案。支払時期の分散を提案。着手を遅らせた場合の損失を示す |
+| （建設業）「Webはよく分からない」 | 専門用語を避け、既存の営業活動との対比で説明する。「チラシ1回分の費用で、24時間働く営業マンを1人雇うイメージです」 |
 
-### Step 7: Terms and Conditions Essentials
+### ステップ7：契約条件の必須項目
 
-Include these in the proposal appendix or as a separate document:
+提案書の付録、または別紙として以下を含めます。
 
-1. **Payment Terms:** Net 15 or Net 30, payment methods, late payment penalties
-2. **Contract Duration:** Minimum commitment period, auto-renewal terms
-3. **Cancellation Policy:** Required notice period (typically 30 days), exit process
-4. **Scope Changes:** Process for handling scope changes and additional costs
-5. **Intellectual Property:** Who owns the work product, license terms
-6. **Confidentiality:** NDA terms, how client data is handled
-7. **Liability Limitations:** Caps on liability, force majeure
-8. **Reporting and Communication:** Agreed cadence and format
-9. **Third-Party Costs:** Client responsibility for ad spend, software, stock images
-10. **Results Disclaimer:** Marketing results are not guaranteed, past performance context
+1. **支払条件：** 月末締め翌月末払い等、支払方法、遅延時の取り扱い
+2. **契約期間：** 最低契約期間、自動更新の条件
+3. **解約条件：** 必要な予告期間（通常30日）、解約時の手続き
+4. **範囲変更：** 業務範囲の変更手続きと追加費用の扱い
+5. **知的財産権：** 成果物の権利帰属、利用許諾の範囲
+6. **秘密保持：** 秘密保持の条件、データの取り扱い
+7. **責任の制限：** 賠償上限、不可抗力
+8. **報告・連絡：** 頻度と形式
+9. **第三者費用：** 広告費・ソフト利用料・素材費のクライアント負担
+10. **成果に関する注記：** マーケティングの成果は保証されるものではない旨
+11. **収入印紙：** 契約書の印紙税の負担者（日本の契約では明記が必要）
 
-## Output Format
+## 出力形式
 
-Generate a file called `CLIENT-PROPOSAL.md` with:
+`CLIENT-PROPOSAL.md` というファイルを生成します。
 
 ```markdown
-# Marketing Services Proposal
+# マーケティング支援 ご提案書
 
-## Prepared for: [Client Name]
-## Prepared by: [Agency Name]
-## Date: [Date]
-
----
-
-## Table of Contents
-1. Executive Summary
-2. Situation Analysis
-3. Strategy & Approach
-4. Scope of Work
-5. Timeline
-6. Investment
-7. ROI Projection
-8. Our Team
-9. Case Studies
-10. Next Steps
+## ご提案先： [会社名] 御中
+## ご提案者： [自社名]
+## 作成日　： [日付]
 
 ---
 
-[Full proposal content with all sections populated based on client details]
+## 目次
+1. エグゼクティブ・サマリー
+2. 現状分析
+3. 戦略とアプローチ
+4. 業務範囲
+5. スケジュール
+6. ご投資額
+7. 投資対効果の見込み
+8. 体制
+9. 実績・事例
+10. 次のステップ
 
 ---
 
-## Appendix
-- Terms & Conditions
-- Detailed Deliverable Descriptions
-- Tool Stack
+[クライアント情報に基づいて各章を記述]
+
+---
+
+## 付録
+- 契約条件
+- 成果物の詳細
+- 使用ツール一覧
 ```
 
-## Key Principles
-- The proposal is a sales document, not a statement of work. It should SELL, not just describe.
-- Lead with the client's problems and goals, not your services. Make them feel understood before presenting solutions.
-- Every price should be anchored to the ROI it will generate. Never present cost without context.
-- Use the client's own language from the discovery call. Mirror their words back to them.
-- If audit data is available from previous skills, use it extensively -- data-backed proposals close at 2-3x the rate of generic proposals.
-- Keep it concise. Executives skim. Use bold, headers, and tables to make key information scannable.
-- Always include a specific, time-bound next step. Ambiguity kills deals.
+## 基本原則
+
+- 提案書は営業資料であり、作業仕様書ではありません。「説明する」のではなく「売る」ものです
+- 自社のサービスではなく、クライアントの課題と目標から始めること。解決策を出す前に「理解されている」と感じてもらう
+- すべての価格は、それが生む効果と結びつけて提示すること。文脈なしに金額だけを出さない
+- ヒアリングで出たクライアント自身の言葉をそのまま使うこと
+- 他スキルの監査データがあれば徹底的に活用すること。データに基づく提案書は、汎用的な提案書の2〜3倍の確率で成約します
+- 簡潔に書くこと。経営者は流し読みします。太字・見出し・表で要点を拾えるようにする
+- 必ず、期限つきの具体的な次のアクションを示すこと。曖昧さは失注に直結します
+- 建設業向けでは、専門用語を最小限にし、既存の営業手法（チラシ・紹介・訪問）との対比で説明すること

@@ -4,372 +4,416 @@ description: "既存の分析結果を統合し、マーケティングレポー
 ---
 # マーケティングレポート生成（Markdown形式）
 
-## Skill Purpose
-Generate a comprehensive, professionally formatted marketing report in Markdown. This skill compiles data from all previous audit and analysis results into a single, client-ready document with scores, findings, recommendations, and a prioritized action plan with revenue impact estimates.
+## このスキルの目的
 
-## When to Use
-- User wants a full marketing report for a client or their own business
-- User has completed one or more audit skills and wants a compiled report
-- User asks for a marketing assessment, scorecard, or analysis document
-- Triggered by `/market report` or `/market report <domain>`
+網羅的で体裁の整ったマーケティングレポートをMarkdown形式で生成します。これまでの監査・分析結果を1つの文書に統合し、スコア・所見・改善提案・収益インパクト付きの優先順位別アクションプランを、そのままクライアントに提出できる品質でまとめます。
 
-## How to Execute
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
-### Step 1: Collect All Available Data
-Before generating the report, check for any existing audit data from previous skill runs. Look for these files in the project directory:
+## 使う場面
 
-**Possible data sources:**
-- `MARKETING-AUDIT.md` -- from `/market audit`
-- `LANDING-CRO.md` -- from `/market landing`
-- `SEO-AUDIT.md` -- from `/market seo`
-- `BRAND-VOICE.md` -- from `/market brand`
-- `COMPETITOR-ANALYSIS.md` -- from `/market competitors`
-- `FUNNEL-ANALYSIS.md` -- from `/market funnel`
-- `CONTENT-AUDIT.md` -- from content analysis
-- `AD-AUDIT.md` -- from `/market ads`
-- `SOCIAL-AUDIT.md` -- from `/market social`
-- `EMAIL-AUDIT.md` -- from `/market emails`
+- クライアント向け、または自社向けの総合レポートが欲しいとき
+- 複数の監査スキルを実行済みで、それらを統合したいとき
+- マーケティングの評価書・スコアカード・分析資料を求められたとき
+- `/market report` または `/market report <ドメイン>` が実行されたとき
 
-If no previous data exists, inform the user and offer to:
-1. Run a quick audit first (recommended)
-2. Generate a report based on available information (website URL, user-provided data)
-3. Create a report template they can fill in
+## 実行手順
 
-### Step 2: Calculate the Marketing Scorecard
+### ステップ1：利用可能なデータの収集
 
-Score across 6 categories, each worth up to 100 points. The overall score is the weighted average.
+レポート生成の前に、過去のスキル実行で生成されたファイルがないか確認します。
 
-#### Category 1: Website & Conversion (Weight: 25%)
-Evaluate based on landing page analysis, CRO findings, and UX assessment.
+**参照するファイル：**
 
-| Factor | Points Available | Criteria |
+- `MARKETING-AUDIT.md` — `/market audit` の結果
+- `LANDING-CRO.md` — `/market landing` の結果
+- `SEO-AUDIT.md` — `/market seo` の結果
+- `BRAND-VOICE.md` — `/market brand` の結果
+- `COMPETITOR-REPORT.md` — `/market competitors` の結果
+- `FUNNEL-ANALYSIS.md` — `/market funnel` の結果
+- `COPY-SUGGESTIONS.md` — `/market copy` の結果
+- `AD-CAMPAIGNS.md` — `/market ads` の結果
+- `SOCIAL-CALENDAR.md` — `/market social` の結果
+- `EMAIL-SEQUENCES.md` — `/market emails` の結果
+
+過去データが1件も無い場合は、その旨をユーザーに伝えたうえで以下を提案します。
+
+1. 先に簡易監査を実行する（推奨）
+2. 現時点で分かる情報（サイトURL、ユーザー提供の情報）だけでレポートを作る
+3. 記入用のレポート雛形を作る
+
+### ステップ2：マーケティング・スコアカードの算出
+
+6カテゴリを各100点で採点し、加重平均で総合スコアを出します。
+
+#### カテゴリ1：Webサイト・コンバージョン（ウェイト25%）
+
+ランディングページ分析、CRO所見、UX評価に基づいて採点します。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| Page load speed | 15 | Under 2s = 15, Under 3s = 10, Under 5s = 5, Over 5s = 0 |
-| Mobile responsiveness | 15 | Fully responsive = 15, Mostly = 10, Partially = 5, Not = 0 |
-| Clear value proposition | 20 | Immediately clear = 20, Takes effort = 12, Vague = 5, Missing = 0 |
-| CTA effectiveness | 20 | Strong and clear = 20, Present but weak = 12, Unclear = 5, Missing = 0 |
-| Social proof | 15 | Multiple types = 15, Some = 10, Minimal = 5, None = 0 |
-| Form optimization | 15 | Optimized = 15, Adequate = 10, Needs work = 5, Broken = 0 |
+| 表示速度 | 15 | 2秒未満＝15、3秒未満＝10、5秒未満＝5、5秒以上＝0 |
+| スマホ対応 | 15 | 完全対応＝15、ほぼ対応＝10、一部＝5、非対応＝0 |
+| 価値提案の明確さ | 20 | 即座に伝わる＝20、読めば分かる＝12、曖昧＝5、なし＝0 |
+| CTAの効果 | 20 | 明確で強い＝20、あるが弱い＝12、不明瞭＝5、なし＝0 |
+| 社会的証明 | 15 | 複数種類あり＝15、一部あり＝10、最小限＝5、なし＝0 |
+| フォーム最適化 | 15 | 最適化済み＝15、及第点＝10、要改善＝5、機能不全＝0 |
 
-#### Category 2: SEO & Organic (Weight: 20%)
-Evaluate based on SEO audit findings.
+#### カテゴリ2：SEO・自然流入（ウェイト20%）
 
-| Factor | Points Available | Criteria |
+SEO監査の所見に基づいて採点します。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| Title tags & meta descriptions | 15 | Optimized = 15, Present = 10, Partial = 5, Missing = 0 |
-| Header hierarchy (H1-H6) | 10 | Proper = 10, Mostly = 7, Needs work = 3, Missing = 0 |
-| Content quality (E-E-A-T) | 25 | Excellent = 25, Good = 17, Average = 10, Poor = 3 |
-| Technical SEO | 20 | No issues = 20, Minor issues = 13, Major issues = 7, Critical = 0 |
-| Internal linking | 15 | Strategic = 15, Present = 10, Minimal = 5, None = 0 |
-| Schema markup | 15 | Comprehensive = 15, Basic = 10, Minimal = 5, None = 0 |
+| タイトル・メタディスクリプション | 15 | 最適化済み＝15、設定あり＝10、一部＝5、なし＝0 |
+| 見出し階層（H1〜H6） | 10 | 適切＝10、ほぼ適切＝7、要改善＝3、崩壊＝0 |
+| コンテンツ品質（E-E-A-T） | 25 | 非常に優秀＝25、良好＝17、平均的＝10、不十分＝3 |
+| テクニカルSEO | 20 | 問題なし＝20、軽微な問題＝13、重大な問題＝7、致命的＝0 |
+| 内部リンク | 15 | 戦略的＝15、あり＝10、最小限＝5、なし＝0 |
+| 構造化データ | 15 | 網羅的＝15、基本のみ＝10、最小限＝5、なし＝0 |
 
-#### Category 3: Content & Messaging (Weight: 15%)
-Evaluate based on brand voice analysis and content audit.
+#### カテゴリ3：コンテンツ・メッセージング（ウェイト15%）
 
-| Factor | Points Available | Criteria |
+ブランドボイス分析とコンテンツ監査に基づいて採点します。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| Brand voice consistency | 20 | Consistent = 20, Mostly = 13, Inconsistent = 7, No voice = 0 |
-| Content quality | 25 | Expert-level = 25, Good = 17, Generic = 10, Poor = 3 |
-| Content variety | 15 | Multiple formats = 15, Some = 10, Limited = 5, Single = 0 |
-| Publishing frequency | 15 | Regular cadence = 15, Sporadic = 10, Rare = 5, None = 0 |
-| Audience targeting | 25 | Precisely targeted = 25, Somewhat = 17, Broad = 10, Off-target = 3 |
+| ブランドボイスの一貫性 | 20 | 一貫＝20、ほぼ一貫＝13、不統一＝7、ボイスなし＝0 |
+| コンテンツの質 | 25 | 専門家水準＝25、良好＝17、汎用的＝10、不十分＝3 |
+| コンテンツの多様性 | 15 | 複数形式＝15、一部＝10、限定的＝5、単一＝0 |
+| 更新頻度 | 15 | 定期的＝15、不定期＝10、まれ＝5、なし＝0 |
+| ターゲットの絞り込み | 25 | 精緻＝25、ある程度＝17、広すぎる＝10、的外れ＝3 |
 
-#### Category 4: Social Media & Community (Weight: 15%)
-Evaluate based on social media presence and engagement.
+#### カテゴリ4：SNS・コミュニティ（ウェイト15%）
 
-| Factor | Points Available | Criteria |
+SNSでの発信状況とエンゲージメントに基づいて採点します。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| Platform presence | 15 | Right platforms, active = 15, Present but inactive = 8, Missing key = 3 |
-| Content quality | 25 | Engaging and on-brand = 25, Adequate = 15, Low quality = 7, Poor = 0 |
-| Engagement rate | 25 | Above benchmark = 25, At benchmark = 17, Below = 10, Negligible = 3 |
-| Posting consistency | 15 | Regular schedule = 15, Sporadic = 10, Rare = 5, Abandoned = 0 |
-| Community building | 20 | Active community = 20, Some engagement = 13, Broadcast only = 7, None = 0 |
+| 媒体の選定 | 15 | 適切な媒体で活動中＝15、あるが停滞＝8、主要媒体が不在＝3 |
+| 投稿の質 | 25 | 魅力的でブランドに合致＝25、及第点＝15、低品質＝7、不適切＝0 |
+| エンゲージメント率 | 25 | 目安以上＝25、目安並み＝17、目安以下＝10、ほぼゼロ＝3 |
+| 投稿の継続性 | 15 | 定期投稿＝15、不定期＝10、まれ＝5、放置＝0 |
+| コミュニティ形成 | 20 | 活発な交流＝20、一部交流あり＝13、一方通行＝7、なし＝0 |
 
-#### Category 5: Email & Automation (Weight: 15%)
-Evaluate based on email marketing assessment.
+#### カテゴリ5：メール・自動化（ウェイト15%）
 
-| Factor | Points Available | Criteria |
+メールマーケティングの状況に基づいて採点します。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| List building mechanism | 20 | Multiple opt-ins = 20, One opt-in = 13, No visible opt-in = 5 |
-| Email design & content | 20 | Professional and engaging = 20, Adequate = 13, Needs work = 7 |
-| Automation sequences | 25 | Comprehensive = 25, Basic = 15, Minimal = 8, None = 0 |
-| Segmentation | 20 | Advanced = 20, Basic = 13, None = 5 |
-| Deliverability signals | 15 | Strong = 15, Adequate = 10, Concerning = 5, Problems = 0 |
+| リスト獲得の仕組み | 20 | 複数の獲得導線＝20、1つ＝13、獲得導線なし＝5 |
+| メールの設計と内容 | 20 | 洗練され読ませる＝20、及第点＝13、要改善＝7 |
+| 自動シーケンス | 25 | 網羅的＝25、基本のみ＝15、最小限＝8、なし＝0 |
+| セグメント分け | 20 | 高度＝20、基本のみ＝13、なし＝5 |
+| 到達率のシグナル | 15 | 良好＝15、及第点＝10、懸念あり＝5、問題あり＝0 |
 
-#### Category 6: Paid Advertising (Weight: 10%)
-Evaluate based on ad account audit (if applicable).
+#### カテゴリ6：有料広告（ウェイト10%）
 
-| Factor | Points Available | Criteria |
+広告アカウントの監査に基づいて採点します（該当する場合）。
+
+| 評価項目 | 配点 | 判定基準 |
 |---|---|---|
-| Campaign structure | 20 | Well-organized = 20, Adequate = 13, Messy = 7, None = 0 |
-| Targeting quality | 25 | Precise and layered = 25, Good = 17, Broad = 10, Wasteful = 3 |
-| Ad creative quality | 25 | Compelling and varied = 25, Adequate = 17, Weak = 10, Poor = 3 |
-| Landing page alignment | 15 | Perfect match = 15, Good = 10, Misaligned = 5, Broken = 0 |
-| Tracking & attribution | 15 | Comprehensive = 15, Basic = 10, Minimal = 5, Missing = 0 |
+| キャンペーン構成 | 20 | 整理されている＝20、及第点＝13、雑然＝7、未実施＝0 |
+| ターゲティングの質 | 25 | 精緻で多層＝25、良好＝17、広すぎる＝10、無駄が多い＝3 |
+| 広告クリエイティブの質 | 25 | 訴求力があり多様＝25、及第点＝17、弱い＝10、不十分＝3 |
+| 着地ページとの整合 | 15 | 完全に一致＝15、良好＝10、ずれている＝5、破綻＝0 |
+| 計測・効果測定 | 15 | 網羅的＝15、基本のみ＝10、最小限＝5、未設定＝0 |
 
-#### Overall Score Calculation
+#### 総合スコアの算出
+
 ```
-Overall Score = (Website * 0.25) + (SEO * 0.20) + (Content * 0.15) + (Social * 0.15) + (Email * 0.15) + (Paid * 0.10)
-```
-
-**Score Interpretation:**
-| Score Range | Rating | Meaning |
-|---|---|---|
-| 85-100 | Excellent | Marketing is a competitive advantage. Optimize and scale. |
-| 70-84 | Good | Solid foundation with clear improvement opportunities. |
-| 55-69 | Average | Functional but leaving significant growth on the table. |
-| 40-54 | Below Average | Multiple areas need attention. Significant opportunity cost. |
-| 0-39 | Critical | Marketing is actively hurting growth. Immediate action required. |
-
-### Step 3: Write Category Deep-Dives
-
-For each of the 6 categories, provide:
-
-1. **Score and Rating** -- X/100 with interpretation
-2. **Key Findings** -- 3-5 specific observations with evidence
-3. **What's Working** -- Positive elements to preserve and build on
-4. **Gaps and Issues** -- Problems identified with severity ratings
-5. **Recommendations** -- Specific, actionable improvements ranked by impact
-6. **Revenue Impact Estimate** -- Estimated financial impact of implementing recommendations
-
-**Revenue Impact Estimation Framework:**
-```
-Impact = (Estimated traffic change * Conversion rate change * Average deal value) * Confidence factor
-
-Example:
-- Current monthly traffic: 10,000
-- Recommended SEO improvements could increase traffic 30%: +3,000 visits
-- Current conversion rate: 2%, CRO could improve to 3%: +1% = +130 conversions
-- Average deal value: $500
-- Estimated monthly revenue impact: $65,000
-- Confidence factor (conservative): 0.5
-- Conservative estimate: $32,500/month additional revenue
+総合スコア = (Webサイト × 0.25) + (SEO × 0.20) + (コンテンツ × 0.15)
+             + (SNS × 0.15) + (メール × 0.15) + (広告 × 0.10)
 ```
 
-### Step 4: Competitor Comparison Summary
-If competitor data is available from `/market competitors`, include:
+**スコアの解釈：**
 
-**Competitive Positioning Matrix:**
-| Factor | Client | Competitor 1 | Competitor 2 | Competitor 3 |
+| 点数 | 評価 | 意味 |
+|---|---|---|
+| 85〜100 | 優秀 | マーケティングが競争優位になっている。最適化と拡大の段階 |
+| 70〜84 | 良好 | 土台は固い。改善余地が明確にある |
+| 55〜69 | 平均的 | 機能はしているが、取り逃している成長が大きい |
+| 40〜54 | 平均以下 | 複数領域で対応が必要。機会損失が大きい |
+| 0〜39 | 危機的 | マーケティングが成長の足を引っ張っている。早急な対応が必要 |
+
+### ステップ3：カテゴリ別の詳細分析
+
+6カテゴリそれぞれについて、以下を記述します。
+
+1. **スコアと評価** — X/100 と解釈
+2. **主な所見** — 根拠を伴う具体的な観察 3〜5点
+3. **できていること** — 維持・強化すべき良い点
+4. **課題・不足点** — 特定した問題と重要度
+5. **改善提案** — 効果順に並べた具体的な施策
+6. **収益インパクトの見込み** — 実施した場合の金額換算
+
+**収益インパクトの試算フレーム（建設業）：**
+
+```
+月間受注件数の増加 = 月間訪問数 × 問い合わせ率の改善幅
+                      × 現地調査化率 × 見積提出率 × 成約率
+月間粗利インパクト = 月間受注件数の増加 × 平均受注単価 × 粗利率 × 確度係数
+
+例）
+- 現在の月間訪問数　　　： 3,000
+- SEO改善で訪問数+30%　： +900訪問 → 3,900
+- 問い合わせ率 1.0% → 1.4%（CRO改善）
+- 月間問い合わせ　　　　： 30件 → 54.6件（+24.6件）
+- 現地調査化率50% × 見積提出率85% × 成約率30% = 12.75%
+- 月間受注件数の増加　　： 24.6 × 12.75% = +3.1件
+- 平均受注単価120万円 × 粗利率35% = 1件あたり粗利42万円
+- 月間粗利インパクト　　： 約130万円
+- 確度係数（保守的）　　： 0.5
+- 保守的な見込み　　　　： 月 約65万円の粗利増
+
+  ※効果が表れ始めるのは3ヶ月目以降、
+    受注として計上されるのは4〜6ヶ月目以降を想定
+```
+
+**建設業以外の場合**は、業種に応じた単価指標に読み替えてください（EC＝平均注文単価、SaaS＝月額単価×想定継続月数）。
+
+### ステップ4：競合比較のまとめ
+
+`/market competitors` の結果がある場合、以下を含めます。
+
+**競合ポジショニング表：**
+
+| 評価項目 | クライアント | 競合1 | 競合2 | 競合3 |
 |---|---|---|---|---|
-| Website Quality | X/10 | X/10 | X/10 | X/10 |
-| SEO Visibility | X/10 | X/10 | X/10 | X/10 |
-| Content Quality | X/10 | X/10 | X/10 | X/10 |
-| Social Presence | X/10 | X/10 | X/10 | X/10 |
-| Overall Position | Xth/4 | Xth/4 | Xth/4 | Xth/4 |
+| サイトの質 | X/10 | X/10 | X/10 | X/10 |
+| SEOでの露出 | X/10 | X/10 | X/10 | X/10 |
+| コンテンツの質 | X/10 | X/10 | X/10 | X/10 |
+| SNSでの存在感 | X/10 | X/10 | X/10 | X/10 |
+| 総合順位 | X位/4社 | X位/4社 | X位/4社 | X位/4社 |
 
-**Competitive Advantages:** What the client does better
-**Competitive Gaps:** Where competitors outperform the client
-**Opportunities:** Spaces competitors are not addressing
+**優位点：** クライアントが勝っている点
+**劣位点：** 競合が上回っている点
+**空白地帯：** どの競合も手をつけていない領域
 
-### Step 5: Content Quality Assessment
-Summarize content findings across all channels:
+### ステップ5：コンテンツ品質の評価
 
-- **Website copy** -- Clarity, persuasiveness, brand alignment
-- **Blog content** -- Depth, expertise, SEO optimization, publishing cadence
-- **Social media content** -- Engagement quality, brand consistency, platform optimization
-- **Email content** -- Subject line effectiveness, body copy quality, CTA strength
-- **Ad creative** -- Messaging clarity, visual quality, offer presentation
+全チャネルのコンテンツ所見をまとめます。
 
-### Step 6: Conversion Optimization Summary
-Compile all conversion-related findings:
+- **サイトのコピー** — 明確さ、説得力、ブランドとの整合
+- **ブログ記事** — 深さ、専門性、SEO最適化、更新頻度
+- **SNS投稿** — エンゲージメントの質、ブランド一貫性、媒体最適化
+- **メール** — 件名の効果、本文の質、CTAの強さ
+- **広告クリエイティブ** — 訴求の明確さ、ビジュアル品質、オファーの見せ方
 
-- **Primary conversion paths** -- How visitors become customers
-- **Funnel leaks** -- Where potential customers drop off
-- **CRO quick wins** -- Changes that can be implemented immediately
-- **Testing opportunities** -- A/B tests recommended with hypotheses
-- **Benchmark comparison** -- Current rates vs industry standards
+### ステップ6：コンバージョン最適化のまとめ
 
-### Step 7: SEO Snapshot
-Summarize SEO health in a scannable format:
+コンバージョン関連の所見を集約します。
+
+- **主要な成約導線** — 訪問者が顧客になるまでの流れ
+- **ファネルの漏れ** — 見込み客が離脱している箇所
+- **すぐできるCRO改善** — 即座に実施できる変更
+- **テスト候補** — 仮説つきのA/Bテスト案
+- **ベンチマーク比較** — 現在の数値と業界標準の対比
+
+### ステップ7：SEOスナップショット
+
+SEOの健全性を一目で分かる形式でまとめます。
 
 ```
-SEO Health Snapshot:
-- Title Tags: [Optimized / Needs Work / Missing]
-- Meta Descriptions: [Optimized / Needs Work / Missing]
-- H1 Tags: [Proper / Issues / Missing]
-- Image Alt Text: [Complete / Partial / Missing]
-- Page Speed: [Fast / Moderate / Slow]
-- Mobile-Friendly: [Yes / Partially / No]
-- Schema Markup: [Present / Partial / Missing]
-- Robots.txt: [Configured / Issues / Missing]
-- Sitemap: [Present / Issues / Missing]
-- HTTPS: [Yes / No]
-- Core Web Vitals: [Pass / Needs Work / Fail]
+SEO健全性チェック:
+- タイトルタグ　　　： [最適化済み / 要改善 / 未設定]
+- メタディスクリプション： [最適化済み / 要改善 / 未設定]
+- H1タグ　　　　　　： [適切 / 問題あり / 未設定]
+- 画像のalt属性　　 ： [完備 / 一部 / 未設定]
+- 表示速度　　　　　： [速い / 普通 / 遅い]
+- スマホ対応　　　　： [対応 / 一部 / 非対応]
+- 構造化データ　　　： [設定済み / 一部 / 未設定]
+- robots.txt　　　　： [適切 / 問題あり / なし]
+- サイトマップ　　　： [あり / 問題あり / なし]
+- HTTPS　　　　　　 ： [対応 / 未対応]
+- Core Web Vitals　： [合格 / 要改善 / 不合格]
+- Googleビジネスプロフィール： [最適化済み / 要改善 / 未登録]
 ```
 
-### Step 8: Build the Prioritized Action Plan
+最終行は建設業・ローカルビジネスの場合に必ず含めてください。
 
-Organize all recommendations into three tiers:
+### ステップ8：優先順位別アクションプランの作成
 
-#### Quick Wins (Implement This Week)
-High impact, low effort changes. These should be implementable within 1-5 business days.
+すべての提案を3つの層に整理します。
 
-Format each item as:
+#### クイックウィン（今週実施）
+
+効果が高く工数が低い施策。1〜5営業日で実施できるもの。
+
+各項目の書式：
+
 ```
-- [ ] [Action item]: [Specific description]
-  - Impact: [HIGH/MEDIUM/LOW]
-  - Effort: [1-5 hours]
-  - Expected Result: [Specific outcome]
-  - Revenue Impact: [$X/month estimated]
+- [ ] [施策名]：[具体的な内容]
+  - 効果　　： [高/中/低]
+  - 工数　　： [1〜5時間]
+  - 期待結果： [具体的な成果]
+  - 収益効果： [月 約XX万円]
 ```
 
-#### Medium-Term (Implement This Month)
-Moderate impact, moderate effort. These require 1-4 weeks.
+#### 中期施策（今月実施）
 
-#### Strategic (Implement This Quarter)
-High impact, high effort. These are foundational changes that require planning and sustained effort.
+中程度の効果・工数。1〜4週間を要するもの。
 
-### Step 9: Build the 30-60-90 Day Roadmap
+#### 戦略施策（今四半期実施）
 
-**Days 1-30: Foundation & Quick Wins**
-- Week 1: Implement all quick wins from the action plan
-- Week 2: Set up tracking and analytics baseline
-- Week 3: Begin medium-term improvements
-- Week 4: First performance review and adjustment
+効果も工数も大きい。計画と継続的な取り組みを要する基盤的な変更。
 
-**Days 31-60: Growth & Optimization**
-- Week 5-6: Launch core campaign improvements
-- Week 7: A/B testing program begins
-- Week 8: Content strategy implementation
+### ステップ9：30・60・90日ロードマップの作成
 
-**Days 61-90: Scale & Expand**
-- Week 9-10: Scale what's working, cut what isn't
-- Week 11: Expand to new channels or campaigns
-- Week 12: Comprehensive review, update strategy for next quarter
+**1〜30日目：基盤づくりとクイックウィン**
 
-### Step 10: Appendix
+- 1週目：アクションプランのクイックウィンを全て実施
+- 2週目：計測環境の整備と現状数値の記録
+- 3週目：中期施策に着手
+- 4週目：初回の成果確認と軌道修正
 
-Include methodology notes so the client understands how scores were derived:
+**31〜60日目：成長と最適化**
 
-**Scoring Methodology:**
-- How each category was evaluated
-- Data sources used
-- Benchmarks referenced
-- Limitations and assumptions
-- Date of analysis
+- 5〜6週目：中核施策の本格開始
+- 7週目：A/Bテストの開始
+- 8週目：コンテンツ戦略の実行
 
-**Tools Used:**
-- List any tools or scripts used in the analysis
-- Reference to ~/.claude/skills/market/scripts/analyze_page.py if used
+**61〜90日目：拡大と展開**
 
-**Glossary:**
-- Define marketing terms that a non-marketer client may not know
-- Keep it relevant to terms used in the report
+- 9〜10週目：効果のある施策を拡大、効果のない施策を停止
+- 11週目：新しいチャネル・施策への展開
+- 12週目：総括レビューと次四半期の戦略更新
 
-## Output Format
+**建設業向けの注記：** 90日時点では「問い合わせ数の増加」が主な成果指標になります。受注・売上への反映は4〜6ヶ月目以降であることをレポート内に明記してください。
 
-Generate a file called `MARKETING-REPORT.md` with:
+### ステップ10：付録
+
+スコアの根拠が分かるよう、算出方法を記載します。
+
+**採点方法：**
+
+- 各カテゴリの評価方法
+- 使用したデータソース
+- 参照したベンチマーク
+- 制約事項と前提条件
+- 分析実施日
+
+**使用ツール：**
+
+- 分析に使用したツール・スクリプトの一覧
+- 使用した場合は `~/.claude/skills/market/scripts/analyze_page.py` を明記
+
+**用語集：**
+
+- マーケティングに詳しくないクライアント向けに、レポート内で使った専門用語を解説
+- 建設業のクライアント向けには、CVR・CTA・SEO・LP などを必ず含める
+
+## 出力形式
+
+`MARKETING-REPORT.md` というファイルを生成します。
 
 ```markdown
-# Marketing Report
-## [Company/Domain Name]
-### Prepared by: [Agent/Agency Name]
-### Date: [Date]
+# マーケティングレポート
+## [会社名／ドメイン]
+### 作成： [担当者名／会社名]
+### 作成日： [日付]
 
 ---
 
-## Executive Summary
+## エグゼクティブ・サマリー
 
-### Overall Marketing Score: [X/100] -- [Rating]
+### 総合マーケティングスコア： [X/100] — [評価]
 
-[2-3 paragraph summary covering: current state assessment, top 3 findings, estimated revenue impact of implementing recommendations, and recommended first steps]
+[2〜3段落。現状評価、主要な所見3点、改善実施時の収益インパクト見込み、
+最初に着手すべき施策]
 
-### Score Breakdown
-| Category | Score | Rating |
+### スコア内訳
+
+| カテゴリ | スコア | 評価 |
 |---|---|---|
-| Website & Conversion | X/100 | [Rating] |
-| SEO & Organic | X/100 | [Rating] |
-| Content & Messaging | X/100 | [Rating] |
-| Social Media | X/100 | [Rating] |
-| Email & Automation | X/100 | [Rating] |
-| Paid Advertising | X/100 | [Rating] |
-| **Overall** | **X/100** | **[Rating]** |
+| Webサイト・コンバージョン | X/100 | [評価] |
+| SEO・自然流入 | X/100 | [評価] |
+| コンテンツ・メッセージング | X/100 | [評価] |
+| SNS | X/100 | [評価] |
+| メール・自動化 | X/100 | [評価] |
+| 有料広告 | X/100 | [評価] |
+| **総合** | **X/100** | **[評価]** |
 
-### Top 3 Priority Actions
-1. [Most impactful recommendation with revenue estimate]
-2. [Second most impactful recommendation]
-3. [Third most impactful recommendation]
-
----
-
-## Detailed Findings
-
-### 1. Website & Conversion [X/100]
-[Deep-dive analysis with findings, what's working, gaps, recommendations]
-
-### 2. SEO & Organic [X/100]
-[Deep-dive analysis]
-
-### 3. Content & Messaging [X/100]
-[Deep-dive analysis]
-
-### 4. Social Media [X/100]
-[Deep-dive analysis]
-
-### 5. Email & Automation [X/100]
-[Deep-dive analysis]
-
-### 6. Paid Advertising [X/100]
-[Deep-dive analysis]
+### 優先アクション 上位3件
+1. [最も効果の大きい施策と収益見込み]
+2. [2番目]
+3. [3番目]
 
 ---
 
-## Competitor Comparison
-[Matrix and analysis]
+## 詳細分析
+
+### 1. Webサイト・コンバージョン [X/100]
+[所見、できていること、課題、改善提案]
+
+### 2. SEO・自然流入 [X/100]
+### 3. コンテンツ・メッセージング [X/100]
+### 4. SNS [X/100]
+### 5. メール・自動化 [X/100]
+### 6. 有料広告 [X/100]
 
 ---
 
-## SEO Snapshot
-[Health checklist]
+## 競合比較
+[比較表と分析]
 
 ---
 
-## Conversion Optimization Summary
-[Funnel analysis and CRO recommendations]
+## SEOスナップショット
+[健全性チェック]
 
 ---
 
-## Revenue Impact Summary
-| Recommendation | Estimated Monthly Impact | Confidence | Priority |
-|---|---|---|---|
-| [Rec 1] | $X,XXX | High/Medium/Low | 1 |
-| [Rec 2] | $X,XXX | High/Medium/Low | 2 |
-| ... | ... | ... | ... |
-| **Total Estimated Impact** | **$XX,XXX/month** | | |
+## コンバージョン最適化のまとめ
+[ファネル分析とCRO提案]
 
 ---
 
-## Prioritized Action Plan
+## 収益インパクト一覧
 
-### Quick Wins (This Week)
-- [ ] [Action items with impact and effort]
+| 施策 | 月間粗利インパクト | 確度 | 優先度 | 効果が出るまで |
+|---|---|---|---|---|
+| [施策1] | 約XX万円 | 高/中/低 | 1 | Xヶ月 |
+| [施策2] | 約XX万円 | 高/中/低 | 2 | Xヶ月 |
+| **合計見込み** | **約XXX万円/月** | | | |
 
-### Medium-Term (This Month)
-- [ ] [Action items]
-
-### Strategic (This Quarter)
-- [ ] [Action items]
-
----
-
-## 30-60-90 Day Roadmap
-[Week-by-week plan]
+**試算の前提：** 月間訪問数 X、平均受注単価 XX万円、粗利率 XX%
 
 ---
 
-## Appendix
-### Methodology
-### Tools Used
-### Glossary
-### Data Sources
+## 優先順位別アクションプラン
+
+### クイックウィン（今週）
+- [ ] [施策：効果と工数つき]
+
+### 中期施策（今月）
+- [ ] [施策]
+
+### 戦略施策（今四半期）
+- [ ] [施策]
+
+---
+
+## 30・60・90日ロードマップ
+[週単位の計画]
+
+---
+
+## 付録
+### 採点方法
+### 使用ツール
+### 用語集
+### データソース
 ```
 
-## Key Principles
-- This report should be impressive enough to use as a sales tool. A well-crafted marketing report can open the door to a client engagement.
-- Always lead with insights and opportunities, not criticism. Frame everything through the lens of growth potential.
-- Quantify everything possible. "$32,000/month in unrealized revenue" is more compelling than "you're leaving money on the table."
-- Make the action plan so specific that someone could hand it to a junior marketer and they could execute it.
-- Use professional formatting: consistent headers, tables for data, checkboxes for action items, clear visual hierarchy.
-- If data from previous skills is available, reference specific findings. If not, be transparent about what's based on analysis vs estimation.
-- The report should tell a story: Here's where you are, here's where you could be, here's how to get there, and here's what it's worth.
+## 基本原則
+
+- このレポートは営業ツールとして通用する品質にすること。優れたレポートは、それ自体が次の契約の入口になります
+- 批判ではなく、洞察と機会から書き始めること。すべてを「成長余地」の観点で提示します
+- 可能な限り数値化すること。「機会損失が発生しています」よりも「月32万円の粗利を取り逃しています」の方がはるかに動かせます
+- アクションプランは、そのまま担当者に渡して実行できるレベルまで具体的に書くこと
+- 体裁を整えること：見出しの統一、データは表、施策はチェックボックス、明確な階層
+- 他スキルのデータがある場合は具体的な所見を引用すること。無い場合は「分析に基づく部分」と「推定に基づく部分」を正直に区別すること
+- レポートは物語であるべきです：今どこにいるか、どこまで行けるか、どうやって行くか、それにいくらの価値があるか
+- 建設業向けでは、効果発現までのタイムラグ（3〜6ヶ月）を必ず明記すること。即効性を装うと信頼を失います

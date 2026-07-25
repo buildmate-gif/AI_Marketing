@@ -31,11 +31,30 @@ COLOR_B = colors.HexColor("#2D5BFF") # 良好 (60-79)
 COLOR_C = colors.HexColor("#FFB300") # 要改善 (40-59)
 COLOR_D = colors.HexColor("#FF1744") # 致命的 (0-39)
 
+ORANGE = colors.HexColor("#FF6B35")     # 重大（要注意）
+
 def get_score_color(score):
     if score >= 80: return COLOR_A
     if score >= 60: return COLOR_B
     if score >= 40: return COLOR_C
     return COLOR_D
+
+# 重要度ラベルの正規化（英語入力でも日本語で出力する）
+SEVERITY_MAP = {
+    "critical": ("致命的", COLOR_D),
+    "致命的":   ("致命的", COLOR_D),
+    "high":     ("重大",   ORANGE),
+    "重大":     ("重大",   ORANGE),
+    "medium":   ("中程度", COLOR_C),
+    "中程度":   ("中程度", COLOR_C),
+    "low":      ("軽微",   COLOR_B),
+    "軽微":     ("軽微",   COLOR_B),
+}
+
+def normalize_severity(value):
+    """重要度を日本語ラベルと表示色に変換する。未知の値はそのまま本文色で返す。"""
+    key = str(value).strip().lower()
+    return SEVERITY_MAP.get(key, (str(value), TEXT_COLOR))
 
 def get_grade(score):
     if score >= 85: return "A"
@@ -150,6 +169,10 @@ def generate_pdf(data, output_filename):
 
     # --- ページ1：表紙 & サマリー ---
     story.append(Paragraph("マーケティング監査レポート", styles['TrustTitle']))
+    # 社名が指定されていれば表紙に大きく表示する
+    brand_name = data.get('brand_name', '').strip()
+    if brand_name:
+        story.append(Paragraph(f"{brand_name} 御中", styles['TrustHeading']))
     story.append(Paragraph(f"対象URL: {data.get('url', 'N/A')} | 発行日: {data.get('date', 'N/A')}", styles['TrustBody']))
     story.append(Spacer(1, 1*cm))
     
@@ -196,11 +219,17 @@ def generate_pdf(data, output_filename):
     if findings:
         table_data = [[Paragraph("重要度", header_style), Paragraph("課題内容", header_style)]]
         for f in findings:
+            label, sev_color = normalize_severity(f.get('severity', ''))
+            sev_style = ParagraphStyle(
+                name='Severity',
+                parent=body_style,
+                textColor=sev_color,
+            )
             table_data.append([
-                Paragraph(f.get('severity', ''), body_style),
+                Paragraph(label, sev_style),
                 Paragraph(f.get('finding', ''), body_style)
             ])
-            
+
         t = Table(table_data, colWidths=[3*cm, 13*cm])
         t.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), NAVY),

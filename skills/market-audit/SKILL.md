@@ -4,371 +4,438 @@ description: "Webサイトの完全マーケティング監査。5つの並列�
 ---
 # マーケティング監査オーケストレーター
 
-You are the full marketing audit engine for `/market audit <url>`. You launch 5 parallel subagents, aggregate their results, and produce a unified MARKETING-AUDIT.md report that is client-ready and revenue-focused.
+あなたは `/market audit <url>` の監査エンジンです。5つのサブエージェントを並列起動し、その結果を統合して、そのままクライアントに提出できる `MARKETING-AUDIT.md` を作成します。すべての指摘は売上への影響に結びつけてください。
 
-## When This Skill Is Invoked
+## このスキルが呼ばれる場面
 
-The user runs `/market audit <url>`. This is the flagship command of the entire suite. It produces the most comprehensive deliverable: a scored, prioritized, actionable marketing audit.
+ユーザーが `/market audit <url>` を実行したとき。本スイートの中核コマンドであり、最も網羅的な成果物（採点・優先順位・実行可能な改善案を含む監査書）を生成します。
 
----
-
-## Phase 1: Discovery (Pre-Analysis)
-
-Before launching subagents, perform these discovery steps:
-
-### 1.1 Fetch the Target URL
-
-Use `WebFetch` to retrieve the homepage and up to 5 key interior pages (pricing, about, product/features, blog, contact). Store raw content for subagent consumption.
-
-### 1.2 Detect Business Type
-
-Classify the business into one of these categories. This classification shapes every subagent's analysis focus:
-
-| Business Type | Detection Signals | Analysis Focus |
-|---------------|-------------------|----------------|
-| **SaaS/Software** | Free trial CTA, pricing tiers, feature pages, "login" link, API docs | Trial-to-paid conversion, onboarding, feature differentiation, churn signals |
-| **E-commerce** | Product listings, cart, checkout, product categories, reviews | Product pages, cart abandonment, upsells, reviews, AOV optimization |
-| **Agency/Services** | Case studies, portfolio, "work with us", testimonials, contact forms | Trust signals, case studies, positioning, lead qualification |
-| **Local Business** | Address, phone number, hours, "near me", Google Maps embed | Local SEO, Google Business Profile, reviews, NAP consistency |
-| **Creator/Course** | Lead magnets, email capture, course listings, community links | Email capture rate, funnel design, testimonials, content quality |
-| **Marketplace** | Two-sided messaging, buyer/seller flows, listing pages | Supply/demand balance, trust mechanisms, network effects |
-
-### 1.3 Identify Key Pages
-
-Map the site architecture to identify:
-- Homepage
-- Primary landing pages
-- Pricing page (if exists)
-- Product/feature pages
-- About/team page
-- Blog/content hub
-- Contact/signup/trial page
-- Legal pages (privacy, terms)
-
-Store this page map for all subagents to reference.
+**出力言語はすべて日本語です。** 分析対象サイトが英語であっても、レポートは日本語で書いてください。
 
 ---
 
-## Phase 2: Analysis (Parallel Subagent Execution)
+## フェーズ1：事前調査
 
-Launch all 5 subagents simultaneously using Claude Code's subagent capability. Each subagent receives the business type, page map, and fetched content.
+サブエージェントを起動する前に、以下を実施します。
 
-### Subagent 1: market-content
+### 1.1 対象URLの取得
 
-**Focus:** Content quality, messaging clarity, copy effectiveness
+`WebFetch` でトップページと、主要な内部ページを最大5枚取得します（料金、会社概要、サービス・製品、ブログ、お問い合わせ）。取得した生データはサブエージェントに渡すため保持しておきます。
 
-Evaluates:
-- Headline clarity and specificity (does it pass the 5-second test?)
-- Value proposition strength (is the unique value immediately obvious?)
-- Body copy persuasion (does it speak to pain points and desired outcomes?)
-- Social proof quality (testimonials, logos, case studies, numbers)
-- Content depth and authority (blog quality, thought leadership)
-- Brand voice consistency across pages
+### 1.2 業種の判定
 
-**Scores:** Content & Messaging (0-100)
+以下の8業種のいずれかに分類します。この判定が、全サブエージェントの分析観点を決めます。
 
-### Subagent 2: market-conversion
+| 業種 | 判定シグナル | 分析の重点 |
+|---|---|---|
+| **SaaS・ソフトウェア** | 無料トライアル、料金プラン、ログインリンク、APIドキュメント | トライアル→有料転換、オンボーディング、機能の差別化、解約シグナル |
+| **EC・通販** | 商品一覧、カート、決済フロー、レビュー | 商品ページ、カゴ落ち、アップセル、客単価 |
+| **エージェンシー・サービス業** | 制作事例、ポートフォリオ、お客様の声、お問い合わせフォーム | 信頼シグナル、実績、ポジショニング、リード選別 |
+| **ローカルビジネス** | 住所、電話番号、営業時間、Googleマップ埋め込み | ローカルSEO、Googleビジネスプロフィール、口コミ、NAP情報の一貫性 |
+| **クリエイター・講座** | 資料請求、メール登録、講座一覧、コミュニティ導線 | リード獲得率、ファネル設計、推薦文、コンテンツ品質 |
+| **マーケットプレイス** | 出品者・購入者の双方向導線、掲載ページ | 需給バランス、信頼担保の仕組み、ネットワーク効果 |
+| **建設・建築業** | 施工実績、建設業許可番号、有資格者一覧、対応エリア、現場写真 | 施工実績の見せ方、許可・資格の明示、問い合わせ・来場予約導線、地域SEO |
+| **製造業・BtoB** | 製品カタログ、技術資料、ISO認証、取引実績、展示会情報 | カタログ請求、見積依頼導線、技術的信頼性、展示会連携 |
 
-**Focus:** CRO, funnels, landing pages, signup flows
+**建設・建築業と判定した場合は、以下を必ず追加で確認してください。**
 
-Evaluates:
-- CTA effectiveness (clarity, placement, contrast, urgency)
-- Form friction (number of fields, progressive disclosure, inline validation)
-- Page layout and visual hierarchy (does the eye flow toward conversion?)
-- Trust signals near conversion points (guarantees, security badges, testimonials)
-- Mobile conversion experience
-- Signup/checkout flow steps and drop-off risk
-- Pricing page effectiveness (anchoring, packaging, FAQ)
+- 建設業許可番号がサイト上に明示されているか（どのページにあるか）
+- 対応エリアが市区町村レベルで書かれているか
+- 施工事例の件数、写真の質、費用帯・工期の記載有無
+- Googleビジネスプロフィールへの導線と口コミ状況
+- 電話番号がヘッダーに固定表示されているか（高齢層の主要な問い合わせ手段）
 
-**Scores:** Conversion Optimization (0-100)
+### 1.3 主要ページの把握
 
-### Subagent 3: market-competitive
+サイト構成を整理し、以下を特定します。
 
-**Focus:** Competitive positioning, market landscape
+- トップページ
+- 主要なランディングページ
+- 料金・費用ページ（あれば）
+- サービス・製品・施工事例ページ
+- 会社概要・スタッフ紹介ページ
+- ブログ・お役立ち情報
+- お問い合わせ・見積依頼・来場予約ページ
+- 法務ページ（プライバシーポリシー、特定商取引法表記）
 
-Evaluates:
-- Unique positioning clarity (how differentiated is the messaging?)
-- Competitor awareness signals (comparison pages, "vs" pages, alternatives pages)
-- Market category definition (are they creating or joining a category?)
-- Pricing relative to likely competitors
-- Feature differentiation signals
-- Review/reputation presence on third-party sites
-
-**Scores:** Competitive Positioning (0-100)
-
-### Subagent 4: market-technical
-
-**Focus:** Technical SEO, site architecture, page speed
-
-Evaluates:
-- Title tags, meta descriptions, header hierarchy
-- URL structure and internal linking
-- Image optimization (alt tags, file sizes, modern formats)
-- Mobile responsiveness
-- Page load speed indicators (DOM size, resource count, render-blocking)
-- Schema markup / structured data
-- Sitemap and robots.txt
-- Core Web Vitals signals (where detectable)
-- Accessibility basics (contrast, form labels, skip navigation)
-
-**Scores:** SEO & Discoverability (0-100)
-
-### Subagent 5: market-strategy
-
-**Focus:** Overall strategy, pricing, growth opportunities
-
-Evaluates:
-- Business model clarity
-- Pricing strategy (value-based, competitor-based, cost-plus)
-- Growth loops (referral, viral, content, sales-led)
-- Retention signals (loyalty programs, community, email nurture)
-- Expansion revenue opportunities (upsells, cross-sells, tiers)
-- Market timing and trends alignment
-- Brand trust signals (about page, team, mission, social proof depth)
-
-**Scores:** Brand & Trust (0-100), Growth & Strategy (0-100)
+このページ一覧は全サブエージェントに共有します。
 
 ---
 
-## Phase 3: Synthesis (Aggregation and Scoring)
+## フェーズ2：分析（5サブエージェントの並列実行）
 
-### 3.1 Scoring Methodology
+Claude Code のサブエージェント機能で5体を同時起動します。各サブエージェントには「業種判定の結果・ページ一覧・取得済みコンテンツ」を渡してください。
 
-Compute the composite Marketing Score using weighted averages:
+### サブエージェント1：market-content
+
+**担当：** コンテンツ品質、メッセージングの明確さ、コピーの効果
+
+評価項目：
+
+- 見出しの明確さと具体性（5秒で理解できるか）
+- 価値提案の強度（独自の価値が即座に伝わるか）
+- 本文コピーの説得力（悩みと得たい結果に触れているか）
+- 社会的証明の質（お客様の声、取引先ロゴ、事例、実績数値）
+- コンテンツの厚みと専門性（ブログの質、専門情報の発信）
+- ページ間のブランドボイスの一貫性
+
+**採点：** コンテンツ・メッセージング（0〜100）
+
+### サブエージェント2：market-conversion
+
+**担当：** CRO（コンバージョン率最適化）、ファネル、ランディングページ、申込フロー
+
+評価項目：
+
+- CTA（行動喚起ボタン）の効果（文言の明確さ、配置、視認性、緊急性）
+- フォームの摩擦（入力項目数、段階的開示、その場でのエラー表示）
+- ページ構成と視覚導線（視線がコンバージョンに向かうか）
+- コンバージョン地点付近の信頼シグナル（保証、安全性表示、お客様の声）
+- スマートフォンでのコンバージョン体験
+- 申込・決済フローの段階数と離脱リスク
+- 料金・費用ページの効果（価格の見せ方、プラン構成、FAQ）
+
+**採点：** コンバージョン最適化（0〜100）
+
+### サブエージェント3：market-competitive
+
+**担当：** 競合ポジショニング、市場環境
+
+評価項目：
+
+- 独自ポジショニングの明確さ（メッセージがどれだけ差別化されているか）
+- 競合認識のシグナル（比較ページ、「他社との違い」ページ）
+- 市場カテゴリの定義（新カテゴリを作っているか、既存市場に参入しているか）
+- 想定競合と比較した価格帯
+- 機能・サービス面の差別化シグナル
+- 第三者サイトでの評判・口コミの存在（Googleマップ、口コミサイト、SNS）
+
+**採点：** 競合ポジショニング（0〜100）
+
+### サブエージェント4：market-technical
+
+**担当：** テクニカルSEO、サイト構造、表示速度
+
+評価項目：
+
+- タイトルタグ、メタディスクリプション、見出し階層
+- URL構造と内部リンク
+- 画像の最適化（alt属性、ファイルサイズ、次世代フォーマット）
+- スマートフォン対応
+- 表示速度の指標（DOMサイズ、リソース数、レンダリングを妨げる要素）
+- 構造化データ（schema.org）
+- サイトマップと robots.txt
+- Core Web Vitals のシグナル（検出できる範囲で）
+- アクセシビリティの基本（コントラスト、フォームのラベル、スキップリンク）
+
+**採点：** SEO・発見可能性（0〜100）
+
+### サブエージェント5：market-strategy
+
+**担当：** 全体戦略、価格設定、成長機会
+
+評価項目：
+
+- ビジネスモデルの明確さ
+- 価格戦略（価値基準・競合基準・原価積み上げのどれか）
+- 成長ループ（紹介、口コミ、コンテンツ、営業主導）
+- 継続・再受注のシグナル（OB顧客フォロー、会員制度、メール配信）
+- 追加受注の機会（アップセル、クロスセル、メンテナンス契約）
+- 市場のタイミングとトレンドとの整合
+- ブランドの信頼シグナル（会社概要、スタッフ、理念、社会的証明の厚み）
+
+**採点：** ブランド・信頼性（0〜100）、成長・戦略（0〜100）
+
+---
+
+## フェーズ3：統合と採点
+
+### 3.1 採点方式
+
+加重平均で総合マーケティングスコアを算出します。
 
 ```
-Marketing Score = (
-    Content_Score      * 0.25 +
-    Conversion_Score   * 0.20 +
-    SEO_Score          * 0.20 +
-    Competitive_Score  * 0.15 +
-    Brand_Score        * 0.10 +
-    Growth_Score       * 0.10
+マーケティングスコア = (
+    コンテンツスコア     × 0.25 +
+    コンバージョンスコア × 0.20 +
+    SEOスコア            × 0.20 +
+    競合スコア           × 0.15 +
+    ブランドスコア       × 0.10 +
+    成長スコア           × 0.10
 )
 ```
 
-**Score interpretation:**
-| Score Range | Grade | Meaning |
-|-------------|-------|---------|
-| 85-100 | A | Excellent — minor optimizations only |
-| 70-84 | B | Good — clear opportunities for improvement |
-| 55-69 | C | Average — significant gaps to address |
-| 40-54 | D | Below average — major overhaul needed |
-| 0-39 | F | Critical — fundamental marketing issues |
+**スコアの解釈：**
 
-### 3.2 Aggregate Recommendations
+| 点数 | 評価 | 意味 |
+|---|---|---|
+| 85〜100 | A | 優秀 — 細部の最適化のみ |
+| 70〜84 | B | 良好 — 改善余地が明確にある |
+| 55〜69 | C | 平均的 — 埋めるべき差が大きい |
+| 40〜54 | D | 平均以下 — 抜本的な見直しが必要 |
+| 0〜39 | F | 危機的 — マーケティングの土台に問題がある |
 
-Collect all recommendations from subagents and classify them:
+### 3.2 改善提案の分類
 
-**Quick Wins** (implement in < 1 week, low effort, high impact):
-- Copy changes to headlines and CTAs
-- Adding missing meta descriptions
-- Adding trust signals near CTAs
-- Fixing broken links or images
-- Adding urgency or social proof
+各サブエージェントの提案を集約し、次の3つに分類します。
 
-**Strategic Recommendations** (1-4 weeks, medium effort, high impact):
-- Redesigning pricing page
-- Building comparison/alternatives pages
-- Creating lead magnets or content upgrades
-- Email sequence implementation
-- Landing page A/B test designs
+**クイックウィン**（1週間以内、低工数・高効果）
 
-**Long-Term Initiatives** (1-3 months, high effort, transformative impact):
-- Content marketing strategy overhaul
-- SEO content gap campaign
-- Funnel redesign
-- Brand repositioning
-- New growth channel development
+- 見出しとCTAの文言修正
+- 不足しているメタディスクリプションの追加
+- CTA付近への信頼シグナルの追加
+- リンク切れ・画像切れの修正
+- 建設業の場合：建設業許可番号の常時表示、電話番号のヘッダー固定
 
-### 3.3 Revenue Impact Estimates
+**戦略施策**（1〜4週間、中工数・高効果）
 
-For each recommendation, estimate the revenue impact:
+- 料金・費用ページの再設計
+- 比較・「他社との違い」ページの新規作成
+- 資料請求用のリードマグネット（無料提供資料）作成
+- メールシーケンスの導入
+- ランディングページのA/Bテスト設計
+
+**長期施策**（1〜3ヶ月、高工数・変革的効果）
+
+- コンテンツマーケティング戦略の全面見直し
+- SEOのコンテンツギャップ解消キャンペーン
+- ファネル全体の再設計
+- ブランドの再定義
+- 新規集客チャネルの開拓
+
+### 3.3 収益インパクトの試算
+
+**建設・建築業の場合は、以下の4段階モデルで試算します。**
 
 ```
-Revenue Impact Formula:
-  Current Monthly Traffic x Conversion Rate Improvement x Average Deal Value
-  = Estimated Monthly Revenue Lift
-
-Example:
-  10,000 visitors x 0.5% conversion lift x $99 ARPU = $4,950/month
+サイト訪問
+  ↓ 問い合わせ率 0.5〜2.0%（優良サイトで2〜3%）
+問い合わせ・資料請求
+  ↓ 現地調査化率 40〜60%
+現地調査・来場
+  ↓ 見積提出率 80〜90%
+見積提出
+  ↓ 成約率 20〜35%（紹介経由は50〜70%）
+契約
 ```
 
-Provide conservative, moderate, and aggressive estimates where possible. Use these qualifiers:
+```
+月間受注件数の増加 = 月間訪問数 × 問い合わせ率の改善幅
+                      × 現地調査化率 × 見積提出率 × 成約率
 
-| Impact Level | Monthly Revenue Lift | Confidence |
-|-------------|---------------------|------------|
-| High Impact | >$5,000/mo or >20% improvement | Based on clear evidence from audit |
-| Medium Impact | $1,000-$5,000/mo or 5-20% improvement | Based on industry benchmarks |
-| Low Impact | <$1,000/mo or <5% improvement | Incremental optimization |
+月間粗利インパクト = 月間受注件数の増加 × 平均受注単価 × 粗利率
+```
 
-### 3.4 Competitor Comparison Table
+**試算例：**
 
-If the competitive subagent identified competitors, include a comparison:
+```
+月間3,000訪問 × 問い合わせ率+0.5ポイント(0.005) × 現地調査化率50%
+  × 見積提出率85% × 成約率30% ＝ 月あたり +1.9件
+
+1.9件 × 平均受注単価120万円 × 粗利率35% ＝ 月間粗利 約80万円の増加
+```
+
+**平均受注単価の既定値**（サイトから読み取れない場合に使用し、レポートに前提として明記する）
+
+| 工種 | 平均受注単価 | 粗利率の目安 |
+|---|---|---|
+| 外壁塗装・屋根塗装 | 80〜150万円 | 30〜40% |
+| 外構・エクステリア | 100〜300万円 | 25〜35% |
+| 水回りリフォーム | 50〜200万円 | 25〜30% |
+| 全面リフォーム | 500〜1,500万円 | 20〜28% |
+| 新築住宅（工務店） | 2,500〜4,000万円 | 18〜25% |
+| 解体工事 | 80〜250万円 | 20〜30% |
+| 太陽光・蓄電池 | 100〜250万円 | 20〜30% |
+
+**建設業以外の場合**は、業種に応じた単価指標に読み替えてください（EC＝平均注文単価、SaaS＝月額単価×想定継続月数、BtoB製造＝1取引あたり売上）。
+
+**重要：建設業は商談期間が数ヶ月〜1年に及ぶため、必ず「効果が表れるまでの期間（通常3〜6ヶ月）」を併記してください。** 即効性を前提にした試算はクライアントの不信を招きます。
+
+**インパクト区分：**
+
+| 区分 | 月間粗利インパクト | 判断根拠 |
+|---|---|---|
+| 高インパクト | 月100万円以上、または20%以上の改善 | 監査で明確な根拠が得られた |
+| 中インパクト | 月30〜100万円、または5〜20%の改善 | 業界ベンチマークに基づく推定 |
+| 低インパクト | 月30万円未満、または5%未満の改善 | 漸進的な最適化 |
+
+可能な場合は、保守的・標準・積極的の3水準で幅を示してください。
+
+### 3.4 競合比較表
+
+競合サブエージェントが競合を特定できた場合は、比較表を含めます。
 
 ```markdown
-| Factor | [Target] | Competitor A | Competitor B | Competitor C |
-|--------|----------|-------------|-------------|-------------|
-| Headline Clarity | 6/10 | 8/10 | 5/10 | 7/10 |
-| Value Prop Strength | 5/10 | 7/10 | 6/10 | 8/10 |
-| Trust Signals | 7/10 | 9/10 | 4/10 | 6/10 |
-| CTA Effectiveness | 4/10 | 8/10 | 6/10 | 7/10 |
-| Pricing Clarity | 6/10 | 7/10 | 8/10 | 5/10 |
-| Content Depth | 5/10 | 9/10 | 3/10 | 6/10 |
+| 評価項目 | [対象社] | 競合A | 競合B | 競合C |
+|---|---|---|---|---|
+| 見出しの明確さ | 6/10 | 8/10 | 5/10 | 7/10 |
+| 価値提案の強度 | 5/10 | 7/10 | 6/10 | 8/10 |
+| 信頼シグナル | 7/10 | 9/10 | 4/10 | 6/10 |
+| CTAの効果 | 4/10 | 8/10 | 6/10 | 7/10 |
+| 費用情報の明確さ | 6/10 | 7/10 | 8/10 | 5/10 |
+| コンテンツの厚み | 5/10 | 9/10 | 3/10 | 6/10 |
 ```
 
----
-
-## Output Format: MARKETING-AUDIT.md
-
-Write the final report to `MARKETING-AUDIT.md` in the current directory with this structure:
+建設業の場合は、以下の行を追加してください。
 
 ```markdown
-# Marketing Audit: [Business Name]
-**URL:** [url]
-**Date:** [current date]
-**Business Type:** [detected type]
-**Overall Marketing Score: [X]/100 (Grade: [letter])**
-
----
-
-## Executive Summary
-
-[3-5 paragraph summary for a non-technical stakeholder. Lead with the score,
-highlight the biggest strength, the biggest gap, and the top 3 actions
-that would move the needle most. Include estimated revenue impact of
-implementing all recommendations.]
-
----
-
-## Score Breakdown
-
-| Category | Score | Weight | Weighted Score | Key Finding |
-|----------|-------|--------|---------------|-------------|
-| Content & Messaging | X/100 | 25% | X | [one-line finding] |
-| Conversion Optimization | X/100 | 20% | X | [one-line finding] |
-| SEO & Discoverability | X/100 | 20% | X | [one-line finding] |
-| Competitive Positioning | X/100 | 15% | X | [one-line finding] |
-| Brand & Trust | X/100 | 10% | X | [one-line finding] |
-| Growth & Strategy | X/100 | 10% | X | [one-line finding] |
-| **TOTAL** | | **100%** | **X/100** | |
-
----
-
-## Quick Wins (This Week)
-
-[Numbered list of 5-10 quick wins with specific implementation steps.
-Each should include: what to change, where to change it, why it matters,
-and estimated impact.]
-
-## Strategic Recommendations (This Month)
-
-[Numbered list of 3-7 strategic recommendations with rationale,
-implementation steps, and expected outcomes.]
-
-## Long-Term Initiatives (This Quarter)
-
-[Numbered list of 2-5 long-term initiatives with business case,
-resource requirements, and projected ROI.]
-
----
-
-## Detailed Analysis by Category
-
-### Content & Messaging Analysis
-[Full findings from market-content subagent]
-
-### Conversion Optimization Analysis
-[Full findings from market-conversion subagent]
-
-### SEO & Discoverability Analysis
-[Full findings from market-technical subagent]
-
-### Competitive Positioning Analysis
-[Full findings from market-competitive subagent]
-
-### Brand & Trust Analysis
-[Full findings from market-strategy subagent — brand section]
-
-### Growth & Strategy Analysis
-[Full findings from market-strategy subagent — growth section]
-
----
-
-## Competitor Comparison
-
-[Comparison table from Section 3.4]
-
----
-
-## Revenue Impact Summary
-
-| Recommendation | Est. Monthly Impact | Confidence | Timeline |
-|---------------|-------------------|------------|----------|
-| [recommendation 1] | $X,XXX | High/Med/Low | X weeks |
-| [recommendation 2] | $X,XXX | High/Med/Low | X weeks |
-| ... | | | |
-| **Total Potential** | **$XX,XXX/mo** | | |
-
----
-
-## Next Steps
-
-1. [Most critical action item]
-2. [Second priority]
-3. [Third priority]
-
-*Generated by AI Marketing Suite — `/market audit`*
+| 施工事例の件数 | 12件 | 80件 | 5件 | 40件 |
+| 建設業許可の明示 | なし | あり | あり | なし |
+| Googleクチコミ | 3.8（12件） | 4.5（86件） | 4.1（7件） | 4.2（33件） |
+| 対応エリアの明確さ | 県単位 | 市区町村単位 | 記載なし | 市区町村単位 |
 ```
 
 ---
 
-## Terminal Output
+## 出力形式：MARKETING-AUDIT.md
 
-In addition to the file, display a condensed summary in the terminal:
+最終レポートをカレントディレクトリの `MARKETING-AUDIT.md` に、以下の構成で書き出します。
 
-```
-=== MARKETING AUDIT COMPLETE ===
+```markdown
+# マーケティング監査：[会社名]
 
-Business: [name] ([type])
-URL: [url]
-Marketing Score: [X]/100 (Grade: [letter])
+**対象URL：** [url]
+**実施日：** [日付]
+**業種：** [判定した業種]
+**総合マーケティングスコア：[X]/100（評価：[A〜F]）**
 
-Score Breakdown:
-  Content & Messaging:     [XX]/100 ████████░░
-  Conversion Optimization: [XX]/100 ██████░░░░
-  SEO & Discoverability:   [XX]/100 ███████░░░
-  Competitive Positioning: [XX]/100 █████░░░░░
-  Brand & Trust:           [XX]/100 ████████░░
-  Growth & Strategy:       [XX]/100 ██████░░░░
+---
 
-Top 3 Quick Wins:
-  1. [win]
-  2. [win]
-  3. [win]
+## エグゼクティブ・サマリー
 
-Top 3 Strategic Moves:
-  1. [move]
-  2. [move]
-  3. [move]
+[経営層向けに3〜5段落。スコアを冒頭に置き、最大の強み、最大の課題、
+最も効果の大きい上位3施策を示す。全施策を実施した場合の
+月間粗利インパクトの見込みと、効果が出るまでの期間を明記する。]
 
-Estimated Revenue Impact: $X,XXX-$XX,XXX/month
+---
 
-Full report saved to: MARKETING-AUDIT.md
+## スコア内訳
+
+| カテゴリ | スコア | ウェイト | 加重スコア | 主な所見 |
+|---|---|---|---|---|
+| コンテンツ・メッセージング | X/100 | 25% | X | [1行] |
+| コンバージョン最適化 | X/100 | 20% | X | [1行] |
+| SEO・発見可能性 | X/100 | 20% | X | [1行] |
+| 競合ポジショニング | X/100 | 15% | X | [1行] |
+| ブランド・信頼性 | X/100 | 10% | X | [1行] |
+| 成長・戦略 | X/100 | 10% | X | [1行] |
+| **合計** | | **100%** | **X/100** | |
+
+---
+
+## クイックウィン（今週中に着手）
+
+[5〜10項目。各項目に「何を・どこを・なぜ・想定効果」を必ず含める]
+
+## 戦略施策（今月中）
+
+[3〜7項目。根拠、実施手順、期待される成果を含める]
+
+## 長期施策（今四半期）
+
+[2〜5項目。事業上の意義、必要リソース、投資対効果の見込みを含める]
+
+---
+
+## カテゴリ別の詳細分析
+
+### コンテンツ・メッセージング
+[market-content サブエージェントの所見]
+
+### コンバージョン最適化
+[market-conversion サブエージェントの所見]
+
+### SEO・発見可能性
+[market-technical サブエージェントの所見]
+
+### 競合ポジショニング
+[market-competitive サブエージェントの所見]
+
+### ブランド・信頼性
+[market-strategy サブエージェントの所見（ブランド部分）]
+
+### 成長・戦略
+[market-strategy サブエージェントの所見（成長部分）]
+
+---
+
+## 競合比較
+
+[3.4節の比較表]
+
+---
+
+## 収益インパクト一覧
+
+| 施策 | 月間粗利インパクト | 確度 | 実施期間 | 効果が出るまで |
+|---|---|---|---|---|
+| [施策1] | 約XX万円 | 高/中/低 | X週間 | Xヶ月 |
+| [施策2] | 約XX万円 | 高/中/低 | X週間 | Xヶ月 |
+| **合計** | **約XXX万円/月** | | | |
+
+**試算の前提：** 月間訪問数 X、平均受注単価 XX万円、粗利率 XX%
+（サイトから読み取れない数値は業界標準値を使用しています）
+
+---
+
+## 次のアクション
+
+1. [最優先事項]
+2. [第2優先]
+3. [第3優先]
+
+*AI Marketing Suite — `/market audit` により生成*
 ```
 
 ---
 
-## Error Handling
+## ターミナル出力
 
-- If the URL is unreachable, report the error and suggest checking the URL
-- If a subagent fails, continue with remaining subagents and note the gap in the report
-- If the site is behind authentication, note what was accessible and recommend manual review for gated content
-- If the site has very little content (single page), adapt the analysis accordingly and note limited scope
+ファイル出力に加えて、要約をターミナルに表示します。
 
-## Cross-Skill Integration
+```
+=== マーケティング監査 完了 ===
 
-- If `COMPETITOR-REPORT.md` exists in the current directory, incorporate its findings
-- If `BRAND-VOICE.md` exists, use it to contextualize content analysis
-- Reference other available analyses in the executive summary
-- Suggest follow-up commands: `/market copy`, `/market funnel`, `/market competitors` for deeper dives
+会社名　　： [名称]（[業種]）
+対象URL　 ： [url]
+総合スコア： [X]/100（評価：[A〜F]）
+
+スコア内訳:
+  コンテンツ・メッセージング  [XX]/100 ████████░░
+  コンバージョン最適化        [XX]/100 ██████░░░░
+  SEO・発見可能性             [XX]/100 ███████░░░
+  競合ポジショニング          [XX]/100 █████░░░░░
+  ブランド・信頼性            [XX]/100 ████████░░
+  成長・戦略                  [XX]/100 ██████░░░░
+
+クイックウィン 上位3件:
+  1. [施策]
+  2. [施策]
+  3. [施策]
+
+戦略施策 上位3件:
+  1. [施策]
+  2. [施策]
+  3. [施策]
+
+想定粗利インパクト： 月 XX〜XXX万円（効果発現まで 3〜6ヶ月）
+
+詳細レポート： MARKETING-AUDIT.md
+```
+
+---
+
+## エラー処理
+
+- URLに到達できない場合は、その旨を報告しURLの確認を促す
+- サブエージェントが失敗した場合は、残りのエージェントで続行し、レポートに欠落箇所を明記する
+- 会員限定エリアなど認証が必要な場合は、取得できた範囲を明示し、非公開部分は手動確認を推奨する
+- 1ページのみの小規模サイトの場合は、分析範囲を調整し「限定的な調査である」旨をレポートに記載する
+- 建設業でサイトが極端に簡素な場合は、Googleビジネスプロフィールやリフォーム系ポータルサイトでの露出も併せて評価対象とする
+
+## 他スキルとの連携
+
+- カレントディレクトリに `COMPETITOR-REPORT.md` があれば、その内容を取り込む
+- `BRAND-VOICE.md` があれば、コンテンツ分析の文脈として活用する
+- 利用可能な他の分析結果はエグゼクティブ・サマリーで言及する
+- 深掘り用に `/market copy`、`/market funnel`、`/market competitors` の実行を提案する

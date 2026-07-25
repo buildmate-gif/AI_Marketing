@@ -4,349 +4,328 @@ description: "分析結果を日本語PDFレポートとして出力する。ス
 ---
 # PDFマーケティングレポート生成
 
-## Skill Purpose
-Generate a professional, visually polished PDF marketing report using the Python script `~/.claude/skills/market/scripts/generate_pdf_jp.py`. This skill collects all available audit and analysis data, structures it into the expected JSON format, invokes the script, and produces a branded PDF with score gauges, bar charts, comparison tables, findings, and a prioritized action plan.
+## このスキルの目的
 
-## When to Use
-- User wants a PDF version of the marketing report (not just Markdown)
-- User is preparing a deliverable for a client presentation
-- User asks for a "polished report", "client-ready report", or "PDF report"
-- User wants a visual report with charts and scores
-- Triggered by `/market report-pdf` or `/market report-pdf <domain>`
+Pythonスクリプト `~/.claude/skills/market/scripts/generate_pdf_jp.py` を使い、体裁の整った日本語PDFレポートを生成します。利用可能な監査・分析データを集約し、所定のJSON形式に整えてスクリプトを呼び出し、スコアゲージ・棒グラフ・課題一覧・優先順位別アクションプランを含むPDFを出力します。
 
-## When to Use PDF vs Markdown
+**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
-| Format | Best For | Pros | Cons |
+## 使う場面
+
+- Markdownではなく、PDF形式のレポートが欲しいとき
+- クライアントへの提出資料を準備しているとき
+- 「きれいなレポート」「そのまま渡せる資料」「PDFのレポート」と依頼されたとき
+- グラフとスコアが入った視覚的なレポートが欲しいとき
+- `/market report-pdf` または `/market report-pdf <ドメイン>` が実行されたとき
+
+## PDFとMarkdownの使い分け
+
+| 形式 | 向いている用途 | 長所 | 短所 |
 |---|---|---|---|
-| **PDF** | Client presentations, email attachments, sales collateral | Professional appearance, consistent formatting, visual charts, printable | Harder to edit, requires Python script |
-| **Markdown** | Internal use, quick reference, iterative editing, version control | Easy to edit, readable in any editor, git-friendly | Less visually polished, no charts |
+| **PDF** | クライアントへの提出、メール添付、営業資料、印刷して持参 | 見栄えが良い、体裁が崩れない、グラフが入る、印刷できる | 編集しにくい、Pythonスクリプトが必要 |
+| **Markdown** | 社内利用、下書き、繰り返しの修正、バージョン管理 | 編集が容易、どのエディタでも読める、差分管理しやすい | 見栄えは劣る、グラフがない |
 
-**Rule of thumb:** If the report is going to a client or prospect, use PDF. If it is for internal use or further editing, use Markdown.
+**判断の目安：** クライアントや見込み客に渡すならPDF。社内利用や修正を重ねるならMarkdown。建設業の経営者には「印刷して手元で読める資料」が好まれるため、商談にはPDFを推奨します。
 
-## How to Execute
+## 実行手順
 
-### Step 1: Collect All Available Data
-Gather data from all previous skill runs. Check for these files in the project directory:
+### ステップ1：利用可能なデータの収集
 
-**Primary data sources:**
-- `MARKETING-AUDIT.md` -- Overall audit results
-- `LANDING-CRO.md` -- Landing page conversion analysis
-- `SEO-AUDIT.md` -- SEO findings
-- `BRAND-VOICE.md` -- Brand voice analysis
-- `COMPETITOR-ANALYSIS.md` -- Competitor comparison data
-- `FUNNEL-ANALYSIS.md` -- Funnel analysis
-- `SOCIAL-AUDIT.md` -- Social media audit
-- `EMAIL-AUDIT.md` -- Email marketing audit
-- `AD-AUDIT.md` -- Advertising audit
+過去のスキル実行結果を集めます。カレントディレクトリで以下を確認してください。
 
-**If no previous data exists:**
-1. Recommend the user run `/market audit <url>` first for the best results
-2. If the user insists on generating a report without prior audits, analyze the provided URL directly and build the data structure from scratch
-3. Use the analyze_page.py script to gather automated data: `python3 ~/.claude/skills/market/scripts/analyze_page.py <url>`
+**主なデータソース：**
 
-### Step 2: Build the JSON Data Structure
-The `~/.claude/skills/market/scripts/generate_pdf_jp.py` script expects a JSON file as input with this exact structure:
+- `MARKETING-AUDIT.md` — 総合監査の結果
+- `LANDING-CRO.md` — ランディングページのCRO分析
+- `SEO-AUDIT.md` — SEO所見
+- `BRAND-VOICE.md` — ブランドボイス分析
+- `COMPETITOR-REPORT.md` — 競合比較データ
+- `FUNNEL-ANALYSIS.md` — ファネル分析
+- `SOCIAL-CALENDAR.md` — SNS関連
+- `EMAIL-SEQUENCES.md` — メール関連
+- `AD-CAMPAIGNS.md` — 広告関連
+
+**過去データが無い場合：**
+
+1. まず `/market audit <url>` の実行を推奨する（最も精度が高い）
+2. それでもすぐPDFが必要な場合は、対象URLを直接分析してデータを組み立てる
+3. 自動収集には次のスクリプトを使う：
+   ```bash
+   python3 ~/.claude/skills/market/scripts/analyze_page.py <url>
+   ```
+
+### ステップ2：JSONデータの組み立て
+
+`generate_pdf_jp.py` は、以下の構造のJSONファイルを入力として受け取ります。
 
 ```json
 {
-  "url": "https://example.com",
-  "date": "March 1, 2026",
-  "brand_name": "Example Co",
+  "url": "https://example-kensetsu.co.jp",
+  "brand_name": "株式会社サンプル工務店",
+  "date": "2026年7月25日",
   "overall_score": 62,
-  "executive_summary": "A 2-4 sentence summary of the overall marketing health, key opportunities, and estimated revenue impact of implementing recommendations.",
+  "executive_summary": "全体の健全性、主要な機会、改善実施時の粗利インパクトを2〜4文でまとめた要約。",
   "categories": {
-    "Content & Messaging": {
-      "score": 68,
-      "weight": "25%"
-    },
-    "Conversion Optimization": {
-      "score": 52,
-      "weight": "20%"
-    },
-    "SEO & Discoverability": {
-      "score": 74,
-      "weight": "20%"
-    },
-    "Competitive Positioning": {
-      "score": 48,
-      "weight": "15%"
-    },
-    "Brand & Trust": {
-      "score": 70,
-      "weight": "10%"
-    },
-    "Growth & Strategy": {
-      "score": 55,
-      "weight": "10%"
-    }
+    "コンテンツ・メッセージング": { "score": 68, "weight": "25%" },
+    "コンバージョン最適化":     { "score": 52, "weight": "20%" },
+    "SEO・発見可能性":          { "score": 74, "weight": "20%" },
+    "競合ポジショニング":       { "score": 48, "weight": "15%" },
+    "ブランド・信頼性":         { "score": 70, "weight": "10%" },
+    "成長・戦略":               { "score": 55, "weight": "10%" }
   },
   "findings": [
-    {
-      "severity": "Critical",
-      "finding": "Description of the most important finding"
-    },
-    {
-      "severity": "High",
-      "finding": "Description of a high-priority finding"
-    },
-    {
-      "severity": "Medium",
-      "finding": "Description of a medium-priority finding"
-    },
-    {
-      "severity": "Low",
-      "finding": "Description of a lower-priority finding"
-    }
+    { "severity": "致命的", "finding": "最も重要な課題の説明" },
+    { "severity": "重大",   "finding": "優先度の高い課題の説明" },
+    { "severity": "中程度", "finding": "中程度の課題の説明" },
+    { "severity": "軽微",   "finding": "軽微な課題の説明" }
   ],
   "quick_wins": [
-    "First quick win action item",
-    "Second quick win action item",
-    "Third quick win action item"
+    "1つ目のクイックウィン施策",
+    "2つ目のクイックウィン施策",
+    "3つ目のクイックウィン施策"
   ],
   "medium_term": [
-    "First medium-term action item",
-    "Second medium-term action item",
-    "Third medium-term action item"
+    "1つ目の中期施策",
+    "2つ目の中期施策"
   ],
   "strategic": [
-    "First strategic action item",
-    "Second strategic action item",
-    "Third strategic action item"
-  ],
-  "competitors": [
-    {
-      "name": "Competitor A",
-      "positioning": "Their market position",
-      "pricing": "Their pricing model",
-      "social_proof": "Their trust signals",
-      "content": "Their content approach"
-    },
-    {
-      "name": "Competitor B",
-      "positioning": "Their market position",
-      "pricing": "Their pricing model",
-      "social_proof": "Their trust signals",
-      "content": "Their content approach"
-    }
+    "1つ目の戦略施策",
+    "2つ目の戦略施策"
   ]
 }
 ```
 
-### Step 3: Field-by-Field Data Assembly Guide
+### ステップ3：項目ごとの作成ガイド
 
-#### `url` (string, required)
-The target website URL. Use the full URL including protocol.
+#### `url`（文字列・必須）
 
-#### `date` (string, required)
-The report generation date. Format: "Month DD, YYYY" (e.g., "March 1, 2026").
+対象サイトのURL。プロトコルを含む完全な形式で記載します。
 
-#### `brand_name` (string, required)
-The company or brand name. Used in competitor comparison table headers.
+#### `brand_name`（文字列・任意）
 
-#### `overall_score` (integer, 0-100, required)
-The weighted average of all category scores. Calculate as:
+会社名。指定すると表紙に「〇〇 御中」として表示されます。クライアント提出用では必ず指定してください。
+
+#### `date`（文字列・必須）
+
+レポートの発行日。形式は「2026年7月25日」のような日本語表記にします。
+
+#### `overall_score`（整数 0〜100・必須）
+
+全カテゴリの加重平均。次式で算出します。
+
 ```
-overall_score = (content * 0.25) + (conversion * 0.20) + (seo * 0.20) + (competitive * 0.15) + (brand * 0.10) + (growth * 0.10)
+総合スコア = (コンテンツ × 0.25) + (コンバージョン × 0.20) + (SEO × 0.20)
+             + (競合 × 0.15) + (ブランド × 0.10) + (成長 × 0.10)
 ```
 
-#### `executive_summary` (string, required)
-A 2-4 sentence summary covering:
-- Current marketing health assessment
-- Top 1-2 most impactful findings
-- Estimated revenue impact of implementing recommendations
-- Recommended first step
+#### `executive_summary`（文字列・必須）
 
-Keep it concise and impactful. This appears on the cover page right below the score gauge.
+2〜4文の要約。以下を含めます。
 
-#### `categories` (object, required)
-Exactly 6 categories with their scores. The categories map to these evaluation areas:
+- 現状のマーケティング健全性の評価
+- 最も影響の大きい所見1〜2点
+- 改善実施時の月間粗利インパクトの見込み
+- 最初に着手すべき施策
 
-| Category | What It Measures | Scoring Guidance |
+表紙のスコアゲージ直下に表示されるため、簡潔かつ印象に残る文章にしてください。
+
+#### `categories`（オブジェクト・必須）
+
+ちょうど6カテゴリを、上記の日本語キー名で指定します。
+
+| カテゴリ | 評価対象 | 採点の目安 |
 |---|---|---|
-| Content & Messaging | Copy quality, value proposition, headline clarity, CTA text, brand voice consistency | 80+: Clear, benefit-driven, specific. 60-79: Adequate but generic. <60: Vague, feature-focused, unclear |
-| Conversion Optimization | Social proof, form design, CTA placement, objection handling, urgency | 80+: Multiple proof types, optimized forms, clear CTAs. 60-79: Some elements present. <60: Missing critical elements |
-| SEO & Discoverability | Title tags, meta descriptions, headers, schema, internal linking, page speed | 80+: Fully optimized. 60-79: Mostly present with gaps. <60: Major issues or missing elements |
-| Competitive Positioning | Differentiation, pricing clarity, comparison content, market awareness | 80+: Clear positioning, comparison pages exist. 60-79: Some differentiation. <60: No clear positioning |
-| Brand & Trust | Design quality, trust badges, security indicators, professional appearance | 80+: Modern design, trust signals throughout. 60-79: Adequate design. <60: Outdated or unprofessional |
-| Growth & Strategy | Lead capture, email marketing, content strategy, acquisition channels | 80+: Multi-channel strategy in place. 60-79: Some channels active. <60: No clear growth strategy |
+| コンテンツ・メッセージング | コピーの質、価値提案、見出しの明確さ、CTA文言、ブランドボイスの一貫性 | 80以上：明確でベネフィット中心。60〜79：及第点だが汎用的。60未満：曖昧・機能説明中心 |
+| コンバージョン最適化 | 社会的証明、フォーム設計、CTA配置、不安の解消、緊急性 | 80以上：複数の証明と最適化済フォーム。60〜79：一部あり。60未満：重要要素が欠落 |
+| SEO・発見可能性 | タイトル、メタ、見出し、構造化データ、内部リンク、表示速度 | 80以上：最適化済み。60〜79：概ね設定済だが不足あり。60未満：重大な問題 |
+| 競合ポジショニング | 差別化、費用情報の明確さ、比較コンテンツ、市場認識 | 80以上：明確な立ち位置と比較ページあり。60〜79：一定の差別化。60未満：立ち位置が不明 |
+| ブランド・信頼性 | デザイン品質、信頼バッジ、許可・資格の明示、専門性の印象 | 80以上：現代的なデザインと十分な信頼シグナル。60〜79：及第点。60未満：古い・素人的 |
+| 成長・戦略 | リード獲得、メール施策、コンテンツ戦略、集客チャネル | 80以上：複数チャネル戦略あり。60〜79：一部稼働。60未満：戦略なし |
 
-#### `findings` (array, required)
-An array of finding objects, each with `severity` and `finding` fields.
+**建設業の場合の追加観点：** 「ブランド・信頼性」では建設業許可番号・有資格者数・施工保証の明示を、「成長・戦略」ではOB顧客フォローと紹介の仕組みを重点的に評価してください。
 
-**Severity levels:**
-- `Critical` -- Directly losing revenue or customers. Fix immediately.
-- `High` -- Significant impact on growth. Fix within 1-2 weeks.
-- `Medium` -- Meaningful improvement opportunity. Fix within 1 month.
-- `Low` -- Nice-to-have improvement. Fix when time allows.
+#### `findings`（配列・必須）
 
-**Writing effective findings:**
-- Be specific: "Homepage headline says 'Welcome to Our Platform'" not "Headline needs improvement"
-- Quantify impact: "Missing meta descriptions on 8 of 12 landing pages"
-- Reference benchmarks: "Page load time is 4.2s (benchmark: under 2s)"
-- Include evidence: "No testimonials found on homepage, pricing page, or signup page"
+`severity`（重要度）と `finding`（内容）を持つオブジェクトの配列です。
 
-Aim for 5-10 findings. Order from most to least severe.
+**重要度：**
 
-#### `quick_wins` (array, required)
-3-5 action items that can be implemented within one week with minimal effort. Each should be a specific, actionable instruction.
+- `致命的` — 直接的に受注・売上を失っている。即座に対応が必要
+- `重大` — 成長への影響が大きい。1〜2週間以内に対応
+- `中程度` — 意味のある改善機会。1ヶ月以内に対応
+- `軽微` — できれば直したい。余裕があるときに対応
 
-**Good quick win:** "Rewrite the homepage headline from 'Welcome to Our Platform' to 'Cut Your Reporting Time by 75% -- Automated Analytics for Growth Teams'"
+英語で `Critical` / `High` / `Medium` / `Low` と指定した場合も、スクリプトが自動で日本語ラベルに変換し、重要度に応じた色で表示します。
 
-**Bad quick win:** "Improve the headline" (too vague)
+**良い所見の書き方：**
 
-#### `medium_term` (array, required)
-3-5 action items requiring 1-3 months to implement. These are more involved but have high impact.
+- 具体的に書く：「見出しが『ようこそ』のみになっている」（×「見出しを改善すべき」）
+- 影響を数値化する：「12ページ中8ページでメタディスクリプションが未設定」
+- 基準と比較する：「表示速度が4.2秒（目安は2秒以内）」
+- 根拠を含める：「トップ・費用・問い合わせの各ページにお客様の声が1件も見当たらない」
 
-#### `strategic` (array, required)
-3-5 action items requiring 3-6 months. These are foundational changes that require planning and sustained effort.
+5〜10件を目安に、重要度の高い順に並べます。
 
-#### `competitors` (array, optional)
-Up to 3 competitor objects for the comparison table. If no competitor data is available, omit this field -- the script will skip the competitor section.
+#### `quick_wins`（配列・必須）
 
-### Step 4: Write the JSON File
-Save the assembled data as a temporary JSON file:
+1週間以内・低工数で実施できる施策を3〜5件。具体的な指示として書きます。
+
+**良い例：** 「トップページの見出しを『快適な住まいづくり』から『〇〇市で施工実績1,200件｜外壁塗装の専門店』に変更する」
+
+**悪い例：** 「見出しを改善する」（曖昧すぎる）
+
+#### `medium_term`（配列・必須）
+
+1〜3ヶ月を要する施策を3〜5件。工数は大きいが効果も大きいもの。
+
+#### `strategic`（配列・必須）
+
+3〜6ヶ月を要する施策を3〜5件。計画と継続的な取り組みを要する基盤的な変更。
+
+### ステップ4：JSONファイルの書き出し
+
+組み立てたデータを一時ファイルに保存します。**日本語を含むため、必ずUTF-8で書き出してください。**
 
 ```bash
-# Write the JSON data to a temporary file
 cat > /tmp/report_data.json << 'JSONEOF'
 {
-  ... assembled JSON data ...
+  ... 組み立てたJSONデータ ...
 }
 JSONEOF
 ```
 
-### Step 5: Invoke the PDF Generator Script
+### ステップ5：PDF生成スクリプトの実行
 
-**Prerequisites check:**
-First, verify that `reportlab` is installed:
+**事前確認：** `reportlab` が入っているか確認します。
+
 ```bash
 python3 -c "import reportlab" 2>/dev/null || pip3 install reportlab
 ```
 
-**Generate the report:**
+**生成：**
+
 ```bash
-python3 ~/.claude/skills/market/scripts/generate_pdf_jp.py /tmp/report_data.json "MARKETING-REPORT-<domain>.pdf"
+python3 ~/.claude/skills/market/scripts/generate_pdf_jp.py /tmp/report_data.json "MARKETING-REPORT-<ドメイン>.pdf"
 ```
 
-Replace `<domain>` with the target website's domain name (without protocol or www), using hyphens instead of dots. For example:
-- `example.com` becomes `MARKETING-REPORT-example-com.pdf`
-- `myapp.io` becomes `MARKETING-REPORT-myapp-io.pdf`
+`<ドメイン>` は対象サイトのドメイン名（プロトコル・wwwを除き、ドットをハイフンに置換）に置き換えます。
 
-**Demo mode (no arguments):**
-Running the script without arguments generates a sample report with placeholder data:
+- `example.com` → `MARKETING-REPORT-example-com.pdf`
+- `tanaka-kensetsu.co.jp` → `MARKETING-REPORT-tanaka-kensetsu-co-jp.pdf`
+
+**動作確認モード（引数なし）：** サンプルデータでPDFを生成します。
+
 ```bash
 python3 ~/.claude/skills/market/scripts/generate_pdf_jp.py
-# Creates: MARKETING-REPORT-sample.pdf
 ```
 
-### Step 6: Verify the Output
-After generation, verify the PDF was created:
+### ステップ6：出力の確認
+
+生成後、ファイルができているか確認します。
+
 ```bash
-ls -la "MARKETING-REPORT-<domain>.pdf"
+ls -la "MARKETING-REPORT-<ドメイン>.pdf"
 ```
 
-Report the file path and size to the user.
+ファイルパスとサイズをユーザーに報告してください。
 
-### Step 7: Clean Up
-Remove the temporary JSON file:
-```bash
-rm /tmp/report_data.json
-```
+### ステップ7：後片付け
 
-## PDF Report Contents
+一時JSONファイルは不要になったら削除します。削除前に必ずユーザーに確認してください。
 
-The generated PDF includes the following pages:
+## PDFレポートの構成
 
-### Page 1: Cover Page
-- Report title: "Marketing Audit Report"
-- Target URL
-- Generation date
-- Overall score gauge (circular visualization with color coding)
-- Grade letter (A+ through F)
-- Executive summary paragraph
+生成されるPDFは**全4ページ**です。
 
-### Page 2: Score Breakdown
-- Horizontal bar chart showing all 6 category scores with color coding
-- Score table with category names, scores, weights, and status labels
-- Color coding: Green (80+), Blue (60-79), Yellow (40-59), Red (<40)
+### 1ページ目：表紙とサマリー
 
-### Page 3: Key Findings
-- Findings table with severity labels and descriptions
-- Color-coded severity indicators (Critical = red, High = orange, Medium = yellow, Low = blue)
-- Findings ordered from most to least severe
+- タイトル「マーケティング監査レポート」
+- 社名（`brand_name` を指定した場合）
+- 対象URLと発行日
+- 総合スコアの円形ゲージ（点数に応じた配色）
+- 評価（A〜F）
+- エグゼクティブ・サマリー
 
-### Page 4: Prioritized Action Plan
-- Quick Wins section (This Week)
-- Medium-Term section (1-3 Months)
-- Strategic section (3-6 Months)
-- Numbered action items in each tier
+### 2ページ目：スコア内訳
 
-### Page 5: Competitive Landscape (if competitor data provided)
-- Comparison table with client vs up to 3 competitors
-- Rows: Positioning, Pricing, Social Proof, Content
+- 6カテゴリの横棒グラフ（点数に応じた配色）
+- カテゴリ名・スコア・ウェイトの表
 
-### Final Page: Methodology
-- Scoring methodology explanation
-- Category weights and measurement criteria
-- Footer: "Generated by AI Marketing Suite for Claude Code"
+### 3ページ目：主要課題
 
-## Color Scheme
+- 重要度と課題内容の表
+- 重要度に応じた色分け（致命的＝赤、重大＝オレンジ、中程度＝黄、軽微＝青）
+- 重要度の高い順に並ぶ
 
-The PDF uses a professional color palette:
+### 4ページ目：優先度別アクションプラン
 
-| Element | Color | Hex Code |
+- クイックウィン（今週中）
+- 中期施策（1〜3ヶ月）
+- 戦略施策（3〜6ヶ月）
+- 各層の施策が番号付きで並ぶ
+
+**現時点で未対応の項目：** 競合比較ページと採点方法の説明ページは、現在のスクリプトでは生成されません。これらが必要な場合は、Markdown版（`/market report`）を併用してください。
+
+## 配色
+
+PDFは「トラスト・ブルー」の配色を使用します。
+
+| 用途 | 色 | カラーコード |
 |---|---|---|
-| Primary (headers, titles) | Dark Navy | #1B2A4A |
-| Accent (links, highlights) | Blue | #2D5BFF |
-| Highlight (attention) | Orange | #FF6B35 |
-| Success (high scores) | Green | #00C853 |
-| Warning (medium scores) | Amber | #FFB300 |
-| Danger (low scores, critical) | Red | #FF1744 |
-| Light background | Light Gray | #F5F7FA |
-| Body text | Dark Gray | #2C3E50 |
-| Secondary text | Medium Gray | #7F8C9B |
-| Borders | Light Border | #E0E6ED |
+| 見出し・タイトル | ネイビー | #1B2A4A |
+| アクセント | ブルー | #2D5BFF |
+| 注意喚起（重大） | オレンジ | #FF6B35 |
+| 良好（高スコア） | グリーン | #00C853 |
+| 要改善（中スコア） | アンバー | #FFB300 |
+| 危険（低スコア・致命的） | レッド | #FF1744 |
+| 背景 | ライトグレー | #F5F7FA |
+| 本文 | ダークグレー | #2C3E50 |
+| 罫線 | ライトボーダー | #E0E6ED |
 
-## Score-to-Color Mapping
-- 80-100: Green (#00C853) -- Strong performance
-- 60-79: Blue (#2D5BFF) -- Solid with room to improve
-- 40-59: Amber (#FFB300) -- Needs attention
-- 0-39: Red (#FF1744) -- Critical issues
+**スコアと色の対応：**
 
-## Troubleshooting
+- 80〜100：グリーン（優秀）
+- 60〜79：ブルー（良好、改善余地あり）
+- 40〜59：アンバー（要改善）
+- 0〜39：レッド（危機的）
 
-| Issue | Solution |
+## トラブルシューティング
+
+| 症状 | 対処 |
 |---|---|
-| `ModuleNotFoundError: No module named 'reportlab'` | Run `pip3 install reportlab` |
-| Script produces empty PDF | Check that JSON data has all required fields |
-| Score gauge not rendering | Ensure `overall_score` is a number 0-100 |
-| Competitor table missing | Ensure `competitors` array has objects with `name`, `positioning`, `pricing`, `social_proof`, `content` fields |
-| PDF is only 1 page | Check for JSON parsing errors -- run `python3 -c "import json; json.load(open('/tmp/report_data.json'))"` |
-| Fonts look wrong | The script uses Helvetica (built into reportlab). No custom fonts needed. |
+| `ModuleNotFoundError: No module named 'reportlab'` | `pip3 install reportlab` を実行 |
+| PDFが空になる | JSONに必須項目が揃っているか確認 |
+| スコアゲージが出ない | `overall_score` が0〜100の数値になっているか確認 |
+| 1ページしか出ない | JSONの構文エラーの可能性。`python3 -c "import json; json.load(open('/tmp/report_data.json'))"` で検証 |
+| 日本語が文字化けする | JSONファイルがUTF-8で保存されているか確認。スクリプトは日本語標準フォント（HeiseiKakuGo-W5）を使用しており、追加フォントは不要 |
+| 重要度が英語のまま出る | 想定外の値が入っている。`致命的/重大/中程度/軽微` または `Critical/High/Medium/Low` を使用 |
 
-## Integration with Other Skills
+## 他スキルとの連携
 
-This skill works best when combined with other audit skills. The recommended workflow:
+このスキルは、他の監査スキルと組み合わせると最も効果を発揮します。推奨する流れ：
 
-1. Run `/market audit <url>` -- Generates comprehensive audit data
-2. Run `/market competitors <url>` -- Adds competitor comparison data
-3. Run `/market seo <url>` -- Adds detailed SEO findings
-4. Run `/market landing <url>` -- Adds CRO analysis
-5. Run `/market report-pdf <url>` -- Compiles everything into a PDF
+1. `/market audit <url>` — 総合的な監査データを生成
+2. `/market competitors <url>` — 競合比較データを追加
+3. `/market seo <url>` — SEOの詳細所見を追加
+4. `/market landing <url>` — CRO分析を追加
+5. `/market report-pdf <url>` — すべてを統合してPDF化
 
-The PDF report skill will automatically look for output files from these skills and incorporate their data into the report JSON.
+本スキルは、これらのスキルの出力ファイルを自動的に探し、レポート用JSONに取り込みます。
 
-## Output
-- **File:** `MARKETING-REPORT-<domain>.pdf`
-- **Location:** Project root directory
-- **Size:** Typically 200KB-500KB depending on content volume
-- **Pages:** 5-7 pages depending on whether competitor data and additional sections are included
+## 出力
 
-## Key Principles
-- The PDF report is the most client-facing deliverable in the toolkit. Quality matters.
-- Always verify the JSON data is complete and accurate before generating. Garbage in, garbage out.
-- Use the PDF for initial client impressions and sales conversations. Follow up with the more detailed Markdown report if the client engages.
-- Every score should be justifiable. If a client asks "why did I get a 52 in Conversion Optimization?", the findings should provide clear evidence.
-- Round scores to whole numbers. Decimals imply false precision.
-- Keep the executive summary tight -- 2-4 sentences maximum. Clients skim cover pages.
-- If generating for a prospect (not yet a client), the report serves as a sales tool. Make the opportunities compelling and the action plan achievable.
+- **ファイル名：** `MARKETING-REPORT-<ドメイン>.pdf`
+- **場所：** カレントディレクトリ
+- **サイズ：** 内容量により概ね10KB〜500KB
+- **ページ数：** 4ページ
+
+## 基本原則
+
+- PDFレポートは本スイートで最もクライアントの目に触れる成果物です。品質が最優先です
+- 生成前に必ずJSONデータの完全性と正確性を確認してください。入力が雑ならPDFも雑になります
+- 初回商談や提案の場ではPDFを使い、契約後の詳細な改善作業ではMarkdown版を使い分けてください
+- すべてのスコアには根拠が必要です。「なぜコンバージョン最適化が52点なのか」と聞かれたときに、課題一覧で説明できる状態にしてください
+- スコアは整数に丸めてください。小数点は不必要な精密さの印象を与えます
+- エグゼクティブ・サマリーは2〜4文に収めてください。経営者は表紙を流し読みします
+- 見込み客向けの場合、このレポートは営業ツールです。機会を魅力的に、アクションプランを実行可能に見せてください
+- 建設業向けでは、効果が表れるまでの期間（3〜6ヶ月）を必ずサマリーに含めてください
