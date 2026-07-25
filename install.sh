@@ -15,7 +15,7 @@ NC='\033[0m'
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║   AI Marketing Suite — Claude Code Skills    ║${NC}"
-echo -e "${CYAN}║   15 Skills · 5 Agents · 4 Scripts · PDF     ║${NC}"
+echo -e "${CYAN}║   17 Skills · 5 Agents · 5 Scripts · PDF     ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -89,6 +89,8 @@ SKILLS=(
     "market-report-pdf"
     "market-seo"
     "market-brand"
+    "market-visual"
+    "market-track"
 )
 
 SKILL_COUNT=0
@@ -140,6 +142,7 @@ SCRIPT_FILES=(
     "competitor_scanner.py"
     "social_calendar.py"
     "generate_pdf_jp.py"
+    "track_history.py"
 )
 
 SCRIPT_COUNT=0
@@ -225,6 +228,8 @@ echo "  /market report <url>       マーケティングレポート（Markdown�
 echo "  /market report-pdf <url>   マーケティングレポート（PDF）"
 echo "  /market seo <url>          SEO監査"
 echo "  /market brand <url>        ブランドボイス分析"
+echo "  /market visual <url>       ビジュアル診断（スクリーンショット採点）"
+echo "  /market track <url>        定点観測・スコア推移"
 echo ""
 echo -e "  ${YELLOW}スキルを使うには Claude Code を新しく起動し直してください。${NC}"
 echo ""

@@ -21,6 +21,7 @@ description: "建設業・工務店向けAIマーケティングスイートの�
 | `/market seo <url>` | SEO監査・地域SEO診断 | `SEO-AUDIT.md` |
 | `/market landing <url>` | ランディングページCRO分析 | `LANDING-CRO.md` |
 | `/market funnel <url>` | 問い合わせ〜成約の導線分析 | `FUNNEL-ANALYSIS.md` |
+| `/market visual <url>` | スクリーンショットを撮って見た目を採点 | `VISUAL-AUDIT.md` |
 
 ### 2. 調べる
 
@@ -51,6 +52,14 @@ description: "建設業・工務店向けAIマーケティングスイートの�
 | コマンド | 内容 | 出力 |
 |---|---|---|
 | `/market launch <サービス>` | 週単位のローンチ計画 | `LAUNCH-PLAYBOOK.md` |
+
+### 6. 継続する
+
+| コマンド | 内容 | 出力 |
+|---|---|---|
+| `/market track <url>` | スコアと実測値の定点観測・推移レポート | `MARKET-HISTORY.json` / `TRACK-REPORT.md` |
+
+**継続支援では、このコマンドが最も重要です。** 施策の効果を数字で示せるかどうかが、単発の受注と継続契約の分かれ目になります。
 
 ## ルーティング
 

@@ -18,8 +18,20 @@ description: "競合他社を特定し、ポジショニング・訴求・価格
 |---|---|---|
 | 1 | 競合の分類、見つけ方、自動収集スクリプトの使い方 | `references/identification.md` |
 | 2 | 訴求・価格・サービス・SEO・Googleビジネスプロフィール・クチコミの比較 | `references/analysis.md` |
-| 3 | SWOT、取り入れるべき施策、差別化の方針、継続監視 | `references/swot-strategy.md` |
-| 4 | COMPETITOR-REPORT.md の書式とターミナル出力 | `references/output-format.md` |
+| 3 | **実データの取得手順（地図順位・クチコミ・検索順位の実測）** | `references/live-data.md` |
+| 4 | SWOT、取り入れるべき施策、差別化の方針、継続監視 | `references/swot-strategy.md` |
+| 5 | COMPETITOR-REPORT.md の書式とターミナル出力 | `references/output-format.md` |
+
+## 推測ではなく実測すること
+
+比較表を推測で埋めないでください。以下は**実際に検索・閲覧して数字を取ります**（手順は `references/live-data.md`）。
+
+- 「地域名＋工種」で検索した地図結果の順位（最低5パターン）
+- 各競合のクチコミ件数・評点・返信率
+- 各競合のクチコミ本文（不満点はそのまま自社の訴求材料になります）
+- 施工事例の掲載件数、費用記載の有無、ブログの最終更新日
+
+**取得できなかった項目は「未取得」と書いてください。** 推測を事実のように並べると、1箇所の誤りで全体の信頼を失います。
 
 ## 建設業で外してはいけない観点
 
