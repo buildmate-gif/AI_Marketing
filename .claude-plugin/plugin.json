@@ -1,7 +1,7 @@
 {
   "name": "ai-marketing-jp",
   "version": "2.2.0",
-  "description": "建設業・工務店向けの日本語マーケティング分析・生成スイート。サイト監査、ビジュアル診断、SEO、競合調査、コピー、広告、SNS、メール、提案書、PDFレポート、定点観測を日本市場の基準で行います。",
+  "description": "8業種対応（建設業に特に強い）の日本語マーケティング分析・生成スイート。サイト監査、ビジュアル診断、SEO、競合調査、コピー、広告、SNS、メール、提案書、PDFレポート、定点観測を日本市場の基準で行います。",
   "author": {
     "name": "BuildMate"
   },
@@ -11,6 +11,8 @@
     "marketing",
     "japanese",
     "construction",
+    "agency",
+    "b2b",
     "seo",
     "cro",
     "audit",
