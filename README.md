@@ -12,6 +12,32 @@
 
 ---
 
+## 2.3.0 を使い始める
+
+案件の作業フォルダで Claude Code を起動し、診断したいURLを指定します。配布ZIPを展開した場合は、この版だけを読み込んで使えます。
+
+```bash
+claude --plugin-dir "/展開した場所/ai-marketing-jp"
+```
+
+Claude Code の入力欄で実行します。
+
+```text
+/ai-marketing-jp:market improve https://example.com
+```
+
+サイトの公開情報を診断し、確認できた優先施策を最大3件、該当ページ・根拠・修正案・成果指標とともにHTMLにまとめます。同じ案件で再度実行すると前回の施策と指標を照合します。実績がわかる場合は対象期間と出典を添えて渡してください。接続していない管理画面の数値は未計測として扱います。
+
+| 開きたいもの | ファイル |
+|---|---|
+| 入力不要で見られる顧客向け見本 | [工務店のHTMLレポート](examples/construction/report.html) |
+| 翌月の施策と実績を照合する見本 | [工務店の月次比較](examples/construction/monthly.html) |
+| 導入から翌月の比較まで | [操作ガイド（Word）](docs/操作ガイド_2.3.docx) |
+| 今回の機能と検証範囲 | [製品仕様と検証記録](docs/release-2.3.md) |
+| 媒体・競合の調査と採用理由 | [2026年11月19日の調査資料](docs/marketing-research-2026-11-19.md) |
+
+本文の `/market` は手動インストール時の表記です。プラグイン版では `/ai-marketing-jp:market` に読み替えてください。
+
 ## 8つの業種に対応
 
 分析対象のサイトから業種を自動判定し、それぞれの業種で重視すべき指標に評価の重点を合わせます。
@@ -72,15 +98,14 @@ Claude Code でコマンドを入力するだけで、業種を問わずウェ�
 
 ### 方法1：プラグインとして導入（推奨）
 
-Claude Code のプラグインとして導入します。更新も `/plugin` から行えます。
+配布フォルダから継続利用する場合は、そのフォルダで実行します。
 
 ```bash
-claude plugin marketplace add buildmate-gif/AI_Marketing
+claude plugin marketplace add .
+claude plugin install ai-marketing-jp@buildmate-marketing
 ```
 
-追加後、`/plugin` から `ai-marketing-jp` を有効化してください。
-
-### 方法2：ワンコマンドでインストール
+### 方法2：GitHubで公開されている版をインストール
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/buildmate-gif/AI_Marketing/main/install.sh | bash
@@ -89,8 +114,7 @@ curl -fsSL https://raw.githubusercontent.com/buildmate-gif/AI_Marketing/main/ins
 ### 方法3：手動インストール
 
 ```bash
-git clone https://github.com/buildmate-gif/AI_Marketing.git
-cd AI_Marketing
+# 配布フォルダ内で実行
 ./install.sh
 ```
 

@@ -245,8 +245,8 @@ def generate_pdf(data, output_filename):
     story.append(Paragraph("優先度別アクションプラン", styles['TrustTitle']))
     
     sections = [
-        ("クイックウィン (今週中)", data.get('quick_wins', [])),
-        ("中期施策 (1〜3ヶ月)", data.get('medium_term', [])),
+        ("クイックウィン (着手2週間以内)", data.get('quick_wins', [])),
+        ("中期施策 (1〜4ヶ月)", data.get('medium_term', [])),
         ("戦略施策 (3〜6ヶ月)", data.get('strategic', []))
     ]
     

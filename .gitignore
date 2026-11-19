@@ -1,5 +1,5 @@
 # Generated reports (local output files)
-# ドメイン名フォルダ（例：g-wic.jp/）内に生成されるため、深さを問わず無視する
+# ドメイン名フォルダ（例：example.jp/）内に生成されるため、深さを問わず無視する
 # （skills/market/references/output-location.md の格納規則を参照）
 MARKETING-AUDIT.md
 MARKETING-REPORT.md
@@ -47,3 +47,10 @@ node_modules/
 # Temp
 *.tmp
 *.bak
+
+# 案件データと編集中のOfficeファイル
+REPORT-DATA.json
+MARKETING-REPORT.html
+~$*.docx
+TRACK-REPORT.html
+.MARKET-HISTORY.json.lock

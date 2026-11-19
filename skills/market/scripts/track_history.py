@@ -1,201 +1,426 @@
 #!/usr/bin/env python3
-"""マーケティングスコアの定点観測を管理する。
-
-スコアをJSONに追記し、前回・初回との差分を計算して推移表を返す。
-継続支援の提案材料として使うため、出力はそのままレポートに貼れる形式にする。
-
-使い方:
-  # 記録する
-  python3 track_history.py record MARKET-HISTORY.json \
-      --url https://example.co.jp --date 2026-07-25 --overall 62 \
-      --scores '{"コンテンツ・メッセージング": 68, "コンバージョン最適化": 52}' \
-      --note "問い合わせフォームを5項目に削減"
-
-  # 推移を出力する
-  python3 track_history.py report MARKET-HISTORY.json
-
-  # 直近2回の差分だけを出す
-  python3 track_history.py diff MARKET-HISTORY.json
-"""
+"""担当案件の診断、施策、成果指標を日付別に記録する。"""
 import argparse
+import datetime
+import html
 import json
+import math
+import os
+import re
 import sys
+import tempfile
+from contextlib import contextmanager
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
-def load(path):
-    p = Path(path)
-    if not p.exists():
+STATUSES = {"予定", "進行中", "実施済", "未確認"}
+DETAIL_FIELDS = ("source", "period", "unit", "basis")
+
+
+def read_history(path):
+    if not path.exists():
         return {"url": None, "entries": []}
-    with p.open(encoding="utf-8") as f:
-        return json.load(f)
+    with path.open(encoding="utf-8") as stream:
+        history = json.load(stream)
+    if not isinstance(history, dict) or not isinstance(history.get("entries"), list):
+        raise ValueError("履歴の entries を読み取れません")
+    dates = set()
+    for entry in history["entries"]:
+        validate_day(entry["date"])
+        if entry["overall"] is not None:
+            validate_score(entry["overall"])
+        if entry["date"] in dates:
+            raise ValueError("履歴の日付が重複しています")
+        dates.add(entry["date"])
+    history["entries"].sort(key=lambda entry: entry["date"])
+    return history
 
 
-def save(path, data):
-    with Path(path).open("w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+@contextmanager
+def record_lock(path):
+    # 置換される JSON 本体とは別のファイルをロックする。
+    with path.with_name("." + path.name + ".lock").open("a+b") as stream:
+        if os.name == "nt":
+            import msvcrt
+            stream.seek(0)
+            msvcrt.locking(stream.fileno(), msvcrt.LK_LOCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(stream, fcntl.LOCK_EX)
+        yield
+
+
+def save_text(path, text):
+    # 一時ファイルを閉じてから置換するため、読み手には完成した内容が見える。
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+                                         delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
+
+
+def validate_day(value):
+    if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        raise ValueError("測定日は YYYY-MM-DD 形式で指定してください")
+    return datetime.date.fromisoformat(value)
+
+
+def validate_score(value):
+    if type(value) is not int or not 0 <= value <= 100:
+        raise ValueError("スコアは0〜100の整数で指定してください")
+
+
+def period_kind(period):
+    if re.fullmatch(r"\d{4}-\d{2}", period):
+        validate_day(period + "-01")
+        return "月間"
+    validate_day(period)
+    return "時点"
+
+
+def object_arg(raw, name):
+    value = json.loads(raw)
+    if not isinstance(value, dict) or any(not key.strip() for key in value):
+        raise ValueError(f"{name} は名前をキーにしたJSONオブジェクトで指定してください")
+    return value
+
+
+def validate_action(action):
+    for key in ("id", "title", "metric", "status"):
+        if not isinstance(action.get(key), str) or not action[key].strip():
+            raise ValueError(f"施策には {key} が必要です")
+    if action["status"] not in STATUSES:
+        raise ValueError(f"施策状況は {'／'.join(sorted(STATUSES))} から指定してください")
+    if not isinstance(action.get("evidence", ""), str):
+        raise ValueError("施策の確認根拠は文字列で指定してください")
+    if action["status"] == "実施済" and not action.get("evidence", "").strip():
+        raise ValueError("実施済の施策には公開ページや作業記録などの確認根拠が必要です")
+
+
+def update_entry(entry, args):
+    entry.update(date=args.date, overall=args.overall)
+    if args.note is not None:
+        entry["note"] = args.note
+    if args.scores is not None:
+        scores = object_arg(args.scores, "--scores")
+        for value in scores.values():
+            if value is not None:
+                validate_score(value)
+        entry.setdefault("scores", {}).update(scores)
+    if args.metrics is not None:
+        metrics = object_arg(args.metrics, "--metrics")
+        for key, value in metrics.items():
+            if value is not None and type(value) not in (int, float, str):
+                raise ValueError(f"{key} の実測値には数値、従来形式の文字列、または null を指定してください")
+            if isinstance(value, float) and not math.isfinite(value):
+                raise ValueError(f"{key} の数値が有限ではありません")
+        entry.setdefault("metrics", {}).update(metrics)
+    if args.metric_details is not None:
+        details = object_arg(args.metric_details, "--metric-details")
+        for key, detail in details.items():
+            if key not in entry.get("metrics", {}):
+                raise ValueError(f"{key} の値は --metrics で指定してください（未計測は null）")
+            if not isinstance(detail, dict) or not all(
+                isinstance(detail.get(field), str) and detail[field].strip() for field in DETAIL_FIELDS
+            ):
+                raise ValueError(f"{key} の測定条件には source, period, unit, basis が必要です")
+            period_kind(detail["period"])
+        entry.setdefault("metric_details", {}).update(details)
+    if args.actions is not None:
+        actions = json.loads(args.actions)
+        if not isinstance(actions, list) or not all(isinstance(a, dict) for a in actions):
+            raise ValueError("--actions は施策の配列を指定してください")
+        existing = {a["id"]: a for a in entry.get("actions", [])}
+        incoming = set()
+        for action in actions:
+            validate_action(action)
+            if action["id"] in incoming:
+                raise ValueError("同じ施策IDが重複しています")
+            incoming.add(action["id"])
+            existing[action["id"]] = action
+        entry["actions"] = list(existing.values())
+
+
+def site_host(value):
+    parts = urlsplit(value if "://" in value else "//" + value)
+    if not parts.hostname or parts.username or parts.password:
+        raise ValueError("案件の公開URLを指定してください")
+    return re.sub(r"^www\.", "", parts.hostname).lower()
+
+
+def apply_report(args):
+    with Path(args.from_report).open(encoding="utf-8") as stream:
+        report = json.load(stream)
+    if not isinstance(report, dict) or not isinstance(report.get("url"), str):
+        raise ValueError("入力レポートには対象URLが必要です")
+    host = site_host(report["url"])
+    if args.url and site_host(args.url) != host:
+        raise ValueError("入力レポートのドメインと対象URLが異なります")
+    args.url = args.url or report["url"]
+    args.brand_name = report.get("brand_name")
+    if not args.date:
+        args.date = report.get("date")
+        match = re.fullmatch(r"(\d{4})年(\d{1,2})月(\d{1,2})日", str(args.date))
+        if match:
+            args.date = datetime.date(*map(int, match.groups())).isoformat()
+    if args.overall is None:
+        args.overall = report.get("overall_score")
+    if args.scores is None:
+        categories = report.get("categories", {})
+        if not isinstance(categories, dict) or not all(isinstance(item, dict) for item in categories.values()):
+            raise ValueError("入力レポートのカテゴリは score を持つオブジェクトで指定してください")
+        scores = {key: item.get("score") for key, item in categories.items()}
+        args.scores = json.dumps(scores)
+    if args.actions is None:
+        actions = report.get("priority_actions", [])
+        if not isinstance(actions, list) or not all(isinstance(action, dict) for action in actions):
+            raise ValueError("入力レポートの priority_actions は施策配列を指定してください")
+        keys = ("id", "title", "metric", "status", "evidence")
+        args.actions = json.dumps([{key: action.get(key) for key in keys} for action in actions])
+
+
+def score_change(before, after):
+    if before is None or after is None:
+        return "比較不可（未採点）"
+    return signed(after - before)
+
+
+def points(score):
+    return "未採点" if score is None else f"{score}点"
 
 
 def cmd_record(args):
-    data = load(args.path)
-    if data.get("url") and args.url and data["url"] != args.url:
-        print(f"警告: 記録済みのURL（{data['url']}）と異なります: {args.url}", file=sys.stderr)
-    if args.url:
-        data["url"] = args.url
-
-    try:
-        scores = json.loads(args.scores) if args.scores else {}
-    except json.JSONDecodeError as e:
-        print(f"エラー: --scores のJSONが不正です: {e}", file=sys.stderr)
-        return 1
-
-    entry = {
-        "date": args.date,
-        "overall": args.overall,
-        "scores": scores,
-        "note": args.note or "",
-    }
-    if args.metrics:
-        try:
-            entry["metrics"] = json.loads(args.metrics)
-        except json.JSONDecodeError as e:
-            print(f"エラー: --metrics のJSONが不正です: {e}", file=sys.stderr)
-            return 1
-
-    # 同じ日付の記録があれば上書きする（測り直しに対応）
-    data["entries"] = [e for e in data["entries"] if e["date"] != args.date]
-    data["entries"].append(entry)
-    data["entries"].sort(key=lambda e: e["date"])
-    save(args.path, data)
-
-    n = len(data["entries"])
-    print(f"記録しました: {args.date} 総合 {args.overall}点（通算 {n} 回目）")
-    if n >= 2:
-        prev = data["entries"][-2]
-        d = args.overall - prev["overall"]
-        print(f"前回（{prev['date']}）比: {d:+d}点")
+    path = Path(args.path)
+    if args.from_report:
+        apply_report(args)
+    elif args.overall is None:
+        raise ValueError("--overall または --from-report を指定してください")
+    validate_day(args.date)
+    if args.overall is not None:
+        validate_score(args.overall)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with record_lock(path):
+        data = read_history(path)
+        if args.url:
+            host = site_host(args.url)
+            if data.get("url") and site_host(data["url"]) != host:
+                raise ValueError("記録先が別ドメインの履歴です。対象ドメインの保存先を指定してください")
+            data["url"] = data.get("url") or args.url
+        if isinstance(getattr(args, "brand_name", None), str) and args.brand_name.strip():
+            data["brand_name"] = args.brand_name.strip()
+        entries = data["entries"]
+        entry = next((item for item in entries if item["date"] == args.date), None)
+        if entry is None:
+            entry = {"scores": {}, "note": ""}
+            entries.append(entry)
+        update_entry(entry, args)
+        entries.sort(key=lambda item: item["date"])
+        save_text(path, json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+    print(f"記録しました：{args.date} 総合 {points(args.overall)}（全{len(entries)}回）")
+    index = entries.index(entry)
+    if index:
+        previous = entries[index - 1]
+        print(f"前回（{previous['date']}）比：{score_change(previous['overall'], args.overall)}")
     return 0
 
 
-def _arrow(d):
-    if d > 0:
-        return f"▲{d}"
-    if d < 0:
-        return f"▼{abs(d)}"
-    return "→0"
+def cell(value):
+    return html.escape(str(value), quote=False).replace("|", "&#124;").replace("\n", " ").replace("\r", " ")
+
+
+def table(headers, rows):
+    print("| " + " | ".join(map(cell, headers)) + " |")
+    print("|" + "---|" * len(headers))
+    for row in rows:
+        print("| " + " | ".join(map(cell, row)) + " |")
+    print()
+
+
+def signed(value):
+    return f"{value:+.6g}"
+
+
+def delta(previous, current, key):
+    before = previous.get("metrics", {}).get(key)
+    after = current.get("metrics", {}).get(key)
+    if before is None or after is None:
+        return "比較不可（未計測）"
+    left = previous.get("metric_details", {}).get(key, {})
+    right = current.get("metric_details", {}).get(key, {})
+    if not left or not right:
+        return "比較不可（条件未記録）"
+    if any(left.get(field) != right.get(field) for field in ("source", "unit", "basis")):
+        return "比較不可（条件変更）"
+    period = right["period"]
+    if period_kind(left["period"]) != period_kind(period) or left["period"] >= period:
+        return "比較不可（対象期間を確認）"
+    if type(before) not in (float, int) or type(after) not in (float, int):
+        return "比較不可（数値未記録）"
+    difference_unit = "ポイント" if right["unit"] in ("%", "％") else right["unit"]
+    return signed(after - before) + difference_unit
+
+
+def measurement_keys(entries):
+    keys = {}
+    for entry in entries:
+        for key in entry.get("metrics", {}):
+            keys[key] = True
+        for action in entry.get("actions", []):
+            keys[action["metric"]] = True
+    return keys
+
+
+def measurement_rows(entries, latest_only=False):
+    keys = measurement_keys(entries)
+    rows = []
+    start = max(0, len(entries) - 2) if latest_only else 0
+    for index in range(start, len(entries)):
+        entry = entries[index]
+        for key in keys:
+            details = entry.get("metric_details", {}).get(key, {})
+            value = entry.get("metrics", {}).get(key)
+            unit = details.get("unit", "")
+            change = delta(entries[index - 1], entry, key) if index and index > start else "—"
+            rows.append([entry["date"], key, f"{value}{unit}" if value is not None else "未計測",
+                         details.get("source", "出所未記録"), details.get("period", "期間未記録"),
+                         details.get("basis", "条件未記録"), change])
+    return rows
+
+
+MEASUREMENT_HEADERS = ["測定日", "指標", "値", "出所", "対象期間", "集計条件", "前回比"]
+
+
+def show_measurements(entries, latest_only=False):
+    print("## 成果指標\n")
+    rows = measurement_rows(entries, latest_only)
+    if not rows:
+        print("成果指標は未計測です。\n")
+        return
+    print("差分は表示した前回測定との比較です。計測条件を変更した指標には差分を付けません。\n")
+    table(MEASUREMENT_HEADERS, rows)
+
+
+def latest_actions(entries):
+    latest = {}
+    for entry in entries:
+        for action in entry.get("actions", []):
+            latest[action["id"]] = (action, entry["date"])
+    return list(latest.values())
+
+
+def show_actions(entries):
+    print("## 優先施策の状況\n")
+    latest = latest_actions(entries)
+    if latest:
+        table(["ID", "施策", "最終記録時の状況", "記録日", "確認根拠", "追跡指標"],
+              ([a["id"], a["title"], a["status"], day, a.get("evidence") or "未確認", a["metric"]]
+               for a, day in latest))
+    else:
+        print("施策IDの記録はありません。実施メモがあればスコア推移に表示します。\n")
 
 
 def cmd_report(args):
-    data = load(args.path)
+    data = read_history(Path(args.path))
     entries = data["entries"]
     if not entries:
-        print("記録がありません。まず record を実行してください。", file=sys.stderr)
-        return 1
-
-    print(f"# スコア推移レポート\n")
-    print(f"**対象URL：** {data.get('url', '（未記録）')}")
-    print(f"**測定回数：** {len(entries)} 回")
-    print(f"**期間：** {entries[0]['date']} 〜 {entries[-1]['date']}\n")
-
+        raise ValueError("記録がありません。先に record を実行してください")
+    if args.html:
+        output = Path(args.html)
+        if output.resolve() == Path(args.path).resolve() or output.suffix.lower() not in (".html", ".htm"):
+            raise ValueError("履歴JSONとは別の .html ファイルを出力先に指定してください")
+        from monthly_history_html import render_monthly
+        comparisons = measurement_rows(entries)
+        scores = [(e["date"], points(e["overall"]), score_change(entries[i-1]["overall"], e["overall"])
+                   if i else "初回", e.get("note") or "—") for i, e in enumerate(entries)]
+        report = render_monthly(data, scores, latest_actions(entries), MEASUREMENT_HEADERS, comparisons)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        save_text(output, report)
     first, last = entries[0], entries[-1]
-    total = last["overall"] - first["overall"]
-    print(f"**初回からの変化：{first['overall']}点 → {last['overall']}点（{_arrow(total)}点）**\n")
-
-    # 総合スコアの推移
+    print("# スコア推移レポート\n")
+    print(f"**対象URL：** {cell(data.get('url') or '未記録')}\n")
+    print(f"**測定回数：** {len(entries)} 回\n")
+    print(f"**期間：** {first['date']} 〜 {last['date']}\n")
+    if len(entries) > 1:
+        print(f"**初回からの変化：{points(first['overall'])} → {points(last['overall'])}（{score_change(first['overall'], last['overall'])}）**\n")
     print("## 総合スコアの推移\n")
-    print("| 測定日 | 総合 | 前回比 | 実施した施策 |")
-    print("|---|---|---|---|")
-    for i, e in enumerate(entries):
-        d = "—" if i == 0 else _arrow(e["overall"] - entries[i - 1]["overall"])
-        print(f"| {e['date']} | {e['overall']}/100 | {d} | {e.get('note', '')} |")
-    print()
-
-    # カテゴリ別の推移
-    keys = []
-    for e in entries:
-        for k in e.get("scores", {}):
-            if k not in keys:
-                keys.append(k)
-    if keys:
+    table(["測定日", "総合", "前回比", "実施メモ"],
+          ([e["date"], points(e["overall"]), score_change(entries[i - 1]["overall"], e["overall"]) if i else "—",
+            e.get("note", "")] for i, e in enumerate(entries)))
+    categories = sorted({key for e in entries for key in e.get("scores", {})})
+    if categories:
         print("## カテゴリ別の推移\n")
-        header = "| カテゴリ | " + " | ".join(e["date"] for e in entries) + " | 初回比 |"
-        print(header)
-        print("|---" * (len(entries) + 2) + "|")
-        for k in keys:
-            vals = [e.get("scores", {}).get(k) for e in entries]
-            cells = [str(v) if v is not None else "—" for v in vals]
-            fv = next((v for v in vals if v is not None), None)
-            lv = next((v for v in reversed(vals) if v is not None), None)
-            diff = _arrow(lv - fv) if (fv is not None and lv is not None) else "—"
-            print(f"| {k} | " + " | ".join(cells) + f" | {diff} |")
-        print()
-
-    # 実測値の推移
-    mkeys = []
-    for e in entries:
-        for k in e.get("metrics", {}):
-            if k not in mkeys:
-                mkeys.append(k)
-    if mkeys:
-        print("## 実測値の推移\n")
-        print("| 指標 | " + " | ".join(e["date"] for e in entries) + " |")
-        print("|---" * (len(entries) + 1) + "|")
-        for k in mkeys:
-            cells = [str(e.get("metrics", {}).get(k, "—")) for e in entries]
-            print(f"| {k} | " + " | ".join(cells) + " |")
-        print()
-
-    # 簡易グラフ
-    print("## 総合スコアの推移（図）\n```")
-    for e in entries:
-        bar = "█" * (e["overall"] // 5) + "░" * (20 - e["overall"] // 5)
-        print(f"{e['date']}  {bar} {e['overall']:3}")
+        rows = []
+        for key in categories:
+            vals = [e.get("scores", {}).get(key) for e in entries]
+            diff = signed(vals[-1] - vals[0]) if len(entries) > 1 and None not in (vals[0], vals[-1]) else "—"
+            rows.append([key, *["—" if v is None else v for v in vals], diff])
+        table(["カテゴリ", *[e["date"] for e in entries], "初回比"], rows)
+    show_actions(entries)
+    show_measurements(entries)
+    print("## 総合スコアの推移（図）\n\n```")
+    for entry in entries:
+        score = entry["overall"]
+        if score is None:
+            print(f"{entry['date']}  未採点")
+            continue
+        print(f"{entry['date']}  {'█' * (score // 5)}{'░' * (20 - score // 5)} {score:3}")
     print("```")
     return 0
 
 
 def cmd_diff(args):
-    data = load(args.path)
-    entries = data["entries"]
+    entries = read_history(Path(args.path))["entries"]
     if len(entries) < 2:
-        print("比較には2回以上の記録が必要です。", file=sys.stderr)
-        return 1
-    prev, last = entries[-2], entries[-1]
-    print(f"{prev['date']} → {last['date']}")
-    print(f"総合: {prev['overall']} → {last['overall']} ({_arrow(last['overall'] - prev['overall'])})")
-    keys = set(prev.get("scores", {})) | set(last.get("scores", {}))
-    for k in sorted(keys):
-        a, b = prev.get("scores", {}).get(k), last.get("scores", {}).get(k)
-        if a is None or b is None:
-            continue
-        print(f"  {k}: {a} → {b} ({_arrow(b - a)})")
+        raise ValueError("比較には2回以上の記録が必要です")
+    previous, last = entries[-2:]
+    print(f"{previous['date']} → {last['date']}\n")
+    print(f"総合：{points(previous['overall'])} → {points(last['overall'])}（{score_change(previous['overall'], last['overall'])}）\n")
+    for key in sorted(set(previous.get("scores", {})).intersection(last.get("scores", {}))):
+        a, b = previous["scores"][key], last["scores"][key]
+        if a is not None and b is not None:
+            print(f"  {cell(key)}：{a} → {b}（{signed(b - a)}点）")
+    print()
+    show_actions(entries)
+    show_measurements(entries, latest_only=True)
     return 0
 
 
 def main():
-    ap = argparse.ArgumentParser(description="マーケティングスコアの定点観測")
-    sub = ap.add_subparsers(dest="cmd", required=True)
-
-    r = sub.add_parser("record", help="スコアを記録する")
-    r.add_argument("path")
-    r.add_argument("--url")
-    r.add_argument("--date", required=True, help="YYYY-MM-DD")
-    r.add_argument("--overall", type=int, required=True, help="総合スコア 0-100")
-    r.add_argument("--scores", help='カテゴリ別スコアのJSON文字列')
-    r.add_argument("--metrics", help='実測値のJSON文字列（問い合わせ数、順位など）')
-    r.add_argument("--note", help="この期間に実施した施策")
-    r.set_defaults(func=cmd_record)
-
-    p = sub.add_parser("report", help="推移レポートを出力する")
-    p.add_argument("path")
-    p.set_defaults(func=cmd_report)
-
-    d = sub.add_parser("diff", help="直近2回の差分を出力する")
-    d.add_argument("path")
-    d.set_defaults(func=cmd_diff)
-
-    args = ap.parse_args()
-    return args.func(args)
+    parser = argparse.ArgumentParser(description="マーケティングスコアの定点観測")
+    commands = parser.add_subparsers(dest="cmd", required=True)
+    record = commands.add_parser("record", help="スコア、施策、実測値を記録")
+    record.add_argument("path")
+    record.add_argument("--url")
+    record.add_argument("--from-report", help="案件の REPORT-DATA.json から診断と優先施策を取り込む")
+    record.add_argument("--date", help="測定日 YYYY-MM-DD")
+    record.add_argument("--overall", type=int, help="総合スコア 0〜100")
+    record.add_argument("--scores", help="カテゴリ名とスコアのJSON")
+    record.add_argument("--metrics", help="指標名と値のJSON（未計測は null）")
+    record.add_argument("--metric-details", help="指標名と source, period, unit, basis のJSON")
+    record.add_argument("--actions", help="id, title, status, metric, evidence を含む施策配列のJSON")
+    record.add_argument("--note", help="この期間の実施メモ")
+    record.set_defaults(func=cmd_record)
+    for name, callback, help_text in (("report", cmd_report, "全期間のレポートを表示"),
+                                       ("diff", cmd_diff, "直近2回を比較")):
+        cmd = commands.add_parser(name, help=help_text)
+        cmd.add_argument("path")
+        if name == "report":
+            cmd.add_argument("--html", metavar="PATH", help="共有用の月次レポートHTMLも保存")
+        cmd.set_defaults(func=callback)
+    args = parser.parse_args()
+    try:
+        return args.func(args)
+    except (ValueError, KeyError, TypeError, OSError) as exc:
+        print(f"エラー：{exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

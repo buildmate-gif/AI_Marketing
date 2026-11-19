@@ -29,7 +29,7 @@
 
 ### ステップ2：JSONデータの組み立て
 
-`generate_pdf_jp.py` は、以下の構造のJSONファイルを入力として受け取ります。
+同じ案件の `REPORT-DATA.json` を優先します。以下は基本項目の例です。根拠付き施策は `../../market-audit/references/report-data.md` の形式で追加します。
 
 ```json
 {
@@ -97,7 +97,7 @@
 
 - 現状のマーケティング健全性の評価
 - 最も影響の大きい所見1〜2点
-- 改善実施時の月間粗利インパクトの見込み
+- 必要な実績がそろう場合は、前提を示した月間粗利の試算
 - 最初に着手すべき施策
 
 表紙のスコアゲージ直下に表示されるため、簡潔かつ印象に残る文章にしてください。
@@ -141,7 +141,7 @@
 
 #### `quick_wins`（配列・必須）
 
-1週間以内・低工数で実施できる施策を3〜5件。具体的な指示として書きます。
+着手2週間以内・低工数で実施できる施策を3〜5件。具体的な指示として書きます。
 
 **良い例：** 「トップページの見出しを『快適な住まいづくり』から『〇〇市で施工実績1,200件｜外壁塗装の専門店』に変更する」
 
@@ -149,7 +149,7 @@
 
 #### `medium_term`（配列・必須）
 
-1〜3ヶ月を要する施策を3〜5件。工数は大きいが効果も大きいもの。
+1〜4ヶ月を要する施策を3〜5件。工数は大きいが効果も大きいもの。
 
 #### `strategic`（配列・必須）
 
@@ -157,52 +157,20 @@
 
 ### ステップ4：JSONファイルの書き出し
 
-組み立てたデータを一時ファイルに保存します。**日本語を含むため、必ずUTF-8で書き出してください。**
+対象ドメインフォルダの `REPORT-DATA.json` を使用します。監査時のデータがない場合は `../../market-audit/references/report-data.md` の構造で作成し、欠測を明示してください。
+
+### ステップ5：PDFの生成
+
+`case_dir` に対象ドメインフォルダを設定し、既存のJSONを利用します。
 
 ```bash
-cat > /tmp/report_data.json << 'JSONEOF'
-{
-  ... 組み立てたJSONデータ ...
-}
-JSONEOF
-```
-
-### ステップ5：PDF生成スクリプトの実行
-
-**事前確認：** `reportlab` が入っているか確認します。
-
-```bash
-python3 -c "import reportlab" 2>/dev/null || pip3 install reportlab
-```
-
-**生成：**
-
-```bash
-python3 "$MARKET_SCRIPTS"/generate_pdf_jp.py /tmp/report_data.json "MARKETING-REPORT-<ドメイン>.pdf"
-```
-
-`<ドメイン>` は対象サイトのドメイン名（プロトコル・wwwを除き、ドットをハイフンに置換）に置き換えます。
-
-- `example.com` → `MARKETING-REPORT-example-com.pdf`
-- `tanaka-kensetsu.co.jp` → `MARKETING-REPORT-tanaka-kensetsu-co-jp.pdf`
-
-**動作確認モード（引数なし）：** サンプルデータでPDFを生成します。
-
-```bash
-python3 "$MARKET_SCRIPTS"/generate_pdf_jp.py
+python3 "$MARKET_SCRIPTS/generate_report_html.py" "$case_dir/REPORT-DATA.json" "$case_dir/MARKETING-REPORT.html" --pdf "$case_dir/MARKETING-REPORT.pdf"
 ```
 
 ### ステップ6：出力の確認
 
-生成後、ファイルができているか確認します。
+PDFを開き、HTMLと同じ根拠・施策が印刷されているか、改ページと日本語の表示を確認してください。Chromeがない場合は生成済みHTMLの印刷機能を使います。
 
-```bash
-ls -la "MARKETING-REPORT-<ドメイン>.pdf"
-```
+### ステップ7：引き渡し
 
-ファイルパスとサイズをユーザーに報告してください。
-
-### ステップ7：後片付け
-
-一時JSONファイルは不要になったら削除します。削除前に必ずユーザーに確認してください。
-
+PDF・HTMLのパスを報告し、次回再診断のため案件フォルダに入力JSONを保存します。

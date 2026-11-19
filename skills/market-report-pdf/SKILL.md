@@ -6,7 +6,7 @@ description: "分析結果を日本語PDFレポートとして出力する。ス
 
 ## このスキルの目的
 
-Pythonスクリプト `$MARKET_SCRIPTS/generate_pdf_jp.py` を使い、体裁の整った日本語PDFレポートを生成します。利用可能な監査・分析データを集約し、所定のJSON形式に整えてスクリプトを呼び出し、スコアゲージ・棒グラフ・課題一覧・優先順位別アクションプランを含むPDFを出力します。
+標準のHTML生成スクリプトとChromeを使い、体裁の整った日本語PDFレポートを生成します。利用可能な監査・分析データを集約し、所定のJSON形式に整えてスクリプトを呼び出し、スコアゲージ・棒グラフ・課題一覧・優先順位別アクションプランを含むPDFを出力します。
 
 **出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
 
@@ -40,7 +40,7 @@ Pythonスクリプト `$MARKET_SCRIPTS/generate_pdf_jp.py` を使い、体裁の
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
 ## 2つの生成方式
@@ -57,14 +57,14 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 ### HTML版（推奨）
 
 ```bash
-# HTMLとPDFを両方生成
-python3 "$MARKET_SCRIPTS/generate_report_html.py" /tmp/report_data.json \
-  "MARKETING-REPORT-<ドメイン>.html" --pdf "MARKETING-REPORT-<ドメイン>.pdf"
+# case_dir に対象ドメインフォルダのパスを設定してから実行
+python3 "$MARKET_SCRIPTS/generate_report_html.py" "$case_dir/REPORT-DATA.json" \
+  "$case_dir/MARKETING-REPORT.html" --pdf "$case_dir/MARKETING-REPORT.pdf"
 ```
 
 Chrome が見つからない環境では、HTMLだけ生成されます。その場合はブラウザで開き「印刷 → PDFとして保存」で変換するようユーザーに案内してください。
 
-競合比較ページを出すには、JSONに `competitors` を含めます。
+競合比較ページを出すには、JSONに `competitors` を含めます。上位施策は同じ案件の `REPORT-DATA.json` の `priority_actions` をそのまま使います。
 
 ```json
 "competitors": [
@@ -79,10 +79,10 @@ Chrome が見つからない環境では、HTMLだけ生成されます。その
 ### reportlab版
 
 ```bash
-python3 "$MARKET_SCRIPTS/generate_pdf_jp.py" /tmp/report_data.json "MARKETING-REPORT-<ドメイン>.pdf"
+python3 "$MARKET_SCRIPTS/generate_pdf_jp.py" "$case_dir/REPORT-DATA.json" "$case_dir/MARKETING-REPORT.pdf"
 ```
 
-Chrome が使えない環境や、HTML経由を避けたい場合に使います。
+Chrome が使えず簡易版が必要な場合に、全6カテゴリが採点済みのデータで使用します。根拠・追跡指標まで必要な場合はHTMLをブラウザで印刷してください。
 
 ## 必ず守ること
 

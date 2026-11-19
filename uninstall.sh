@@ -11,11 +11,11 @@ echo ""
 echo -e "${YELLOW}Uninstalling AI Marketing Suite...${NC}"
 echo ""
 
-SKILLS_DIR="$HOME/.claude/skills"
-AGENTS_DIR="$HOME/.claude/agents"
+SKILLS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+AGENTS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/agents"
 
 # Remove skills
-SKILLS=("market" "market-audit" "market-copy" "market-emails" "market-social" "market-ads" "market-funnel" "market-competitors" "market-landing" "market-launch" "market-proposal" "market-report" "market-report-pdf" "market-seo" "market-brand")
+SKILLS=("market" "market-audit" "market-copy" "market-emails" "market-social" "market-ads" "market-funnel" "market-competitors" "market-landing" "market-launch" "market-proposal" "market-report" "market-report-pdf" "market-seo" "market-brand" "market-track" "market-visual")
 for skill in "${SKILLS[@]}"; do
     if [ -d "$SKILLS_DIR/$skill" ]; then
         rm -rf "$SKILLS_DIR/$skill"
@@ -24,7 +24,7 @@ for skill in "${SKILLS[@]}"; do
 done
 
 # Remove agents
-AGENTS=("market-content" "market-conversion" "market-competitive" "market-technical" "market-strategy")
+AGENTS=("market-content" "market-conversion" "market-competitive" "market-technical" "market-strategy" "market-critic")
 for agent in "${AGENTS[@]}"; do
     if [ -f "$AGENTS_DIR/$agent.md" ]; then
         rm "$AGENTS_DIR/$agent.md"

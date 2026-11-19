@@ -24,7 +24,7 @@ description: "30日分のSNS投稿カレンダーを媒体別に生成する。�
 
 ## 建設業での推奨構成
 
-**Instagram（施工事例）＋ LINE公式アカウント（問い合わせと追客）＋ Googleビジネスプロフィール（地域検索）** の3点が基本です。Xの優先度は低くなります。ハッシュタグには必ず市区町村レベルの地域タグを入れてください。
+**Instagram（施工事例）＋ LINE公式アカウント（問い合わせと追客）＋ Googleビジネスプロフィール（地域検索）** の3点が基本です。案件の集客経路と運用可能な媒体を確かめて選びます。各投稿に狙う行動、確認する指標、集計元を付けます。LINEは配信・クリックユーザー・相談完了、Instagramはリーチ・反応・予約を別々に扱い、管理画面・予約台帳等を確認できた指標だけに実績値を入れます。[LINE公式の配信分析](https://www.lycbiz.com/jp/manual/OfficialAccountManager/insight_message/)・[Instagram Insights](https://developers.facebook.com/docs/graph-api/reference/shadow-ig-user/insights/)
 
 ## 出力
 

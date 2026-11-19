@@ -1,0 +1,14 @@
+{
+  "name": "buildmate-marketing",
+  "description": "日本企業向けマーケティング支援ツール",
+  "owner": {
+    "name": "BuildMate"
+  },
+  "plugins": [
+    {
+      "name": "ai-marketing-jp",
+      "source": "./",
+      "description": "日本企業向けのサイト診断、改善提案、定点観測"
+    }
+  ]
+}
