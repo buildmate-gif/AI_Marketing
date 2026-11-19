@@ -14,6 +14,10 @@ from xml.etree import ElementTree
 from html.parser import HTMLParser
 from urllib.parse import urlparse, urljoin
 
+MAX_RESPONSE_BYTES = 10 * 1024 * 1024
+MAX_SITEMAP_BYTES = 50 * 1024 * 1024  # sitemaps.org の1ファイル上限
+UNSAFE_XML_DECLARATION = re.compile(r"<!(?:DOCTYPE|ENTITY)", re.IGNORECASE)
+
 
 class MarketingPageParser(HTMLParser):
     """Parse HTML and extract marketing-relevant elements."""
@@ -344,8 +348,8 @@ class MarketingPageParser(HTMLParser):
         }
 
 
-def fetch_page(url):
-    """Fetch a webpage and return its HTML content."""
+def fetch_page(url, max_bytes=MAX_RESPONSE_BYTES):
+    """Fetch a webpage and return its HTML content, or None if it is too large."""
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -356,7 +360,10 @@ def fetch_page(url):
     req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=15) as response:
-            return response.read().decode(response.headers.get_content_charset() or "utf-8", errors="replace")
+            body = response.read(max_bytes + 1)
+            if len(body) > max_bytes:
+                return None
+            return body.decode(response.headers.get_content_charset() or "utf-8", errors="replace")
     except urllib.error.HTTPError as e:
         return None
     except Exception as e:
@@ -378,8 +385,8 @@ def fetch_sitemap(url):
     """Check if sitemap.xml exists."""
     parsed = urlparse(url)
     sitemap_url = f"{parsed.scheme}://{parsed.netloc}/sitemap.xml"
-    content = fetch_page(sitemap_url)
-    if content:
+    content = fetch_page(sitemap_url, max_bytes=MAX_SITEMAP_BYTES)
+    if content and not UNSAFE_XML_DECLARATION.search(content):
         try:
             root = ElementTree.fromstring(content)
             kind = root.tag.split("}")[-1]
