@@ -31,17 +31,20 @@ Webページ・サイトの網羅的なSEO監査を行います。オンペー�
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
 ```bash
 python3 "$MARKET_SCRIPTS/analyze_page.py" <url>
 ```
 
-## 日本語で必ず守る文字数
+## 検索表示とAI検索の確認
 
-- **タイトルタグ：全角28〜32文字**（英語基準の60文字では検索結果で切れます）
-- **メタディスクリプション：全角80〜120文字**（スマホでは冒頭の全角50文字程度しか表示されません）
+検索結果のタイトルと説明は端末幅・クエリなどで変わります。文字数は参考値として記録し、ページとの整合性、固有性、読みやすさを評価してください。[タイトルリンク](https://developers.google.com/search/docs/appearance/title-link)・[スニペット](https://developers.google.com/search/docs/appearance/snippet)
+
+GoogleのAI検索では、クロール可能性、一次情報、具体的な経験、役立つ画像を点検します。専用ファイルや独自の構造化データを導入条件にせず、確認したページと具体例を示します。Search Consoleの生成AIレポートを利用者が提供した場合は、対象面・期間と表示回数を記録します。専用レポートの表示回数を全体値に加算しないでください。未提供のクリック数・送客・問い合わせは「未計測」とします。[公式ガイド](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide)・[専用レポート](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports)
+
+集計ファイルに指名／非指名分類がある場合は、対象プロパティ・期間・国・端末をそろえて比較します。対象外プロパティで返る空の結果は未取得として扱います。[11月16日のSearch Analytics API更新](https://developers.google.com/search/blog/2026/11/search-analytics-api-update)
 
 ## 建設業での優先順位
 

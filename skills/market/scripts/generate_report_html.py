@@ -2,7 +2,7 @@
 """マーケティングレポートをHTMLで生成し、任意でPDFへ変換する。
 
 reportlab 版（generate_pdf_jp.py）よりデザイン自由度が高く、
-競合比較ページと採点方法ページを含む全7セクションを出力する。
+優先施策、競合比較、採点方法を含むレポートを出力する。
 
 配色・書体は Hiro個人HTMLデザインルール（hiro-html-design）に準拠。
 唯一 --hiro-alert（#B3453A）のみパレットへの追加で、これは承認済みの例外。
@@ -23,6 +23,8 @@ import json
 import shutil
 import subprocess
 import sys
+import tempfile
+from urllib.parse import urlsplit
 from pathlib import Path
 
 # --- 配色（hiro-html-design 準拠） -------------------------------------
@@ -123,9 +125,48 @@ def section(title, body, bg="bg", page_break=False):
 </section>"""
 
 
+def page_reference(value):
+    """根拠URLを表示し、HTTP(S)の完全URLのみリンクにする。"""
+    url = str(value or "").strip()
+    try:
+        parsed = urlsplit(url)
+        if parsed.scheme in ("https", "http") and parsed.hostname:
+            return f'<a href="{e(url)}">{e(url)}</a>'
+    except ValueError:
+        pass
+    return e(url) or "未確認"
+
+
+def priority_panel(actions):
+    if not actions:
+        return ""
+    cards = []
+    for action in actions[:3]:
+        baseline = action.get("baseline")
+        measured = "未計測" if baseline is None or baseline == "" else e(baseline)
+        period = action.get("period")
+        if period:
+            measured += f'（{e(period)}）'
+        details = [
+            ("対象ページ", page_reference(action.get("page_url"))),
+            ("確認したこと", e(action.get("evidence")) or "未確認"),
+            ("確認日", e(action.get("checked_on")) or "未確認"),
+            ("改善の仮説", e(action.get("hypothesis")) or "未設定"),
+            ("変更案", e(action.get("change")) or "未設定"),
+            ("追跡する指標", e(action.get("metric")) or "未設定"),
+            ("現在の実績", measured),
+        ]
+        rows = "".join(f"<dt>{label}</dt><dd>{value}</dd>" for label, value in details)
+        cards.append(f"""<li class="action">
+            <span class="action-meta">{e(action.get("id", ""))}　{e(action.get("status", ""))}</span>
+            <h3>{e(action["title"])}</h3><dl>{rows}</dl></li>""")
+    return section("優先して取り組む施策", '<ol class="actions">' + "".join(cards) + "</ol>", "bg")
+
+
 def build_html(d):
-    overall = int(d.get("overall_score", 0))
-    letter, glabel = grade(overall)
+    overall = d.get("overall_score")
+    if overall is not None:
+        overall = int(overall)
     brand_name = d.get("brand_name", "").strip()
     cats = d.get("categories", {}) or {}
 
@@ -139,7 +180,7 @@ def build_html(d):
     {title_line}
     <p class="meta">対象URL： {e(d.get('url', '—'))}　／　発行日： {e(d.get('date', '—'))}</p>
     <div style="display:flex;gap:36px;align-items:center;flex-wrap:wrap;margin-top:28px;">
-      <div>{score_gauge(overall)}</div>
+      <div>{score_gauge(overall) if overall is not None else "<strong>総合スコア 未採点</strong>"}</div>
       <div style="flex:1;min-width:280px;">
         <h3 style="margin-top:0;">エグゼクティブ・サマリー</h3>
         <p style="margin:0;">{e(d.get('executive_summary', ''))}</p>
@@ -149,10 +190,17 @@ def build_html(d):
 </section>"""
 
     # --- スコア内訳 ---
-    rows = "".join(bar_row(k, int(v.get("score", 0)), v.get("weight", ""))
-                   for k, v in cats.items())
-    weighted = sum(int(v.get("score", 0)) * float(str(v.get("weight", "0")).rstrip("%") or 0) / 100
-                   for v in cats.values())
+    rows = "".join(
+        bar_row(k, int(v["score"]), v.get("weight", "")) if v.get("score") is not None
+        else f'<tr><td>{e(k)}</td><td colspan="3">未採点</td></tr>'
+        for k, v in cats.items()
+    )
+    weighted_note = "評価対象の情報がそろった時点で総合評価を算出します。"
+    if overall is not None and cats and all(v.get("score") is not None for v in cats.values()):
+        weighted = sum(int(v["score"]) * float(str(v.get("weight", "0")).rstrip("%") or 0) / 100
+                       for v in cats.values())
+        letter, label = grade(overall)
+        weighted_note = f"加重平均 {weighted:.1f} ／ 100（評価 {letter}・{label}）"
     breakdown = f"""
     <table>
       <thead>
@@ -165,7 +213,7 @@ def build_html(d):
       </thead>
       <tbody>{rows}</tbody>
     </table>
-    <div class="note">加重平均： <strong style="font-family:Outfit,sans-serif;">{weighted:.1f}</strong> ／ 100　（評価 {letter}・{e(glabel)}）</div>"""
+    <div class="note">{weighted_note}</div>"""
 
     # --- 主要課題 ---
     findings = d.get("findings", []) or []
@@ -184,8 +232,8 @@ def build_html(d):
 
     # --- アクションプラン ---
     plan_blocks = []
-    for label, key, hint in [("クイックウィン", "quick_wins", "今週中・低工数"),
-                             ("中期施策", "medium_term", "1〜3ヶ月"),
+    for label, key, hint in [("クイックウィン", "quick_wins", "着手2週間以内・低工数"),
+                             ("中期施策", "medium_term", "1〜4ヶ月"),
                              ("戦略施策", "strategic", "3〜6ヶ月")]:
         items = d.get(key, []) or []
         if not items:
@@ -202,7 +250,7 @@ def build_html(d):
         head = "".join(f'<th style="text-align:left;">{e(c.get("name", ""))}</th>' for c in comps)
         labels = [("positioning", "ポジショニング"), ("pricing", "価格帯"),
                   ("social_proof", "信頼シグナル"), ("content", "コンテンツ"),
-                  ("reviews", "クチコミ"), ("map_rank", "地図検索順位")]
+                  ("reviews", "口コミ"), ("map_rank", "地図検索順位")]
         body_rows = ""
         for key, jp in labels:
             if not any(c.get(key) for c in comps):
@@ -213,7 +261,7 @@ def build_html(d):
         competitors = f"""<table><thead><tr>
             <th style="text-align:left;">評価項目</th>{head}</tr></thead>
             <tbody>{body_rows}</tbody></table>
-            <div class="note">競合データは調査時点のものです。取得できなかった項目は「—」と表示しています。</div>"""
+            <div class="note">競合データは各社公式サイト等の公開情報にもとづく調査時点のものであり、当社による実測ではありません。数値・件数は競合の更新により変わる可能性があるため、商談等で引用する際は再確認してください。取得できなかった項目は「—」「不明」「確認できず」等と表示しています。</div>"""
     else:
         competitors = ('<p class="note">競合データは未取得です。'
                        '<code>/market competitors &lt;url&gt;</code> を実行すると本節が生成されます。</p>')
@@ -226,6 +274,15 @@ def build_html(d):
         f'color:{score_color(lo)};">{lt}</td>'
         f'<td style="padding:10px 16px;">{lb}</td></tr>'
         for (lo, lt, lb), hi in zip(GRADES, [100, 84, 69, 54, 39]))
+    construction_note = ""
+    if d.get("industry") == "建設・建築業":
+        construction_note = """
+    <div class="callout">
+      建設業は商談期間が数ヶ月〜1年に及びます。効果が数字に表れるまでの期間は施策により異なり、
+      フォーム改善やお客様の声の見直しなど軽微な変更は2〜4ヶ月、価格開示や施工事例の充実など
+      中規模の変更は3〜6ヶ月、SEOや信頼構築など土台からの変更は本格反映まで6ヶ月〜1年を要します。
+      短期での判断は避け、四半期単位で評価してください。
+    </div>"""
     method = f"""
     <p>各カテゴリを0〜100点で採点し、ウェイトを掛けた加重平均を総合スコアとしています。</p>
     <table><thead><tr>
@@ -233,15 +290,13 @@ def build_html(d):
       <th style="text-align:left;">意味</th></tr></thead>
       <tbody>{grade_rows}</tbody></table>
     <div class="callout">
-      建設業は商談期間が数ヶ月〜1年に及びます。本レポートの改善提案は、
-      実施から効果が数字に表れるまで通常3〜6ヶ月を要します。
-      短期での判断は避け、四半期単位で評価してください。
-    </div>
+      改善前後は同じ条件・期間で計測します。広告出稿量や季節性など、結果に影響する変更も記録してください。
+    </div>{construction_note}
     <h3>本レポートの制約</h3>
     <ul>
       <li>スコアは公開情報にもとづく評価であり、実際の受注データとは異なります</li>
       <li>会員限定エリアなど非公開部分は評価対象外です</li>
-      <li>収益試算に用いた単価・粗利率は、記載がない場合は業界標準値を使用しています</li>
+      <li>収益の試算は、入力値の出典と仮定を併記した場合に限り掲載します</li>
     </ul>"""
 
     css = f"""
@@ -283,6 +338,22 @@ def build_html(d):
   code {{ background:var(--hiro-blueLight); color:var(--hiro-brand); padding:1px 6px;
          border-radius:3px; font-size:12.5px; }}
   footer {{ padding:26px 0 34px; text-align:center; color:var(--hiro-gray); font-size:12px; }}
+  .actions {{ list-style:none; margin:0; padding:0; display:grid; gap:18px; }}
+  .action {{ background:var(--hiro-paper); border:1px solid var(--hiro-border);
+             border-top:3px solid var(--hiro-accent); padding:18px 24px; break-inside:avoid; }}
+  .action-meta {{ color:var(--hiro-gray); font-size:12px; }}
+  .action h3 {{ margin:4px 0 12px; }}
+  .action dl {{ display:grid; grid-template-columns:7.5em 1fr; gap:5px 14px; margin:0; }}
+  .action dt {{ color:var(--hiro-gray); font-size:13px; }}
+  .action dd {{ margin:0; min-width:0; }}
+  a {{ color:var(--hiro-blue); text-underline-offset:3px; }}
+  .wrap {{ overflow-wrap:anywhere; }}
+  @media screen and (max-width:600px) {{
+    .wrap {{ padding:0 16px; overflow-x:auto; }}
+    .action {{ padding:14px; }}
+    .action dl {{ display:block; }}
+    .action dt:not(:first-child) {{ margin-top:8px; }}
+  }}
   @page {{ size:A4; margin:14mm; }}
   @media print {{
     section {{ padding:26px 0 !important; }}
@@ -297,19 +368,17 @@ def build_html(d):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>マーケティング監査レポート{' — ' + e(brand_name) if brand_name else ''}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
 <style>{css}</style>
 </head>
 <body>
 {cover}
+{priority_panel(d.get("priority_actions"))}
 {section('スコア内訳', breakdown, 'bg')}
 {section('主要課題', issues, 'paper', page_break=True)}
 {section('優先度別アクションプラン', plan, 'bg')}
 {section('競合比較', competitors, 'paper', page_break=True)}
 {section('採点方法と制約', method, 'bg')}
-<footer>AI Marketing Suite — <code>/market report-pdf</code> により生成</footer>
+<footer>AI Marketing Suite により生成</footer>
 </body>
 </html>"""
 
@@ -338,14 +407,22 @@ def to_pdf(html_path, pdf_path):
         print("Chrome が見つかりません。HTMLをブラウザで開き、"
               "「印刷 → PDFとして保存」で変換してください。", file=sys.stderr)
         return False
-    cmd = [chrome, "--headless=new", "--disable-gpu", "--no-sandbox",
-           "--no-pdf-header-footer", "--virtual-time-budget=8000",
-           f"--print-to-pdf={Path(pdf_path).resolve()}",
-           Path(html_path).resolve().as_uri()]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-    if r.returncode != 0 or not Path(pdf_path).exists():
-        print(f"PDF変換に失敗しました。\n{r.stderr[:400]}", file=sys.stderr)
-        return False
+    target = Path(pdf_path).resolve()
+    # 開いているChromeのプロファイルや前回のPDFを今回の検証に流用しない。
+    with tempfile.TemporaryDirectory() as profile, tempfile.TemporaryDirectory(dir=target.parent) as stage:
+        staged_pdf = Path(stage) / "report.pdf"
+        cmd = [chrome, "--headless=new", "--disable-gpu", "--no-sandbox",
+               f"--user-data-dir={profile}", "--no-pdf-header-footer", "--virtual-time-budget=8000",
+               f"--print-to-pdf={staged_pdf}", Path(html_path).resolve().as_uri()]
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            print(f"PDF変換に失敗しました。{exc}", file=sys.stderr)
+            return False
+        if result.returncode or not staged_pdf.is_file() or not staged_pdf.stat().st_size:
+            print(f"PDF変換に失敗しました。\n{result.stderr[:400]}", file=sys.stderr)
+            return False
+        staged_pdf.replace(target)
     return True
 
 

@@ -42,7 +42,7 @@ description: "ブランドボイス（トーン・語彙・言い回し）を分
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
 ## 出力

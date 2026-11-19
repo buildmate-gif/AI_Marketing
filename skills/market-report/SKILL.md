@@ -1,8 +1,8 @@
 ---
 name: market-report
-description: "既存の分析結果を統合し、マーケティングレポートをMarkdown形式で生成する。「レポートにまとめて」「納品用の報告書」「分析結果を1つの資料にして」で使う。"
+description: "既存の分析結果を統合し、根拠と優先施策を示すMarkdown・HTMLレポートを生成する。「レポートにまとめて」「納品用の報告書」「分析結果を1つの資料にして」で使う。"
 ---
-# マーケティングレポート生成（Markdown形式）
+# マーケティングレポート生成（Markdown・HTML）
 
 ## このスキルの目的
 
@@ -26,7 +26,7 @@ description: "既存の分析結果を統合し、マーケティングレポー
 
 ## 採点の配点
 
-Webサイト・コンバージョン25% ／ SEO・自然流入20% ／ コンテンツ15% ／ SNS15% ／ メール15% ／ 有料広告10%
+監査と同じ6カテゴリ・配点を使い、同じ案件の `REPORT-DATA.json` から総合点と優先施策を転記する。SNS、メール、広告は関連資料があるときの追加分析とする。
 
 ## 先に確認するファイル
 
@@ -40,7 +40,7 @@ Webサイト・コンバージョン25% ／ SEO・自然流入20% ／ コンテ�
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
 ## 提出前の検証
@@ -57,4 +57,5 @@ MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}
 ## 出力
 
 - `<ドメイン>/MARKETING-REPORT.md`（規則は `../market/references/output-location.md`）
+- 同じドメインの監査入力がある場合は `../market-audit/references/report-data.md` の手順でHTMLを再生成する。過去のMarkdownのみの場合は確認できた根拠からJSONを作成し、不足値を未計測・未採点とする。
 - PDF形式が必要な場合は `/market report-pdf` を使ってください

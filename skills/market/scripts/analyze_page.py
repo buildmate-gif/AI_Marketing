@@ -10,7 +10,7 @@ import json
 import re
 import urllib.request
 import urllib.error
-import ssl
+from xml.etree import ElementTree
 from html.parser import HTMLParser
 from urllib.parse import urlparse, urljoin
 
@@ -45,6 +45,8 @@ class MarketingPageParser(HTMLParser):
         self._current_text = ""
         self._in_script = False
         self._script_type = ""
+        self._in_style = False
+        self._has_script = False
         self._in_form = False
         self._current_form = {}
         self._form_fields = []
@@ -58,7 +60,9 @@ class MarketingPageParser(HTMLParser):
         self._current_tag = tag
         self._current_attrs = attrs_dict
 
-        if tag == "title":
+        if tag == "style":
+            self._in_style = True
+        elif tag == "title":
             self._in_title = True
             self._current_text = ""
 
@@ -128,6 +132,7 @@ class MarketingPageParser(HTMLParser):
             })
 
         elif tag == "script":
+            self._has_script = True
             self._in_script = True
             self._script_type = attrs_dict.get("type", "")
             self._current_text = ""
@@ -161,7 +166,9 @@ class MarketingPageParser(HTMLParser):
                         self.tracking_scripts.append(name)
 
     def handle_endtag(self, tag):
-        if tag == "title":
+        if tag == "style":
+            self._in_style = False
+        elif tag == "title":
             self._in_title = False
             self.title = self._current_text.strip()
 
@@ -247,17 +254,18 @@ class MarketingPageParser(HTMLParser):
             if self._script_type == "application/ld+json":
                 try:
                     schema = json.loads(script_content)
-                    if isinstance(schema, list):
-                        self.schema_data.extend(schema)
-                    else:
-                        self.schema_data.append(schema)
+                    nodes = schema if isinstance(schema, list) else [schema]
+                    for node in nodes:
+                        if isinstance(node, dict):
+                            self.schema_data.append(node)
                 except (json.JSONDecodeError, ValueError):
                     pass
 
     def handle_data(self, data):
         if self._in_title or self._in_heading or self._in_a or self._in_button or self._in_script:
             self._current_text += data
-        self._text_content.append(data)
+        if not self._in_script and not self._in_style and not self._in_title:
+            self._text_content.append(data)
 
     def get_full_text(self):
         return " ".join(self._text_content)
@@ -265,7 +273,7 @@ class MarketingPageParser(HTMLParser):
     def get_results(self):
         """Compile all findings into a structured result."""
         # Count images without alt text
-        images_without_alt = sum(1 for img in self.images if not img.get("has_alt") or not img.get("alt"))
+        images_without_alt = sum(1 for img in self.images if not img.get("has_alt"))
         images_with_lazy = sum(1 for img in self.images if img.get("loading") == "lazy")
 
         # Analyze heading hierarchy
@@ -278,20 +286,21 @@ class MarketingPageParser(HTMLParser):
             heading_issues.append("H3 used without H2 (skipped level)")
 
         # Unique tracking tools
-        tracking = list(set(self.tracking_scripts))
+        tracking = sorted(set(self.tracking_scripts))
 
         # Full text for word count
         full_text = self.get_full_text()
         word_count = len(full_text.split())
 
         return {
+            "requires_browser": self._has_script and not full_text.strip() and not self.images and not self.forms,
             "seo": {
                 "title": self.title,
                 "title_length": len(self.title),
-                "title_ok": 30 <= len(self.title) <= 60,
+                "title_ok": bool(self.title.strip()),
                 "meta_description": self.meta_description,
                 "meta_description_length": len(self.meta_description),
-                "meta_description_ok": 120 <= len(self.meta_description) <= 160,
+                "meta_description_ok": bool(self.meta_description.strip()),
                 "canonical": self._canonical,
                 "robots_meta": self._robots_meta,
                 "has_viewport": self._has_viewport,
@@ -304,6 +313,7 @@ class MarketingPageParser(HTMLParser):
             },
             "content": {
                 "word_count": word_count,
+                "japanese_char_count": len(re.findall(r"[ぁ-んァ-ヶ一-龯]", full_text)),
                 "headings_count": sum(len(v) for v in self.headings.values()),
                 "h1": self.headings["h1"],
                 "h2": self.headings["h2"]
@@ -336,20 +346,17 @@ class MarketingPageParser(HTMLParser):
 
 def fetch_page(url):
     """Fetch a webpage and return its HTML content."""
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Language": "ja,en;q=0.7",
     }
 
     req = urllib.request.Request(url, headers=headers)
     try:
-        response = urllib.request.urlopen(req, timeout=15, context=ctx)
-        return response.read().decode("utf-8", errors="replace")
+        with urllib.request.urlopen(req, timeout=15) as response:
+            return response.read().decode(response.headers.get_content_charset() or "utf-8", errors="replace")
     except urllib.error.HTTPError as e:
         return None
     except Exception as e:
@@ -361,7 +368,7 @@ def fetch_robots_txt(url):
     parsed = urlparse(url)
     robots_url = f"{parsed.scheme}://{parsed.netloc}/robots.txt"
     content = fetch_page(robots_url)
-    if content:
+    if content and not content.lstrip().startswith("<"):
         has_sitemap = "sitemap:" in content.lower()
         return {"exists": True, "has_sitemap_reference": has_sitemap, "content_preview": content[:500]}
     return {"exists": False}
@@ -371,18 +378,18 @@ def fetch_sitemap(url):
     """Check if sitemap.xml exists."""
     parsed = urlparse(url)
     sitemap_url = f"{parsed.scheme}://{parsed.netloc}/sitemap.xml"
-    try:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        req = urllib.request.Request(sitemap_url, headers={"User-Agent": "MarketingBot/1.0"})
-        response = urllib.request.urlopen(req, timeout=10, context=ctx)
-        content = response.read().decode("utf-8", errors="replace")
-        # Count URLs in sitemap
-        url_count = content.lower().count("<url>") or content.lower().count("<loc>")
-        return {"exists": True, "url_count": url_count}
-    except:
-        return {"exists": False, "url_count": 0}
+    content = fetch_page(sitemap_url)
+    if content:
+        try:
+            root = ElementTree.fromstring(content)
+            kind = root.tag.split("}")[-1]
+            if kind in {"sitemapindex", "urlset"}:
+                return {"exists": True, "kind": kind, "url_count": len(root.findall("{*}url")),
+                        "sitemap_count": len(root.findall("{*}sitemap"))}
+        except ElementTree.ParseError:
+            pass
+    return {"exists": False, "url_count": 0}
+
 
 
 def analyze(url):
@@ -402,16 +409,26 @@ def analyze(url):
 
     page_results = parser.get_results()
 
+    if page_results["requires_browser"]:
+        page_results.update(scores={}, overall_score=None, score_method="html-signals-v2")
+        return {"url": url, "status": "partial", "analysis": page_results,
+                "message": "取得したHTMLには本文がありません。ブラウザーで遷移先と描画後の内容を確認してください。"}
+
     # Count internal vs external links
     parsed_url = urlparse(url)
-    domain = parsed_url.netloc
+    domain = parsed_url.hostname
     internal = 0
     external = 0
     for link in parser.links:
         href = link.get("href", "")
-        if href.startswith("/") or domain in href:
+        if not href or href.startswith("#"):
+            continue
+        target = urlparse(urljoin(url, href))
+        if target.scheme not in {"https", "http"}:
+            continue
+        if target.hostname == domain:
             internal += 1
-        elif href.startswith("http"):
+        else:
             external += 1
     page_results["technical"]["internal_links"] = internal
     page_results["technical"]["external_links"] = external
@@ -422,7 +439,7 @@ def analyze(url):
 
     # -------------------------------------------------------
     # マーケティングスコア算出（6カテゴリ加重平均）
-    # READMEのウェイト仕様に準拠：
+    # HTMLで観察できる指標に限定した簡易診断のウェイト：
     #   コンテンツ・メッセージング  25%
     #   コンバージョン最適化        20%
     #   SEO・発見可能性             20%
@@ -445,11 +462,12 @@ def analyze(url):
     # --- コンテンツ・メッセージングスコア (0-10) ---
     content_score = 1  # 最低点
     content = page_results["content"]
-    if content["word_count"] >= 500:
+    # 日本語は分かち書きされないため、本文量の目安を文字数でも確認する。
+    if content["word_count"] >= 500 or content["japanese_char_count"] >= 1000:
         content_score += 3
-    elif content["word_count"] >= 300:
+    elif content["word_count"] >= 300 or content["japanese_char_count"] >= 600:
         content_score += 2
-    elif content["word_count"] >= 100:
+    elif content["word_count"] >= 100 or content["japanese_char_count"] >= 200:
         content_score += 1
     if seo["headings"].get("h1"):
         content_score += 2
@@ -468,12 +486,8 @@ def analyze(url):
     seo_score = 10
     if not seo["title"]:
         seo_score -= 3
-    elif not seo["title_ok"]:
-        seo_score -= 1
     if not seo["meta_description"]:
         seo_score -= 3
-    elif not seo["meta_description_ok"]:
-        seo_score -= 1
     if not seo["headings"].get("h1"):
         seo_score -= 2
     if seo["images_without_alt"] > 0:
@@ -552,6 +566,7 @@ def analyze(url):
     # --- 加重平均で総合スコア算出（0-100点） ---
     overall = sum(scores[cat] * WEIGHTS[cat] for cat in WEIGHTS) * 10
     page_results["scores"] = scores
+    page_results["score_method"] = "html-signals-v2"
     page_results["weights"] = WEIGHTS
     page_results["overall_score"] = round(overall, 1)
 

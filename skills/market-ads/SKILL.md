@@ -17,7 +17,7 @@ description: "広告クリエイティブと広告文を媒体別に生成する
 | 段階 | 内容 | 参照ファイル |
 |---|---|---|
 | 1 | 事業・オファーの分析、目的と媒体の対応 | `references/campaign-setup.md` |
-| 2 | 媒体別の広告文生成（Google / Yahoo! / Meta / LINE / X / TikTok） | `references/platforms.md` |
+| 2 | 媒体別の広告文生成（Google / LINEヤフー / Meta / X / TikTok） | `references/platforms.md` |
 | 3 | 3段階リターゲティングの設計 | `references/retargeting.md` |
 | 4 | 予算配分、獲得単価・ROASの目安、着地ページとの整合 | `references/budget-metrics.md` |
 | 5 | テストの進め方と、景品表示法・建設業法の注意 | `references/testing-legal.md` |
@@ -26,8 +26,8 @@ description: "広告クリエイティブと広告文を媒体別に生成する
 ## 必ず守ること
 
 - **広告文の文字数は全角換算で数える。** Google広告の見出しは全角15文字、説明文は全角45文字が上限です
-- 建設業では検索広告（Google・Yahoo!）に予算の大半を配分する
-- 商圏外の地域名を除外キーワードに入れる（広告費削減で最も効く）
+- 建設業では検索広告を候補にし、商圏・検索需要・許容問い合わせ単価とテスト予算で配分する。日本向けの旧LINE広告は2026年10月26日に配信を終了。新規案はLINEヤフー広告で設計する。[配信停止完了のお知らせ](https://www.lycbiz.com/jp/news/line-ads/20261026/)
+- 対象地域の設定と検索語句を確認し、商圏外の意図が明らかな場合に除外候補とする
 - 「業界No.1」「地域最安値」は客観的な根拠がなければ使わない（景品表示法）
 
 ## 提出前の検証

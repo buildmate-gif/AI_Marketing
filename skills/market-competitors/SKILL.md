@@ -36,7 +36,7 @@ description: "競合他社を特定し、ポジショニング・訴求・価格
 ## 建設業で外してはいけない観点
 
 - **一括見積もりサイト**は事実上の最大の競合です。分析対象から外さないでください
-- **Googleマップ検索の上位3社**が実質的な競合です。順位・クチコミ件数・評点を必ず比較してください
+- 地図枠で観測した事業者を競合候補に加えます。検索地点・端末・日時・語句・結果面（マップ／検索の地図枠）を記録し、確認できた範囲で順位・クチコミ件数・評点を比較します
 - 実名での比較ページは、地域密着業では評判を損なうため推奨しません。「業者の選び方」形式にしてください
 
 ## スクリプトの場所
@@ -45,7 +45,7 @@ description: "競合他社を特定し、ポジショニング・訴求・価格
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
 ## 出力

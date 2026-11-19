@@ -51,7 +51,7 @@ description: "クライアント向けのマーケティング提案書を生成
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 
 python3 "$MARKET_SCRIPTS/generate_proposal_pdf.py" \
   <ドメイン>/CLIENT-PROPOSAL.md <ドメイン>/CLIENT-PROPOSAL.pdf

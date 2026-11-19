@@ -1,80 +1,19 @@
 ---
 name: market-track
-description: "マーケティングスコアを定点観測し、前回からの変化を可視化する。改善施策の効果を数字で示し、継続支援の報告資料を作る。「前回と比べて」「スコアの推移」「効果を測定して」「定期レポート」「改善できているか確認」で使う。"
+description: "前回の診断と今回の変化を比較する。「前回と比べて」「改善できたか」「効果を測定して」「定期レポート」で使う。施策の実施状況、診断スコア、根拠付き実測値を案件別に追跡する。"
 ---
-# 定点観測（スコアの推移管理）
+# 定点観測
 
-同じサイトを継続的に測定し、スコアと実測値の推移を記録・可視化します。**単発の診断ツールから、継続支援のツールへの転換点となるスキルです。**
+`/market track <url>` で、同一ドメインの施策、スコア、成果指標を日本語で報告する。
 
-**出力言語はすべて日本語です。金額はすべて円建てで表記してください。**
-
-## このスキルの価値
-
-単発の監査は「今こうなっています」しか言えません。定点観測ができると、次が言えるようになります。
-
-- 「3ヶ月前は62点でした。今は79点です。実施した施策はこれです」
-- 「問い合わせが月12件から27件に増えました。地図検索は7位から2位です」
-- 「コンバージョン最適化が52→76と最も伸びました。次は競合ポジショニングです」
-
-**これがそのまま継続契約の根拠になります。** 施策の効果を数字で示せるかどうかが、単発の受注と継続的な支援の分かれ目です。
-
-## 使う場面
-
-- 前回の監査から一定期間が経ち、効果を測りたいとき
-- クライアントへの月次・四半期レポートを作るとき
-- 施策の効果を数字で示したいとき
-- 契約更新の提案材料が必要なとき
-- `/market track <url>` が実行されたとき
-
-## 進め方
-
-| 段階 | 内容 | 参照ファイル |
-|---|---|---|
-| 1 | 初回の記録、2回目以降の測定、レポート作成の手順 | `references/procedure.md` |
-| 2 | TRACK-REPORT.md の書式 | `references/output-format.md` |
-
-## スクリプトの場所
+1. 対象ドメインの履歴、監査、`REPORT-DATA.json` があれば読む。手順は `references/procedure.md`。
+2. 現在の監査結果と既存の作業記録・解析資料を使う。問い合わせ件数、受注数など未提供の数字は `null` として「未計測」と表示する。
+3. 優先施策の ID を再利用し、実施状況と確認根拠を記録する。施策の提案と実施を区別する。
+4. `record` が成功した後、`report` の出力と `references/output-format.md` に従い、`report <案件フォルダ>/MARKET-HISTORY.json --html <案件フォルダ>/TRACK-REPORT.html` を実行する。標準出力で案件フォルダの `TRACK-REPORT.md` を作成し、同時に出力される `TRACK-REPORT.html` を顧客向け月次画面として案内する。次回も同じ `MARKET-HISTORY.json` を使用する。
 
 ```bash
 MARKET_SCRIPTS="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/market/scripts}"
-[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="$HOME/.claude/skills/market/scripts"
+[ -d "$MARKET_SCRIPTS" ] || MARKET_SCRIPTS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/market/scripts"
 ```
 
-## 基本の3コマンド
-
-```bash
-# スコアを記録する
-python3 "$MARKET_SCRIPTS/track_history.py" record <ドメイン>/MARKET-HISTORY.json \
-  --url <url> --date YYYY-MM-DD --overall <点数> \
-  --scores '{"カテゴリ名": 点数, ...}' \
-  --metrics '{"月間問い合わせ件数": 12, ...}' \
-  --note "この期間に実施した施策"
-
-# 推移レポートを出力する
-python3 "$MARKET_SCRIPTS/track_history.py" report <ドメイン>/MARKET-HISTORY.json
-
-# 直近2回の差分だけを見る
-python3 "$MARKET_SCRIPTS/track_history.py" diff <ドメイン>/MARKET-HISTORY.json
-```
-
-履歴は `<ドメイン>/MARKET-HISTORY.json` に蓄積されます（規則は `../market/references/output-location.md`）。**このファイルは消さないでください。** 継続支援の全ての根拠がここに入ります。
-
-## 必ず守ること
-
-- **測定条件を毎回そろえる。** 同じスキル・同じ観点で測らないと、スコアの差が施策の効果なのか測り方のブレなのか区別できません
-- **スコアだけでなく実測値も記録する。** 問い合わせ件数、Googleクチコミ件数、地図検索順位は、スコアより説得力があります
-- **その期間に実施した施策を `--note` に必ず書く。** 何をしたから上がったのかが後から追えなくなります
-- **測定間隔は1〜3ヶ月。** 建設業は効果が出るまで3〜6ヶ月かかるため、毎週測っても意味のある変化は出ません
-- **スコアが下がった場合も正直に記録する。** 競合が動いた、季節要因、施策が裏目に出たなど、原因の考察を添えてください
-
-## 出力
-
-- `<ドメイン>/MARKET-HISTORY.json`（履歴データ。継続して使う）
-- `<ドメイン>/TRACK-REPORT.md`（クライアント提出用の推移レポート）
-
-## 他スキルとの連携
-
-- `/market audit` → 測定のたびに実行し、そのスコアをこのスキルで記録する
-- `/market visual` → ビジュアルスコアも記録できる（`--scores` に含める）
-- `/market report-pdf` → 推移表をPDFレポートに含めると提案書として強くなる
-- `/market proposal` → 契約更新の提案では、推移レポートを現状分析の章に必ず入れる
+初回は基準値を報告する。2回目以降は `python3 "$MARKET_SCRIPTS/track_history.py" diff <案件フォルダ>/MARKET-HISTORY.json` で確認する。比較できない指標は理由を添える。問い合わせの数やスコアが動いた場合、実施した日や需要の季節性などを確認し、施策への因果帰属は検証方法に見合う範囲で記述する。

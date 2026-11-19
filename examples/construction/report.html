@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>マーケティング監査レポート — 見本工務店（架空）</title>
+<style>
+  :root {
+    --hiro-bg: #FCFBF7;
+    --hiro-paper: #ffffff;
+    --hiro-text: #1F2A44;
+    --hiro-gray: #5A6478;
+    --hiro-brand: #1F2A44;
+    --hiro-accent: #B99745;
+    --hiro-blue: #2563EB;
+    --hiro-blueLight: #EFF4FF;
+    --hiro-border: #E8E4DA;
+    --hiro-highlight: #FDF8EC;
+    --hiro-alert: #B3453A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--hiro-bg); color:var(--hiro-text);
+    font-family:'Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif;
+    line-height:1.8; font-size:15px; -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .wrap { max-width:900px; margin:0 auto; padding:0 32px; }
+  h1 { font-family:'Noto Serif JP','Hiragino Mincho ProN',serif; font-size:30px;
+       font-weight:600; color:var(--hiro-brand); margin:14px 0 6px; line-height:1.5; }
+  h2 { font-family:'Noto Serif JP','Hiragino Mincho ProN',serif; font-size:22px;
+       font-weight:600; color:var(--hiro-brand); border-left:4px solid var(--hiro-accent);
+       padding-left:14px; margin:0 0 22px; }
+  h3 { font-size:17px; font-weight:700; color:var(--hiro-brand);
+       border-bottom:1px solid var(--hiro-border); padding-bottom:8px; margin:28px 0 14px; }
+  .hint { font-size:12px; font-weight:400; color:var(--hiro-gray); margin-left:10px; }
+  .badge { display:inline-block; background:var(--hiro-accent); color:#fff; font-size:11px;
+           font-weight:700; padding:3px 10px; border-radius:3px; letter-spacing:.08em;
+           font-family:'Outfit',sans-serif; }
+  .lead-brand { font-family:'Noto Serif JP',serif; font-size:19px; color:var(--hiro-brand);
+                margin:0 0 4px; }
+  .meta { color:var(--hiro-gray); font-size:13px; margin:0; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0 4px;
+          background:var(--hiro-paper); }
+  thead tr { border-bottom:2px solid var(--hiro-brand); }
+  th { padding:10px 16px; color:var(--hiro-gray); font-weight:500; font-size:12.5px;
+       white-space:nowrap; }
+  ol.plan { padding-left:22px; margin:0 0 4px; }
+  ol.plan li { margin-bottom:9px; }
+  ul { padding-left:20px; }
+  .note { font-size:12.5px; color:var(--hiro-gray); margin-top:10px; }
+  .callout { background:var(--hiro-highlight); border-left:3px solid var(--hiro-accent);
+             padding:14px 18px; font-size:13px; border-radius:0 6px 6px 0; margin:20px 0; }
+  code { background:var(--hiro-blueLight); color:var(--hiro-brand); padding:1px 6px;
+         border-radius:3px; font-size:12.5px; }
+  footer { padding:26px 0 34px; text-align:center; color:var(--hiro-gray); font-size:12px; }
+  .actions { list-style:none; margin:0; padding:0; display:grid; gap:18px; }
+  .action { background:var(--hiro-paper); border:1px solid var(--hiro-border);
+             border-top:3px solid var(--hiro-accent); padding:18px 24px; break-inside:avoid; }
+  .action-meta { color:var(--hiro-gray); font-size:12px; }
+  .action h3 { margin:4px 0 12px; }
+  .action dl { display:grid; grid-template-columns:7.5em 1fr; gap:5px 14px; margin:0; }
+  .action dt { color:var(--hiro-gray); font-size:13px; }
+  .action dd { margin:0; min-width:0; }
+  a { color:var(--hiro-blue); text-underline-offset:3px; }
+  .wrap { overflow-wrap:anywhere; }
+  @media screen and (max-width:600px) {
+    .wrap { padding:0 16px; overflow-x:auto; }
+    .action { padding:14px; }
+    .action dl { display:block; }
+    .action dt:not(:first-child) { margin-top:8px; }
+  }
+  @page { size:A4; margin:14mm; }
+  @media print {
+    section { padding:26px 0 !important; }
+    .wrap { padding:0 !important; }
+    table, ol.plan { page-break-inside:avoid; }
+    h2, h3 { page-break-after:avoid; }
+  }</style>
+</head>
+<body>
+
+<section style="background:var(--hiro-paper);padding:56px 0 44px;border-bottom:1px solid var(--hiro-border);">
+  <div class="wrap">
+    <span class="badge">MARKETING AUDIT</span>
+    <h1>マーケティング監査レポート</h1>
+    <p class="lead-brand">見本工務店（架空） 御中</p>
+    <p class="meta">対象URL： https://example.com　／　発行日： 2026年11月19日</p>
+    <div style="display:flex;gap:36px;align-items:center;flex-wrap:wrap;margin-top:28px;">
+      <div>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="総合スコア 62点">
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#E8E4DA" stroke-width="12"/>
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#1F2A44" stroke-width="12"
+          stroke-dasharray="303.9 186.2" stroke-linecap="round"
+          transform="rotate(-90 100 100)"/>
+  <text x="100" y="96" text-anchor="middle" font-family="Outfit, sans-serif"
+        font-size="52" font-weight="700" fill="#1F2A44">62</text>
+  <text x="100" y="120" text-anchor="middle" font-family="Outfit, sans-serif"
+        font-size="15" fill="#5A6478">/ 100</text>
+  <text x="100" y="146" text-anchor="middle" font-family="Outfit, sans-serif"
+        font-size="15" font-weight="700" fill="#1F2A44">C · 平均的</text>
+</svg></div>
+      <div style="flex:1;min-width:280px;">
+        <h3 style="margin-top:0;">エグゼクティブ・サマリー</h3>
+        <p style="margin:0;">架空の工務店を使った操作見本です。施工事例から相談への導線、相談フォームの入力項目、来場予約の案内を取り上げます。数値と観察内容はすべて説明用です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--hiro-bg);padding:44px 0;border-bottom:1px solid var(--hiro-border);">
+  <div class="wrap">
+    <h2>優先して取り組む施策</h2>
+    <ol class="actions"><li class="action">
+            <span class="action-meta">A01　予定</span>
+            <h3>施工事例から同じ工事を相談できるようにする</h3><dl><dt>対象ページ</dt><dd><a href="https://example.com/works/">https://example.com/works/</a></dd><dt>確認したこと</dt><dd>確認した4事例は、いずれも本文末のリンクが「一覧へ戻る」だけでした。</dd><dt>確認日</dt><dd>2026-11-19</dd><dt>改善の仮説</dt><dd>事例を読み終えた人が相談窓口を見つけやすくなります。</dd><dt>変更案</dt><dd>各事例の末尾に「同じ工事を相談する」リンクを置き、相談フォームへつなぎます。</dd><dt>追跡する指標</dt><dd>事例からフォームに進んだセッション数</dd><dt>現在の実績</dt><dd>未計測</dd></dl></li><li class="action">
+            <span class="action-meta">A02　進行中</span>
+            <h3>概算相談の入力項目を見直す</h3><dl><dt>対象ページ</dt><dd><a href="https://example.com/contact/">https://example.com/contact/</a></dd><dt>確認したこと</dt><dd>見積もりを頼む前の相談にも、番地と電話番号が必須です。</dd><dt>確認日</dt><dd>2026-11-19</dd><dt>改善の仮説</dt><dd>回答に必要な項目に絞ると、相談の途中離脱が減る可能性があります。</dd><dt>変更案</dt><dd>初回の概算相談で必要な情報を営業担当と確認し、番地を任意にして完了率を追います。</dd><dt>追跡する指標</dt><dd>相談フォーム完了率</dd><dt>現在の実績</dt><dd>40%（開始30件・完了12件）（10月1〜31日・架空のフォーム集計）</dd></dl></li><li class="action">
+            <span class="action-meta">A03　予定</span>
+            <h3>見学会ページに予約できる曜日を載せる</h3><dl><dt>対象ページ</dt><dd><a href="https://example.com/visit/">https://example.com/visit/</a></dd><dt>確認したこと</dt><dd>予約ボタンはありますが、見学可能な曜日をページ内で確認できません。</dd><dt>確認日</dt><dd>2026-11-19</dd><dt>改善の仮説</dt><dd>予約前に予定を合わせられると、日程確認の往復が減る可能性があります。</dd><dt>変更案</dt><dd>予約ボタンの直前に、担当者が確認した開催曜日と直近の空き日程を掲載します。</dd><dt>追跡する指標</dt><dd>見学会予約件数</dd><dt>現在の実績</dt><dd>0件（10月1〜31日・架空の予約台帳）</dd></dl></li></ol>
+  </div>
+</section>
+
+<section style="background:var(--hiro-bg);padding:44px 0;border-bottom:1px solid var(--hiro-border);">
+  <div class="wrap">
+    <h2>スコア内訳</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;">カテゴリ</th>
+          <th style="text-align:left;">スコア</th>
+          <th style="text-align:right;">点数</th>
+          <th style="text-align:right;">ウェイト</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">コンテンツ・メッセージング</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#1F2A44;height:9px;width:68%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#1F2A44;white-space:nowrap;">68</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">25%</td>
+      </tr>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">コンバージョン最適化</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#B99745;height:9px;width:52%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#B99745;white-space:nowrap;">52</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">20%</td>
+      </tr>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">SEO・発見可能性</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#2563EB;height:9px;width:74%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#2563EB;white-space:nowrap;">74</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">20%</td>
+      </tr>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">競合ポジショニング</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#B99745;height:9px;width:48%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#B99745;white-space:nowrap;">48</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">15%</td>
+      </tr>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">ブランド・信頼性</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#2563EB;height:9px;width:70%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#2563EB;white-space:nowrap;">70</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">10%</td>
+      </tr>
+      <tr style="border-bottom:1px solid #E8E4DA;">
+        <td style="padding:12px 16px;font-weight:500;white-space:nowrap;">成長・戦略</td>
+        <td style="padding:12px 16px;width:100%;">
+          <div style="background:#E8E4DA;height:9px;border-radius:5px;overflow:hidden;">
+            <div style="background:#1F2A44;height:9px;width:55%;border-radius:5px;"></div>
+          </div>
+        </td>
+        <td style="padding:12px 16px;text-align:right;font-family:Outfit,sans-serif;
+                   font-weight:700;color:#1F2A44;white-space:nowrap;">55</td>
+        <td style="padding:12px 16px;text-align:right;color:#5A6478;
+                   font-size:13px;white-space:nowrap;">10%</td>
+      </tr></tbody>
+    </table>
+    <div class="note">加重平均 61.9 ／ 100（評価 C・平均的）</div>
+  </div>
+</section>
+
+<section style="background:var(--hiro-paper);padding:44px 0;border-bottom:1px solid var(--hiro-border);page-break-before:always;">
+  <div class="wrap">
+    <h2>主要課題</h2>
+    <table><thead><tr>
+            <th style="text-align:left;width:110px;">重要度</th>
+            <th style="text-align:left;">課題内容</th></tr></thead>
+            <tbody><tr style="border-bottom:1px solid var(--hiro-border);">
+                  <td style="padding:14px 16px;vertical-align:top;"><span style="display:inline-block;background:#B99745;color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:3px;letter-spacing:.05em;white-space:nowrap;">重大</span></td>
+                  <td style="padding:14px 16px;">事例を読んだ直後に相談できる入口がありません。</td>
+                </tr><tr style="border-bottom:1px solid var(--hiro-border);">
+                  <td style="padding:14px 16px;vertical-align:top;"><span style="display:inline-block;background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:3px;letter-spacing:.05em;white-space:nowrap;">中程度</span></td>
+                  <td style="padding:14px 16px;">見学可能な日程は問い合わせ前に確認できません。</td>
+                </tr></tbody></table>
+  </div>
+</section>
+
+<section style="background:var(--hiro-bg);padding:44px 0;border-bottom:1px solid var(--hiro-border);">
+  <div class="wrap">
+    <h2>優先度別アクションプラン</h2>
+    
+        <h3>クイックウィン<span class="hint">着手2週間以内・低工数</span></h3>
+        <ol class="plan"><li>施工事例のテンプレートに相談ボタンを追加する。</li><li>見学可能日を予約ボタン付近に掲示する。</li></ol>
+        <h3>中期施策<span class="hint">1〜4ヶ月</span></h3>
+        <ol class="plan"><li>フォームの変更前後で開始件数と完了件数を同じ定義で比較する。</li></ol>
+  </div>
+</section>
+
+<section style="background:var(--hiro-paper);padding:44px 0;border-bottom:1px solid var(--hiro-border);page-break-before:always;">
+  <div class="wrap">
+    <h2>競合比較</h2>
+    <p class="note">競合データは未取得です。<code>/market competitors &lt;url&gt;</code> を実行すると本節が生成されます。</p>
+  </div>
+</section>
+
+<section style="background:var(--hiro-bg);padding:44px 0;border-bottom:1px solid var(--hiro-border);">
+  <div class="wrap">
+    <h2>採点方法と制約</h2>
+    
+    <p>各カテゴリを0〜100点で採点し、ウェイトを掛けた加重平均を総合スコアとしています。</p>
+    <table><thead><tr>
+      <th style="text-align:left;">点数</th><th style="text-align:left;">評価</th>
+      <th style="text-align:left;">意味</th></tr></thead>
+      <tbody><tr style="border-bottom:1px solid var(--hiro-border);"><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;">85–100</td><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;color:#2563EB;">A</td><td style="padding:10px 16px;">優秀</td></tr><tr style="border-bottom:1px solid var(--hiro-border);"><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;">70–84</td><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;color:#2563EB;">B</td><td style="padding:10px 16px;">良好</td></tr><tr style="border-bottom:1px solid var(--hiro-border);"><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;">55–69</td><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;color:#1F2A44;">C</td><td style="padding:10px 16px;">平均的</td></tr><tr style="border-bottom:1px solid var(--hiro-border);"><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;">40–54</td><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;color:#B99745;">D</td><td style="padding:10px 16px;">平均以下</td></tr><tr style="border-bottom:1px solid var(--hiro-border);"><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;">0–39</td><td style="padding:10px 16px;font-family:Outfit,sans-serif;font-weight:700;color:#B3453A;">F</td><td style="padding:10px 16px;">危機的</td></tr></tbody></table>
+    <div class="callout">
+      改善前後は同じ条件・期間で計測します。広告出稿量や季節性など、結果に影響する変更も記録してください。
+    </div>
+    <div class="callout">
+      建設業は商談期間が数ヶ月〜1年に及びます。効果が数字に表れるまでの期間は施策により異なり、
+      フォーム改善やお客様の声の見直しなど軽微な変更は2〜4ヶ月、価格開示や施工事例の充実など
+      中規模の変更は3〜6ヶ月、SEOや信頼構築など土台からの変更は本格反映まで6ヶ月〜1年を要します。
+      短期での判断は避け、四半期単位で評価してください。
+    </div>
+    <h3>本レポートの制約</h3>
+    <ul>
+      <li>スコアは公開情報にもとづく評価であり、実際の受注データとは異なります</li>
+      <li>会員限定エリアなど非公開部分は評価対象外です</li>
+      <li>収益の試算は、入力値の出典と仮定を併記した場合に限り掲載します</li>
+    </ul>
+  </div>
+</section>
+<footer>AI Marketing Suite により生成</footer>
+</body>
+</html>

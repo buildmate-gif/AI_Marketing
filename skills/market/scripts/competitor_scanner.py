@@ -10,7 +10,6 @@ import json
 import re
 import urllib.request
 import urllib.error
-import ssl
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 
@@ -39,13 +38,16 @@ class CompetitorPageParser(HTMLParser):
         self._in_a = False
         self._in_button = False
         self._current_text = ""
+        self._skip_tag = None
         self._all_text = []
         self._current_href = ""
 
     def handle_starttag(self, tag, attrs):
         attrs_dict = dict(attrs)
 
-        if tag == "title":
+        if tag in ("script", "style"):
+            self._skip_tag = tag
+        elif tag == "title":
             self._in_title = True
             self._current_text = ""
         elif tag == "meta":
@@ -90,7 +92,9 @@ class CompetitorPageParser(HTMLParser):
                 self.logo_count += 1
 
     def handle_endtag(self, tag):
-        if tag == "title" and self._in_title:
+        if tag == self._skip_tag:
+            self._skip_tag = None
+        elif tag == "title" and self._in_title:
             self._in_title = False
             self.title = self._current_text.strip()
         elif tag == "h1" and self._in_h1:
@@ -107,7 +111,8 @@ class CompetitorPageParser(HTMLParser):
             self._in_a = False
             text = self._current_text.strip()
             cta_words = ["sign up", "get started", "try free", "start", "buy", "subscribe",
-                         "join", "register", "download", "book", "demo", "contact", "pricing"]
+                         "join", "register", "download", "book", "demo", "contact", "pricing",
+                         "問い合わせ", "問合せ", "資料請求", "見積", "予約", "購入", "カート", "相談"]
             if any(w in text.lower() for w in cta_words):
                 self.ctas.append(text)
         elif tag == "button" and self._in_button:
@@ -117,6 +122,8 @@ class CompetitorPageParser(HTMLParser):
                 self.ctas.append(text)
 
     def handle_data(self, data):
+        if self._skip_tag:
+            return
         if self._in_title or self._in_h1 or self._in_h2 or self._in_a or self._in_button:
             self._current_text += data
         self._all_text.append(data.strip())
@@ -125,7 +132,8 @@ class CompetitorPageParser(HTMLParser):
         text_lower = data.lower().strip()
         pricing_patterns = [r"\$\d+", r"€\d+", r"£\d+", r"/month", r"/year", r"/mo",
                             r"per month", r"per year", r"annually", r"free plan",
-                            r"free tier", r"free trial", r"enterprise"]
+                            r"free tier", r"free trial", r"enterprise", r"[¥￥]\s*[0-9０-９]",
+                            r"[0-9０-９][0-9０-９,.，．]*\s*[万億]?円", r"月額|年額|料金プラン|無料体験"]
         for pattern in pricing_patterns:
             if re.search(pattern, text_lower):
                 self.pricing_indicators.append(data.strip())
@@ -133,7 +141,7 @@ class CompetitorPageParser(HTMLParser):
 
         # Detect testimonials
         testimonial_words = ["testimonial", "review", "said about", "what our customers",
-                             "customer stories", "case study", "success story"]
+                             "customer stories", "case study", "success story", "お客様の声", "導入事例", "施工事例"]
         if any(w in text_lower for w in testimonial_words):
             self.testimonial_count += 1
 
@@ -156,7 +164,7 @@ class CompetitorPageParser(HTMLParser):
             },
             "pricing": {
                 "has_pricing_info": len(self.pricing_indicators) > 0,
-                "pricing_mentions": list(set(self.pricing_indicators))[:10]
+                "pricing_mentions": list(dict.fromkeys(self.pricing_indicators))[:10]
             },
             "trust": {
                 "social_platforms": [s["platform"] for s in self.social_links],
@@ -164,7 +172,7 @@ class CompetitorPageParser(HTMLParser):
                 "estimated_logo_count": self.logo_count,
                 "has_testimonials": self.testimonial_count > 0
             },
-            "ctas": list(set(self.ctas))[:10],
+            "ctas": list(dict.fromkeys(self.ctas))[:10],
             "content": {
                 "word_count": word_count,
                 "sections": len(self.h2_tags)
@@ -174,9 +182,6 @@ class CompetitorPageParser(HTMLParser):
 
 def fetch_page(url):
     """Fetch a webpage."""
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -185,8 +190,8 @@ def fetch_page(url):
 
     req = urllib.request.Request(url, headers=headers)
     try:
-        response = urllib.request.urlopen(req, timeout=15, context=ctx)
-        return response.read().decode("utf-8", errors="replace")
+        with urllib.request.urlopen(req, timeout=15) as response:
+            return response.read().decode(response.headers.get_content_charset() or "utf-8", errors="replace")
     except:
         return None
 
@@ -223,27 +228,29 @@ def scan_competitor(url):
 
     # Try to fetch pricing page
     pricing_urls = [
-        f"https://{parsed.netloc}/pricing",
-        f"https://{parsed.netloc}/plans",
-        f"https://{parsed.netloc}/price",
+        f"{parsed.scheme}://{parsed.netloc}/pricing",
+        f"{parsed.scheme}://{parsed.netloc}/plans",
+        f"{parsed.scheme}://{parsed.netloc}/price",
     ]
 
     for pricing_url in pricing_urls:
         pricing_html = fetch_page(pricing_url)
-        if pricing_html and len(pricing_html) > 1000:
+        if pricing_html:
             pricing_parser = CompetitorPageParser()
             try:
                 pricing_parser.feed(pricing_html)
                 pricing_data = pricing_parser.get_results()
+                if not pricing_data["pricing"]["has_pricing_info"]:
+                    continue
                 result["pricing_page"] = {
                     "url": pricing_url,
                     "found": True,
                     "pricing_mentions": pricing_data["pricing"]["pricing_mentions"],
                     "sections": pricing_data["positioning"]["key_sections"]
                 }
-            except:
-                pass
-            break
+                break
+            except (TypeError, ValueError):
+                continue
     else:
         result["pricing_page"] = {"found": False}
 

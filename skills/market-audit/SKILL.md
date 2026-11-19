@@ -14,7 +14,7 @@ description: "Webサイトの完全マーケティング監査。5つの並列�
 
 ## 進め方
 
-3つのフェーズを順に実行します。**その段階で必要な参照ファイルだけを読んでください。** 全部を先に読む必要はありません。
+以下の段階を順に実行します。**その段階で必要な参照ファイルだけを読んでください。** 全部を先に読む必要はありません。
 
 | 段階 | 内容 | 参照ファイル |
 |---|---|---|
@@ -22,6 +22,7 @@ description: "Webサイトの完全マーケティング監査。5つの並列�
 | 2 | 5サブエージェントの並列起動と各担当の評価項目 | `references/subagents.md` |
 | 3 | 加重平均による採点、提案の分類、円建ての収益試算、競合比較表 | `references/scoring.md` |
 | 4 | MARKETING-AUDIT.md の書式とターミナル出力 | `references/output-format.md` |
+| 5 | 上位施策・根拠・追跡指標をJSONに保存し、顧客向けHTMLを生成 | `references/report-data.md` |
 
 業種判定と収益モデルの詳細は、`market` スキル側にもあります（`../market/references/business-types.md`、`../market/references/revenue-model.md`）。
 
@@ -43,6 +44,7 @@ description: "Webサイトの完全マーケティング監査。5つの並列�
 ## 出力
 
 - `<ドメイン>/MARKETING-AUDIT.md`（規則は `../market/references/output-location.md`）
+- `<ドメイン>/REPORT-DATA.json` と `<ドメイン>/MARKETING-REPORT.html`
 - ターミナルに要約スコアカード
 
 ## エラー処理
