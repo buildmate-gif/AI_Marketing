@@ -13,6 +13,8 @@ import urllib.error
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 
+MAX_RESPONSE_BYTES = 10 * 1024 * 1024
+
 
 class CompetitorPageParser(HTMLParser):
     """Parse competitor page for positioning data."""
@@ -180,8 +182,8 @@ class CompetitorPageParser(HTMLParser):
         }
 
 
-def fetch_page(url):
-    """Fetch a webpage."""
+def fetch_page(url, max_bytes=MAX_RESPONSE_BYTES):
+    """Fetch a webpage, or return None if it is too large."""
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -191,7 +193,10 @@ def fetch_page(url):
     req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=15) as response:
-            return response.read().decode(response.headers.get_content_charset() or "utf-8", errors="replace")
+            body = response.read(max_bytes + 1)
+            if len(body) > max_bytes:
+                return None
+            return body.decode(response.headers.get_content_charset() or "utf-8", errors="replace")
     except:
         return None
 

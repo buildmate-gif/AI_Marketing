@@ -101,7 +101,7 @@ Claude Code でコマンドを入力するだけで、業種を問わずウェ�
 配布フォルダから継続利用する場合は、そのフォルダで実行します。
 
 ```bash
-claude plugin marketplace add .
+claude plugin marketplace add ./
 claude plugin install ai-marketing-jp@buildmate-marketing
 ```
 
